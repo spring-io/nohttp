@@ -1,0 +1,8 @@
+Demo of using nohttp checkstyle with Maven. Run the following
+
+[source,bash]
+----
+./mvnw checkstyle:check
+----
+
+Try editing `has-url.txt` to contain an http URL and see the build fail.
