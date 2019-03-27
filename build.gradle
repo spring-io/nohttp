@@ -1,0 +1,21 @@
+buildscript {
+	dependencies {
+		classpath 'io.spring.gradle:spring-build-conventions:0.0.23.RELEASE'
+	}
+	repositories {
+		maven { url 'https://repo.spring.io/plugins-snapshot' }
+		maven { url 'https://plugins.gradle.org/m2/' }
+	}
+}
+
+apply plugin: 'io.spring.convention.root'
+
+
+group 'io.spring.nohttp'
+description = 'NoHttp URLs'
+
+subprojects {
+	plugins.withType(JavaPlugin) {
+		project.sourceCompatibility='1.8'
+	}
+}
