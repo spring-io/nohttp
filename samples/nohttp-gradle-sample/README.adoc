@@ -1,0 +1,8 @@
+Demo of using nohttp checkstyle with Gradle. Run the following
+
+[source,bash]
+----
+./gradlew nohttp
+----
+
+Try editing `has-url.txt` to contain an http URL and see the build fail.
