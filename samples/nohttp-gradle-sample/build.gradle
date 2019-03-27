@@ -1,0 +1,23 @@
+plugins {
+	id 'checkstyle'
+}
+
+repositories {
+	mavenCentral()
+	maven { url 'https://repo.spring.io/libs-snapshot' }
+}
+
+dependencies {
+	checkstyle 'io.spring.nohttp:nohttp-checkstyle:0.0.1.BUILD-SNAPSHOT'
+}
+
+task nohttp(type: Checkstyle) {
+	configFile = file("nohttp-checkstyle.xml")
+	source = fileTree(project.projectDir) {
+		exclude "**/build/**"
+		exclude ".git/**"
+		exclude ".gradle/**"
+	}
+	classpath = files()
+	checkstyleClasspath = configurations.checkstyle
+}

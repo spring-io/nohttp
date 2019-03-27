@@ -1,0 +1,10 @@
+
+dependencyManagement {
+	dependencies {
+		dependency 'com.puppycrawl.tools:checkstyle:8.18'
+		dependency 'junit:junit:4.12'
+		dependency 'org.assertj:assertj-core:3.11.1'
+		dependency 'org.springframework:spring-test:5.1.4.RELEASE'
+		dependency 'org.mockito:mockito-core:2.23.4'
+	}
+}
