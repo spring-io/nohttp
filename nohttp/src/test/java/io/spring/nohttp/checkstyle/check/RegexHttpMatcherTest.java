@@ -12,7 +12,58 @@ import static org.assertj.core.api.Assertions.*;
  * @author Rob Winch
  */
 public class RegexHttpMatcherTest {
-	private RegexHttpMatcher matcher = new RegexHttpMatcher();
+	private RegexHttpMatcher matcher = new RegexHttpMatcher(url -> false);
+
+	private RegexHttpMatcher whitelisted = new RegexHttpMatcher();
+
+	@Test
+	public void findHttpWhenWhitelistSpringBeanSchemaName() {
+		List<HttpMatchResult> results = this.whitelisted.findHttp("http://www.springframework.org/schema/beans");
+		assertThat(results).isEmpty();
+	}
+
+	@Test
+	public void findHttpWhenWhitelistSpringBeanSchemaLocation() {
+		List<HttpMatchResult> results = this.whitelisted.findHttp("http://www.springframework.org/schema/beans/spring-beans.xsd");
+		assertThat(results).hasSize(1);
+	}
+
+	@Test
+	public void findHttpWhenWhitelistSpringBeanDtdLocation() {
+		List<HttpMatchResult> results = this.whitelisted.findHttp("http://www.springframework.org/dtd/spring-beans-2.0.dtd");
+		assertThat(results).hasSize(1);
+	}
+
+	@Test
+	public void findHttpWhenWhitelistAndExampleThenFound() {
+		List<HttpMatchResult> results = this.whitelisted.findHttp("http://example.com");
+		assertThat(results).hasSize(1);
+	}
+
+	@Test
+	public void findHttpWhenWhitelistLocalhost() {
+		List<HttpMatchResult> results = this.whitelisted.findHttp("http://localhost");
+		assertThat(results).isEmpty();
+	}
+
+	@Test
+	public void findHttpWhenNoDot() {
+		List<HttpMatchResult> results = this.whitelisted.findHttp("http://foo");
+		assertThat(results).isEmpty();
+	}
+
+	@Test
+	public void findHttpWhenNoDotAndSlash() {
+		List<HttpMatchResult> results = this.whitelisted.findHttp("http://foo/");
+		assertThat(results).isEmpty();
+	}
+
+	@Test
+	public void findHttpWhenWhitelistAll() {
+		RegexHttpMatcher whitelisted = new RegexHttpMatcher(url -> true);
+		List<HttpMatchResult> results = whitelisted.findHttp("http://example.com");
+		assertThat(results).isEmpty();
+	}
 
 	@Test
 	public void findHttpWhenJustUrlThenFound() {

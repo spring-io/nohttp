@@ -12,7 +12,7 @@ import java.util.List;
  * @author Rob Winch
  */
 public class NoHttpCheck extends AbstractFileSetCheck {
-	private final HttpMatcher matcher = new WhitelistHttpMatcher();
+	private final HttpMatcher matcher = new RegexHttpMatcher();
 
 	@Override
 	protected void processFiltered(File file, FileText fileText)
@@ -21,7 +21,7 @@ public class NoHttpCheck extends AbstractFileSetCheck {
 		for (int index = 0; index < fileText.size(); index++) {
 			final String line = fileText.get(index);
 			lineNum++;
-			List<HttpMatchResult> results = matcher.findHttp(line);
+			List<HttpMatchResult> results = this.matcher.findHttp(line);
 			for(HttpMatchResult result : results) {
 				log(lineNum, result.getStart() + 1, "nohttp", result.getHttpUrl());
 			}
