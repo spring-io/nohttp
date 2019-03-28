@@ -101,12 +101,12 @@ public class RegexHttpMatcherTest {
 
 	private void assertWhitelisted(String url) {
 		List<HttpMatchResult> results = this.whitelisted.findHttp(url);
-		assertThat(results).isEmpty();
+		assertThat(results).describedAs(url + " should be whitelisted but is not").isEmpty();
 	}
 
 	private List<HttpMatchResult> assertNotWhitelisted(String url) {
 		List<HttpMatchResult> results = this.whitelisted.findHttp(url);
-		assertThat(results).hasSize(1);
+		assertThat(results).describedAs(url + " should NOT be whitelisted but is").hasSize(1);
 		return results;
 	}
 
