@@ -7,6 +7,7 @@ import org.gradle.api.Task;
 import org.gradle.api.artifacts.Configuration;
 import org.gradle.api.artifacts.DependencySet;
 import org.gradle.api.file.ConfigurableFileTree;
+import org.gradle.api.logging.Logger;
 import org.gradle.api.plugins.quality.Checkstyle;
 import org.gradle.api.resources.TextResource;
 
@@ -37,6 +38,7 @@ public class NoHttpPlugin implements Plugin<Project> {
 				.getTasks().create("nohttpCheckstyle", Checkstyle.class);
 		File defaultCheckstyleFile = this.project.file("config/checkstyle/nohttp/nohttp-checkstyle.xml");
 		if (defaultCheckstyleFile.exists()) {
+			this.project.getLogger().debug("Found default checkstyle configuration, so configuring checkstyleTask to use it");
 			checkstyleTask.setConfigFile(defaultCheckstyleFile);
 		}
 		checkstyleTask.setSource(this.project.fileTree(this.project.getProjectDir(), new Action<ConfigurableFileTree>() {
@@ -52,9 +54,12 @@ public class NoHttpPlugin implements Plugin<Project> {
 		checkstyleTask.doFirst(new Action<Task>() {
 			@Override
 			public void execute(Task task) {
+				Logger logger = project.getLogger();
 				if (checkstyleTask.getConfig() != null) {
+					logger.debug("checkstyle config is not null");
 					return;
 				}
+				logger.debug("checkstyle config is null, so defaulting it");
 				// FIXME: Default from configuration vs classpath
 				URL resource = getClass().getResource(
 						"/io/spring/nohttp/checkstyle/default-nohttp-checkstyle.xml");
