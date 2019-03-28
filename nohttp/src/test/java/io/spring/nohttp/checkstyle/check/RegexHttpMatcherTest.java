@@ -78,7 +78,7 @@ public class RegexHttpMatcherTest {
 		assertWhitelisted("http://" + tld);
 		assertWhitelisted("http://" + tld + "/");
 		assertWhitelisted("http://" + tld + "/a/b");
-		assertNotWhitelisted("http://" + tld + "/bar.test");
+		assertNotWhitelisted("http://example.com/" + tld);
 	}
 
 	@Test
