@@ -58,33 +58,38 @@ public class RegexHttpMatcherTest {
 		assertWhitelisted("http://www.w3.org/2001/XMLSchema-datatypes");
 	}
 
+	@Test
+	public void findHttpWhenSourceForge() {
+		assertWhitelisted(" http://iharder.sourceforge.net/current/java/base64/");
+	}
+
 	// https://tools.ietf.org/html/rfc2606
 
 	@Test
 	public void findTestTldIsWhitelisted() {
-		findTldWhitelisted("foo.test");
+		assertDomainAndSubdomainsWhitelisted("foo.test");
 	}
 
 	@Test
 	public void findExampleTldIsWhitelisted() {
-		findTldWhitelisted("foo.example");
+		assertDomainAndSubdomainsWhitelisted("foo.example");
 	}
 
 	@Test
 	public void findInvalidTldIsWhitelisted() {
-		findTldWhitelisted("foo.invalid");
+		assertDomainAndSubdomainsWhitelisted("foo.invalid");
 	}
 
 	@Test
 	public void findLocalhostTldIsWhitelisted() {
-		findTldWhitelisted("foo.localhost");
+		assertDomainAndSubdomainsWhitelisted("foo.localhost");
 	}
 
-	public void findTldWhitelisted(String tld) {
-		assertWhitelisted("http://" + tld);
-		assertWhitelisted("http://" + tld + "/");
-		assertWhitelisted("http://" + tld + "/a/b");
-		assertNotWhitelisted("http://example.com/" + tld);
+	public void assertDomainAndSubdomainsWhitelisted(String domain) {
+		assertWhitelisted("http://" + domain);
+		assertWhitelisted("http://" + domain + "/");
+		assertWhitelisted("http://" + domain + "/a/b");
+		assertNotWhitelisted("http://example.com/" + domain);
 	}
 
 	@Test
