@@ -52,6 +52,40 @@ public class RegexHttpMatcherTest {
 		assertThat(results).isEmpty();
 	}
 
+	// https://tools.ietf.org/html/rfc2606
+
+	@Test
+	public void findTestTldIsWhitelisted() {
+		findTldWhitelisted("foo.test");
+	}
+
+	@Test
+	public void findExampleTldIsWhitelisted() {
+		findTldWhitelisted("foo.example");
+	}
+
+	@Test
+	public void findInvalidTldIsWhitelisted() {
+		findTldWhitelisted("foo.invalid");
+	}
+
+	@Test
+	public void findLocalhostTldIsWhitelisted() {
+		findTldWhitelisted("foo.localhost");
+	}
+
+	public void findTldWhitelisted(String tld) {
+		assertWhitelisted("http://" + tld);
+		assertWhitelisted("http://" + tld + "/");
+		assertWhitelisted("http://" + tld + "/a/b");
+		assertNotWhitelisted("http://" + tld + "/bar.test");
+	}
+
+	@Test
+	public void findExampleWhitelisted() {
+		assertWhitelisted("http://foo.example");
+	}
+
 	@Test
 	public void findHttpWhenNoDotAndSlash() {
 		List<HttpMatchResult> results = this.whitelisted.findHttp("http://foo/");
@@ -63,6 +97,17 @@ public class RegexHttpMatcherTest {
 		RegexHttpMatcher whitelisted = new RegexHttpMatcher(url -> true);
 		List<HttpMatchResult> results = whitelisted.findHttp("http://example.com");
 		assertThat(results).isEmpty();
+	}
+
+	private void assertWhitelisted(String url) {
+		List<HttpMatchResult> results = this.whitelisted.findHttp(url);
+		assertThat(results).isEmpty();
+	}
+
+	private List<HttpMatchResult> assertNotWhitelisted(String url) {
+		List<HttpMatchResult> results = this.whitelisted.findHttp(url);
+		assertThat(results).hasSize(1);
+		return results;
 	}
 
 	@Test
