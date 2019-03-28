@@ -58,11 +58,6 @@ public class RegexHttpMatcherTest {
 		assertWhitelisted("http://www.w3.org/2001/XMLSchema-datatypes");
 	}
 
-	@Test
-	public void findHttpWhenSourceForge() {
-		assertWhitelisted(" http://iharder.sourceforge.net/current/java/base64/");
-	}
-
 	// https://tools.ietf.org/html/rfc2606
 
 	@Test
@@ -83,6 +78,48 @@ public class RegexHttpMatcherTest {
 	@Test
 	public void findLocalhostTldIsWhitelisted() {
 		assertDomainAndSubdomainsWhitelisted("foo.localhost");
+	}
+
+	// no https
+
+	@Test
+	public void findHttpWhenSourceForge() {
+		assertWhitelisted(" http://iharder.sourceforge.net/current/java/base64/");
+	}
+
+	@Test
+	public void findHttpWhenOpensecurityResearchThenWhitelisted() {
+		assertDomainAndSubdomainsWhitelisted("blog.opensecurityresearch.com");
+		assertDomainAndSubdomainsWhitelisted("opensecurityresearch.com");
+	}
+
+	@Test
+	public void findHttpWhenWebappsecThenWhitelisted() {
+		assertDomainAndSubdomainsWhitelisted("lists.webappsec.org");
+		assertDomainAndSubdomainsWhitelisted("webappsec.org");
+	}
+
+	@Test
+	public void findHttpWhenJaspanThenWhitelisted() {
+		assertDomainAndSubdomainsWhitelisted("jaspan.com");
+	}
+
+	@Test
+	public void findHttpWhenCsBerkelyThenWhitelisted() {
+		assertDomainAndSubdomainsWhitelisted("cs.berkeley.edu");
+		assertDomainAndSubdomainsWhitelisted("webblaze.cs.berkeley.edu");
+	}
+
+	@Test
+	public void findHttpWhenNabbleThenWhitelisted() {
+		assertDomainAndSubdomainsWhitelisted("bouncy-castle.1462172.n4.nabble.com");
+		assertDomainAndSubdomainsWhitelisted("nabble.com");
+	}
+
+	@Test
+	public void findHttpWhenZytraxThenWhitelisted() {
+		assertDomainAndSubdomainsWhitelisted("www.zytrax.com");
+		assertDomainAndSubdomainsWhitelisted("zytrax.com");
 	}
 
 	public void assertDomainAndSubdomainsWhitelisted(String domain) {

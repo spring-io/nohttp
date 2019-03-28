@@ -11,7 +11,13 @@
 
 
 // no https for the URL
-^http://[^/]+sourceforge.*
+^http://[^/]*cs\.berkeley\.edu.*
+^http://[^/]*nabble\.com.*
+^http://[^/]*jaspan\.com.*
+^http://[^/]*opensecurityresearch\.com.*
+^http://[^/]*sourceforge\.net.*
+^http://[^/]*webappsec\.org.*
+^http://[^/]*zytrax\.com.*
 
 
 // JDK forces properties.dtd to be http
