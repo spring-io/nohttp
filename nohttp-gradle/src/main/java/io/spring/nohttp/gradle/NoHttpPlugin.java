@@ -30,7 +30,7 @@ public class NoHttpPlugin implements Plugin<Project> {
 	private void createCheckstyleTaskForProject(Configuration checkstyleConfiguration) {
 		Checkstyle checkstyleTask = this.project
 				.getTasks().create("nohttpCheckstyle", Checkstyle.class);
-		checkstyleTask.setConfigFile(this.project.file("nohttp-checkstyle.xml"));
+		checkstyleTask.setConfigFile(this.project.file("config/checkstyle/nohttp/nohttp-checkstyle.xml"));
 		checkstyleTask.setSource(this.project.fileTree(this.project.getProjectDir(), new Action<ConfigurableFileTree>() {
 			@Override
 			public void execute(ConfigurableFileTree files) {
