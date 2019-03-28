@@ -3,16 +3,17 @@ package io.spring.nohttp.gradle;
 import org.gradle.api.Action;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
-import org.gradle.api.Task;
 import org.gradle.api.artifacts.Configuration;
 import org.gradle.api.artifacts.DependencySet;
 import org.gradle.api.file.ConfigurableFileTree;
+import org.gradle.api.internal.ConventionMapping;
 import org.gradle.api.logging.Logger;
 import org.gradle.api.plugins.quality.Checkstyle;
 import org.gradle.api.resources.TextResource;
 
 import java.io.File;
 import java.net.URL;
+import java.util.concurrent.Callable;
 
 /**
  * @author Rob Winch
@@ -34,14 +35,11 @@ public class NoHttpPlugin implements Plugin<Project> {
 	}
 
 	private void createCheckstyleTaskForProject(Configuration configuration) {
-		Checkstyle checkstyleTask = this.project
+		Project project = this.project;
+		Checkstyle checkstyleTask = project
 				.getTasks().create("nohttpCheckstyle", Checkstyle.class);
-		File defaultCheckstyleFile = this.project.file("config/checkstyle/nohttp/nohttp-checkstyle.xml");
-		if (defaultCheckstyleFile.exists()) {
-			this.project.getLogger().debug("Found default checkstyle configuration, so configuring checkstyleTask to use it");
-			checkstyleTask.setConfigFile(defaultCheckstyleFile);
-		}
-		checkstyleTask.setSource(this.project.fileTree(this.project.getProjectDir(), new Action<ConfigurableFileTree>() {
+
+		checkstyleTask.setSource(project.fileTree(project.getProjectDir(), new Action<ConfigurableFileTree>() {
 			@Override
 			public void execute(ConfigurableFileTree files) {
 				files.exclude("**/build/**");
@@ -49,22 +47,22 @@ public class NoHttpPlugin implements Plugin<Project> {
 				files.exclude(".gradle/**");
 			}
 		}));
-		checkstyleTask.setClasspath(this.project.files());
+		checkstyleTask.setClasspath(project.files());
 		checkstyleTask.setClasspath(configuration);
-		checkstyleTask.doFirst(new Action<Task>() {
+		ConventionMapping taskMapping = checkstyleTask.getConventionMapping();
+		taskMapping.map("config", new Callable<TextResource>() {
 			@Override
-			public void execute(Task task) {
+			public TextResource call() throws Exception {
 				Logger logger = project.getLogger();
-				if (checkstyleTask.getConfig() != null) {
-					logger.debug("checkstyle config is not null");
-					return;
+				File defaultCheckstyleFile = project.file("config/checkstyle/nohttp/nohttp-checkstyle.xml");
+				if (defaultCheckstyleFile.exists()) {
+					logger.debug("Found default checkstyle configuration, so configuring checkstyleTask to use it");
+					return project.getResources().getText().fromFile(defaultCheckstyleFile);
 				}
-				logger.debug("checkstyle config is null, so defaulting it");
-				// FIXME: Default from configuration vs classpath
+				logger.debug("No checkstyle configuration provided, so using the default.");
 				URL resource = getClass().getResource(
 						"/io/spring/nohttp/checkstyle/default-nohttp-checkstyle.xml");
-				TextResource defaultResource = NoHttpPlugin.this.project.getResources().getText().fromUri(resource);
-				checkstyleTask.setConfig(defaultResource);
+				return project.getResources().getText().fromUri(resource);
 			}
 		});
 	}
