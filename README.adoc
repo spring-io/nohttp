@@ -1,0 +1,6 @@
+Validates that http is not used unless it is whitelisted. The default whitelist includes:
+
+* localhost
+* https://tools.ietf.org/html/rfc2606 (i.e. tld of .test, .example., invalid, .localhost)
+* URLs that https is not properly supported
+* XML Namespace names (not the locations)
