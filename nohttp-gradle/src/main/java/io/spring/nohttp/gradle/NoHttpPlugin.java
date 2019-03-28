@@ -19,7 +19,11 @@ public class NoHttpPlugin implements Plugin<Project> {
 		this.project = project;
 		project.getPluginManager().apply("checkstyle");
 		Configuration checkstyleConfiguration = project.getConfigurations().getByName("checkstyle");
-		configureDefaultDependenciesForProject(checkstyleConfiguration);
+
+		Configuration noHttpConfiguration = project.getConfigurations().create("nohttp");
+		checkstyleConfiguration.extendsFrom(noHttpConfiguration);
+
+		configureDefaultDependenciesForProject(noHttpConfiguration);
 		createCheckstyleTaskForProject(checkstyleConfiguration);
 	}
 
