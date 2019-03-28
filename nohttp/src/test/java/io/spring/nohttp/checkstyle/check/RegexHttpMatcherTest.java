@@ -52,6 +52,12 @@ public class RegexHttpMatcherTest {
 		assertThat(results).isEmpty();
 	}
 
+	@Test
+	public void findHttpWhenW3Names() {
+		assertWhitelisted("http://www.w3.org/1999/xhtml");
+		assertWhitelisted("http://www.w3.org/2001/XMLSchema-datatypes");
+	}
+
 	// https://tools.ietf.org/html/rfc2606
 
 	@Test
