@@ -45,6 +45,8 @@ public class NoHttpPlugin implements Plugin<Project> {
 				files.exclude("**/build/**");
 				files.exclude(".git/**");
 				files.exclude(".gradle/**");
+				files.exclude(".idea/**");
+				files.exclude("**/*.class");
 			}
 		}));
 		checkstyleTask.setClasspath(project.files());
