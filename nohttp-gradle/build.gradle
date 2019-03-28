@@ -1,0 +1,21 @@
+plugins {
+	id 'java-gradle-plugin'
+	id 'groovy'
+}
+
+apply plugin: 'io.spring.convention.spring-module'
+
+gradlePlugin {
+	plugins {
+		simplePlugin {
+			id = 'io.spring.nohttp'
+			implementationClass = 'io.spring.nohttp.gradle.NoHttpPlugin'
+		}
+	}
+}
+
+dependencies {
+	compile project(':nohttp-checkstyle')
+	testCompile 'junit:junit'
+	testCompile 'org.assertj:assertj-core'
+}
