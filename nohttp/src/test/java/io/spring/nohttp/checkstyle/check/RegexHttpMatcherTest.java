@@ -1,6 +1,7 @@
 package io.spring.nohttp.checkstyle.check;
 
 import io.spring.nohttp.HttpMatchResult;
+import io.spring.nohttp.HttpReplaceResult;
 import io.spring.nohttp.RegexHttpMatcher;
 import org.junit.Test;
 
@@ -272,5 +273,48 @@ public class RegexHttpMatcherTest {
 	public void findHttpWhenNoUrlThenNotFound() {
 		List<HttpMatchResult> results = this.matcher.findHttp("abc def");
 		assertThat(results).isEmpty();
+	}
+
+	// replaceHttp
+
+	@Test
+	public void replaceHttpWhenJustUrlThenHttps() {
+		assertReplaceHttpEquals("http://a.example", "https://a.example");
+	}
+
+	@Test
+	public void replaceHttpWhenMultilineJustUrlsThenHttps() {
+		assertReplaceHttpEquals("http://a.example\nhttp://b.test", "https://a.example\nhttps://b.test");
+	}
+
+	@Test
+	public void replaceHttpWhenSingleUrlThenHttps() {
+		assertReplaceHttpEquals("abc http://a.example def", "abc https://a.example def");
+	}
+
+	@Test
+	public void replaceHttpWhenMultilineThenHttps() {
+		assertReplaceHttpEquals("abc http://a.example def\nghi http://b.test jkl", "abc https://a.example def\nghi https://b.test jkl");
+	}
+
+	@Test
+	public void replaceHttpWhenSingleUrlStartOnlyThenHttps() {
+		assertReplaceHttpEquals("abc http://a.example", "abc https://a.example");
+	}
+
+	@Test
+	public void replaceHttpWhenSingleUrlEndOnlyThenHttps() {
+		assertReplaceHttpEquals("http://a.example def", "https://a.example def");
+	}
+
+	@Test
+	public void replaceHttpWhenMultiUrlThenHttps() {
+		assertReplaceHttpEquals("abc http://a.example def http://b.test ghi", "abc https://a.example def https://b.test ghi");
+	}
+
+	private HttpReplaceResult assertReplaceHttpEquals(String text, String result) {
+		HttpReplaceResult matches = this.matcher.replaceHttp(text);
+		assertThat(matches.getResult()).isEqualTo(result);
+		return matches;
 	}
 }
