@@ -63,7 +63,7 @@ public class NoHttpPlugin implements Plugin<Project> {
 			@Override
 			public Map<String, Object> call() throws Exception {
 				Map<String, Object> configProperties = new HashMap<>();
-				File defaultWhiteListFile = project.file("config/checkstyle/nohttp/whitelist.lines");
+				File defaultWhiteListFile = project.file("etc/nohttp/whitelist.lines");
 				if (defaultWhiteListFile.exists()) {
 					logger.debug("Using whitelist at {}", defaultWhiteListFile);
 					configProperties.put("nohttp.checkstyle.whitelistFileName", defaultWhiteListFile);
@@ -74,7 +74,7 @@ public class NoHttpPlugin implements Plugin<Project> {
 		taskMapping.map("config", new Callable<TextResource>() {
 			@Override
 			public TextResource call() throws Exception {
-				File defaultCheckstyleFile = project.file("config/checkstyle/nohttp/nohttp-checkstyle.xml");
+				File defaultCheckstyleFile = project.file("etc/nohttp/checkstyle.xml");
 				if (defaultCheckstyleFile.exists()) {
 					logger.debug("Found default checkstyle configuration, so configuring checkstyleTask to use it");
 					return project.getResources().getText().fromFile(defaultCheckstyleFile);
