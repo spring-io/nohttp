@@ -1,0 +1,15 @@
+plugins {
+	id 'application'
+}
+
+apply plugin: 'io.spring.convention.spring-module'
+
+dependencies {
+	compile project(':nohttp')
+	testCompile 'junit:junit'
+	testCompile 'org.assertj:assertj-core'
+}
+
+application {
+	mainClassName = 'io.spring.nohttp.cli.ReplaceFilesMain'
+}

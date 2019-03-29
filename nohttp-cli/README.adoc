@@ -1,0 +1,55 @@
+This is a utility for finding and replacing http URLs. It takes into account whitelisting rules that nohttp uses.
+
+= Usage
+
+The application uses Gradle's https://docs.gradle.org/current/userguide/application_plugin.html[Application Plugin].
+This summarizes the behavior, but for additional details read about the plugin in the link above.
+
+== Installing
+
+To use it first install the app
+
+[source,bash]
+----
+./gradlew :nohttp-cli:installDist
+----
+
+The shell script is now available at `nohttp-cli/build/install/nohttp-cli/bin/nohttp-cli`.
+Our guide will only type in `nohttp-cli` but you should type in the absolute path.
+
+== Running
+
+It is best to run this in a folder that does not have any files with build output.
+If you use git, a great way to ensure that there are no build output is to do a fresh clone.
+Alternatively, you can remove all files not added to git using `git clean -dfx`.
+Keep in mind this may delete things you want (i.e. IDE related files).
+
+=== Current Working Directory
+
+The easiest approach is to run the application with no arguments.
+This will attempt to find all text based files in the current directory.
+The process for checking if it is a text file uses a native invocation of `grep`.
+If you cannot run `grep`, then you should try Specifying Paths option below.
+
+You can try to process all text based files in the current directory by running the script with no arguments.
+
+[source,bash]
+----
+<path>/nohttp-cli
+----
+
+=== Specifying Paths
+
+You can also specify one or more paths as arguments that you want to process explicitly.
+This allows you to customize what is processed.
+Any directory will be traversed and all files in the directory will be processed.
+You can specify absolute paths or paths that are relative to the current working directory.
+If you need finer grain control you can specify individual files.
+
+This sample shows how to process the `build.gradle` file and all the files within `src/main/java`.
+
+[source,bash]
+----
+<path>/nohttp-cli /home/rwinch/code/spring-io/nohttp/nohttp-cli/build/install/nohttp-cli/bin/nohttp-cli build.gradle src/main/java/
+----
+
