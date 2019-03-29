@@ -7,9 +7,10 @@ import org.gradle.api.artifacts.Configuration;
 import org.gradle.api.artifacts.DependencySet;
 import org.gradle.api.file.ConfigurableFileTree;
 import org.gradle.api.internal.ConventionMapping;
-import org.gradle.api.logging.Logger;
 import org.gradle.api.plugins.quality.Checkstyle;
 import org.gradle.api.resources.TextResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.net.URL;
@@ -22,6 +23,8 @@ import java.util.concurrent.Callable;
  * @author Rob Winch
  */
 public class NoHttpPlugin implements Plugin<Project> {
+	private Logger logger = LoggerFactory.getLogger(getClass());
+
 	private Project project;
 
 	@Override
@@ -39,7 +42,6 @@ public class NoHttpPlugin implements Plugin<Project> {
 
 	private void createCheckstyleTaskForProject(Configuration configuration) {
 		Project project = this.project;
-		Logger logger = project.getLogger();
 		Checkstyle checkstyleTask = project
 				.getTasks().create("nohttpCheckstyle", Checkstyle.class);
 
