@@ -13,6 +13,9 @@ import org.gradle.api.resources.TextResource;
 
 import java.io.File;
 import java.net.URL;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Callable;
 
 /**
@@ -36,6 +39,7 @@ public class NoHttpPlugin implements Plugin<Project> {
 
 	private void createCheckstyleTaskForProject(Configuration configuration) {
 		Project project = this.project;
+		Logger logger = project.getLogger();
 		Checkstyle checkstyleTask = project
 				.getTasks().create("nohttpCheckstyle", Checkstyle.class);
 
@@ -53,10 +57,21 @@ public class NoHttpPlugin implements Plugin<Project> {
 		checkstyleTask.setClasspath(project.files());
 		checkstyleTask.setClasspath(configuration);
 		ConventionMapping taskMapping = checkstyleTask.getConventionMapping();
+		taskMapping.map("configProperties", new Callable<Map<String, Object>>() {
+			@Override
+			public Map<String, Object> call() throws Exception {
+				Map<String, Object> configProperties = new HashMap<>();
+				File defaultWhiteListFile = project.file("config/checkstyle/nohttp/whitelist.lines");
+				if (defaultWhiteListFile.exists()) {
+					logger.debug("Using whitelist at {}", defaultWhiteListFile);
+					configProperties.put("nohttp.checkstyle.whitelistFileName", defaultWhiteListFile);
+				}
+				return configProperties;
+			}
+		});
 		taskMapping.map("config", new Callable<TextResource>() {
 			@Override
 			public TextResource call() throws Exception {
-				Logger logger = project.getLogger();
 				File defaultCheckstyleFile = project.file("config/checkstyle/nohttp/nohttp-checkstyle.xml");
 				if (defaultCheckstyleFile.exists()) {
 					logger.debug("Found default checkstyle configuration, so configuring checkstyleTask to use it");
