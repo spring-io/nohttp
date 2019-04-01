@@ -14,3 +14,5 @@ The project is split up into the following modules:
 * https://github.com/spring-io/nohttp/tree/master/nohttp-cli[nohttp-cli] - a thin wrapper around `nohttp` that allows running it from the command line
 * https://github.com/spring-io/nohttp/tree/master/nohttp-checkstyle[nohttp-checkstyle] - provides https://checkstyle.org/[checkstyle] integration with nohttp
 * https://github.com/spring-io/nohttp/tree/master/nohttp-gradle[nohttp-gradle] - provides https://gradle.org[Gradle] integration with nohttp
+* https://github.com/spring-io/nohttp/tree/master/samples[samples] - provides samples of using nohttp
+
