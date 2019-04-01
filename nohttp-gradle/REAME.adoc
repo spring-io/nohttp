@@ -31,4 +31,16 @@ repositories {
 apply plugin: 'io.spring.nohttp'
 ----
 
-If you need to provide a custom whitelist, you can create a whitelist
+== Additional Whitelist
+
+If you need to provide a custom whitelist, you can create a https://github.com/spring-io/nohttp/tree/master/nohttp#regexpredicatecreatewhitelistinputstream[whitelist with RegexPredicate] by adding a file at `config/nohttp/whitelist.lines`.
+For example:
+
+.config/nohttp/whitelist.lines
+[source,regex]
+----
+// Ignore Maven XML Namespace id of http://maven.apache.org/POM/4.0.0
+^http://maven\.apache\.org/POM/4.0.0$
+// Whitelist Company XML namespace names but not the locations (which end in .xsd)
+^http://mycompany.test/xml/.*(?<!\.(xsd))$
+----
