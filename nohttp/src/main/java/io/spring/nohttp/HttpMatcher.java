@@ -19,8 +19,15 @@ package io.spring.nohttp;
 import java.util.List;
 
 /**
+ * Finds http:// URLs within text
+ *
  * @author Rob Winch
  */
 public interface HttpMatcher {
+	/**
+	 * Finds all http:// URLs within text
+	 * @param text The text to find http:// URLs within
+	 * @return the {@link HttpMatchResult}s that point to where the matches were found.
+	 */
 	List<HttpMatchResult> findHttp(String text);
 }

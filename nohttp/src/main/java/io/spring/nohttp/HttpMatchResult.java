@@ -17,6 +17,7 @@
 package io.spring.nohttp;
 
 /**
+ * Represents where an http:// result which includes the http:// URL that was found and the index (starting at 0) where the result was found.
  * @author Rob Winch
  */
 public class HttpMatchResult {
@@ -24,15 +25,28 @@ public class HttpMatchResult {
 
 	private final int start;
 
+	/**
+	 * Creates a new instance
+	 * @param httpUrl the http:// URL that was found
+	 * @param start the index (starting at 0) where the http:// URL was found
+	 */
 	public HttpMatchResult(String httpUrl, int start) {
 		this.httpUrl = httpUrl;
 		this.start = start;
 	}
 
+	/**
+	 * The http:// URL that was found
+	 * @return The http:// URL that was found
+	 */
 	public String getHttpUrl() {
 		return this.httpUrl;
 	}
 
+	/**
+	 * Gets the index (starting at 0) where the http:// URL was found
+	 * @return Gets the index (starting at 0) where the http:// URL was found
+	 */
 	public int getStart() {
 		return this.start;
 	}

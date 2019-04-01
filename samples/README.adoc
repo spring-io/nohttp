@@ -1,0 +1,4 @@
+Samples of using nohttp
+
+* https://github.com/spring-io/nohttp/tree/master/nohttp-gradle[nohttp-gradle] - Demos how to use nohttp with Gradle
+* https://github.com/spring-io/nohttp/tree/master/nohttp-maven[nohttp-maven] - Demos how to use nohttp with Maven

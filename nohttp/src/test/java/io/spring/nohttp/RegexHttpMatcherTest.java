@@ -14,165 +14,47 @@
  * limitations under the License.
  */
 
-package io.spring.nohttp.checkstyle.check;
+package io.spring.nohttp;
 
-import io.spring.nohttp.HttpMatchResult;
-import io.spring.nohttp.HttpReplaceResult;
-import io.spring.nohttp.RegexHttpMatcher;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Rob Winch
  */
+@RunWith(MockitoJUnitRunner.class)
 public class RegexHttpMatcherTest {
-	private RegexHttpMatcher matcher = new RegexHttpMatcher(url -> false);
+	@Mock
+	private Predicate<String> whitelisted;
 
-	private RegexHttpMatcher whitelisted = new RegexHttpMatcher();
+	private RegexHttpMatcher matcher;
+
+	@Before
+	public void setup() {
+		this.matcher = new RegexHttpMatcher(this.whitelisted);
+	}
 
 	@Test
-	public void findHttpWhenWhitelistSpringBeanSchemaName() {
-		List<HttpMatchResult> results = this.whitelisted.findHttp("http://www.springframework.org/schema/beans");
+	public void findWhenHttpsThenNotFound() {
+		List<HttpMatchResult> results = this.matcher.findHttp("https://example.com");
 		assertThat(results).isEmpty();
 	}
 
 	@Test
-	public void findHttpWhenWhitelistSpringBeanSchemaLocation() {
-		List<HttpMatchResult> results = this.whitelisted.findHttp("http://www.springframework.org/schema/beans/spring-beans.xsd");
-		assertThat(results).hasSize(1);
-	}
-
-	@Test
-	public void findHttpWhenWhitelistSpringBeanDtdLocation() {
-		List<HttpMatchResult> results = this.whitelisted.findHttp("http://www.springframework.org/dtd/spring-beans-2.0.dtd");
-		assertThat(results).hasSize(1);
-	}
-
-	@Test
-	public void findHttpWhenWhitelistAndExampleThenFound() {
-		List<HttpMatchResult> results = this.whitelisted.findHttp("http://example.com");
-		assertThat(results).hasSize(1);
-	}
-
-	@Test
-	public void findHttpWhenWhitelistLocalhost() {
-		List<HttpMatchResult> results = this.whitelisted.findHttp("http://localhost");
+	public void findWhenWhitelistedThenNotFound() {
+		String url = "http://example.com";
+		when(this.whitelisted.test(url)).thenReturn(true);
+		List<HttpMatchResult> results = this.matcher.findHttp(url);
 		assertThat(results).isEmpty();
-	}
-
-	@Test
-	public void findHttpWhenNoDot() {
-		List<HttpMatchResult> results = this.whitelisted.findHttp("http://foo");
-		assertThat(results).isEmpty();
-	}
-
-	@Test
-	public void findHttpWhenW3Names() {
-		assertWhitelisted("http://www.w3.org/1999/xhtml");
-		assertWhitelisted("http://www.w3.org/2001/XMLSchema-datatypes");
-	}
-
-	// https://tools.ietf.org/html/rfc2606
-
-	@Test
-	public void findTestTldIsWhitelisted() {
-		assertDomainAndSubdomainsWhitelisted("foo.test");
-	}
-
-	@Test
-	public void findExampleTldIsWhitelisted() {
-		assertDomainAndSubdomainsWhitelisted("foo.example");
-	}
-
-	@Test
-	public void findInvalidTldIsWhitelisted() {
-		assertDomainAndSubdomainsWhitelisted("foo.invalid");
-	}
-
-	@Test
-	public void findLocalhostTldIsWhitelisted() {
-		assertDomainAndSubdomainsWhitelisted("foo.localhost");
-	}
-
-	// no https
-
-	@Test
-	public void findHttpWhenSourceForge() {
-		assertWhitelisted(" http://iharder.sourceforge.net/current/java/base64/");
-	}
-
-	@Test
-	public void findHttpWhenOpensecurityResearchThenWhitelisted() {
-		assertDomainAndSubdomainsWhitelisted("blog.opensecurityresearch.com");
-		assertDomainAndSubdomainsWhitelisted("opensecurityresearch.com");
-	}
-
-	@Test
-	public void findHttpWhenWebappsecThenWhitelisted() {
-		assertDomainAndSubdomainsWhitelisted("lists.webappsec.org");
-		assertDomainAndSubdomainsWhitelisted("webappsec.org");
-	}
-
-	@Test
-	public void findHttpWhenJaspanThenWhitelisted() {
-		assertDomainAndSubdomainsWhitelisted("jaspan.com");
-	}
-
-	@Test
-	public void findHttpWhenCsBerkelyThenWhitelisted() {
-		assertDomainAndSubdomainsWhitelisted("cs.berkeley.edu");
-		assertDomainAndSubdomainsWhitelisted("webblaze.cs.berkeley.edu");
-	}
-
-	@Test
-	public void findHttpWhenNabbleThenWhitelisted() {
-		assertDomainAndSubdomainsWhitelisted("bouncy-castle.1462172.n4.nabble.com");
-		assertDomainAndSubdomainsWhitelisted("nabble.com");
-	}
-
-	@Test
-	public void findHttpWhenZytraxThenWhitelisted() {
-		assertDomainAndSubdomainsWhitelisted("www.zytrax.com");
-		assertDomainAndSubdomainsWhitelisted("zytrax.com");
-	}
-
-	public void assertDomainAndSubdomainsWhitelisted(String domain) {
-		assertWhitelisted("http://" + domain);
-		assertWhitelisted("http://" + domain + "/");
-		assertWhitelisted("http://" + domain + "/a/b");
-		assertNotWhitelisted("http://example.com/" + domain);
-	}
-
-	@Test
-	public void findExampleWhitelisted() {
-		assertWhitelisted("http://foo.example");
-	}
-
-	@Test
-	public void findHttpWhenNoDotAndSlash() {
-		List<HttpMatchResult> results = this.whitelisted.findHttp("http://foo/");
-		assertThat(results).isEmpty();
-	}
-
-	@Test
-	public void findHttpWhenWhitelistAll() {
-		RegexHttpMatcher whitelisted = new RegexHttpMatcher(url -> true);
-		List<HttpMatchResult> results = whitelisted.findHttp("http://example.com");
-		assertThat(results).isEmpty();
-	}
-
-	private void assertWhitelisted(String url) {
-		List<HttpMatchResult> results = this.whitelisted.findHttp(url);
-		assertThat(results).describedAs(url + " should be whitelisted but is not").isEmpty();
-	}
-
-	private List<HttpMatchResult> assertNotWhitelisted(String url) {
-		List<HttpMatchResult> results = this.whitelisted.findHttp(url);
-		assertThat(results).describedAs(url + " should NOT be whitelisted but is").hasSize(1);
-		return results;
 	}
 
 	@Test
