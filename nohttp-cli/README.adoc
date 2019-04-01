@@ -50,6 +50,6 @@ This sample shows how to process the `build.gradle` file and all the files withi
 
 [source,bash]
 ----
-<path>/nohttp-cli /home/rwinch/code/spring-io/nohttp/nohttp-cli/build/install/nohttp-cli/bin/nohttp-cli build.gradle src/main/java/
+<path>/nohttp-cli build.gradle src/main/java/
 ----
 
