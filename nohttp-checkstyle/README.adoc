@@ -1,0 +1,53 @@
+This project allows adding checks for URLs with the `http://` scheme while ignoring URLs that cannot be `https://`.
+
+= NoHttpCheck
+
+This verifies that your build has no `http://` URLs but ignores URLs that cannot be `https://`.
+
+[NOTE]
+====
+If you are using https://gradle.org/[Gradle], see https://github.com/spring-io/nohttp/tree/master/nohttp-gradle[nohttp-gradle] project.
+====
+
+While many checkstyle configurations only impact your source and resources, it is important that no http checks are performed on all the files within your repository.
+For example, you will want to ensure that you validate your build files like `pom.xml` and `build.gradle`.
+An example configuration can be found below:
+
+[source,xml]
+----
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC "-//Puppy Crawl//DTD Check Configuration 1.3//EN"
+        "https://www.puppycrawl.com/dtds/configuration_1_3.dtd">
+<module name="Checker">
+
+    <!-- Configure checker to use UTF-8 encoding -->
+    <property name="charset" value="UTF-8"/>
+    <!-- Configure checker to run on files with these extensions -->
+    <property name="fileExtensions" value=""/>
+
+    <module name="io.spring.nohttp.checkstyle.check.NoHttpCheck">
+    </module>
+</module>
+----
+
+If you find the need to exclude additional URL patterns, you can do so by including.
+
+
+[source,xml]
+----
+<module name="io.spring.nohttp.checkstyle.check.NoHttpCheck">
+    <!-- the file name to load for white listing. If an empty String nothing is used -->
+    <property name="whitelistFileName" value="etc/nohttp/whitelist.lines"/>
+</module>
+----
+
+It is important to note that you use http://checkstyle.sourceforge.net/config.html#Properties[checkstyle properties] to load the file as well.
+If you want to make the property optional, you can specify a default of empty String in which case the additional whitelist is ignored.
+
+[source,xml]
+----
+<module name="io.spring.nohttp.checkstyle.check.NoHttpCheck">
+    <!-- the file name to load for white listing. If an empty String nothing is used -->
+    <property name="whitelistFileName" value="${nohttp.checkstyle.whitelistFileName}" default=""/>
+</module>
+----

@@ -1,1 +1,1 @@
-Configures Grale's https://docs.gradle.org/current/dsl/org.gradle.api.plugins.quality.Checkstyle.html[Checkstyle] task
+Configures Gradle's https://docs.gradle.org/current/dsl/org.gradle.api.plugins.quality.Checkstyle.html[Checkstyle] task to verify there are no restricted usages of `http://`.

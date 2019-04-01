@@ -1,0 +1,41 @@
+Allows finding and replacing `http://` with exclusions on URLs that `https://` cannot be used.
+
+= nohttp
+
+Today it is important for everything, https://www.troyhunt.com/heres-why-your-static-website-needs-https/[including static sites], to be over https.
+It can be difficult to switch to `https://` and then to maintain using `https://`.
+This is the core project that allows finding and replacing `http://` URLs.
+For additional integrations refer to https://github.com/spring-io/nohttp
+
+== Thought Process
+
+The recommended process for determining if it is ok to use `http://` is:
+
+* If `https` is possible then use `https`
+* If you cannot use `https`, then consider the following:
+  * If your project uses the URL to make a request over a network, then you need to use `https`
+  * It is acceptable to use `localhost` to make a request using `http` since it does not leave the machine
+  * If you need to test URLs that use `http`, then consider using TLD of `test`, `example`, `invalid`, or `localhost` as defined by https://tools.ietf.org/html/rfc2606[rfc2606].
+  * Links that users click on should prefer `https`, but if the site does not support `http` you may decide to whitelist the URL
+  * If the link is an XML namespace name (which is just an identifier), then you can use `http`. The XML namespace location should still be `https`.
+
+== Whitelisted HTTP URLs
+
+There are times when URLs cannot use `https://` that are beyond our control.
+Fortunately, nohttp provides a default whitelist and whitelisting additional URLs.
+
+=== Default Whitelist
+
+The default whitelist includes a whitelist that impacts these primary categories:
+
+* localhost
+* URLs that use a TLD defined in https://tools.ietf.org/html/rfc2606 (i.e. tld of test, .example, invalid, localhost)
+* XML Namespace names (not the locations)
+* Java specific URLs that do not work over `http`.
+For example, Java Properties http://hg.openjdk.java.net/jdk8u/jdk8u/jdk/file/43ca3768126e/src/share/classes/sun/util/xml/PlatformXmlPropertiesProvider.java#l198[hard codes] using `http`.
+
+=== Adding Custom Rules
+
+This project provides a default whitelist.
+However, other projects may end up with their own usecases.
+Fortunately, nohttp supports custom whitelist as well.

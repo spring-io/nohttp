@@ -5,5 +5,4 @@ package io.spring.nohttp;
  */
 public interface HttpReplacer {
 	HttpReplaceResult replaceHttp(String text);
-
 }

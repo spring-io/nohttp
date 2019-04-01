@@ -1,6 +1,16 @@
-Validates that http is not used unless it is whitelisted. The default whitelist includes:
+A project for ensuring that `http://` is used for everything except where `https://` cannot be used.
 
-* localhost
-* https://tools.ietf.org/html/rfc2606 (i.e. tld of .test, .example., invalid, .localhost)
-* URLs that https is not properly supported
-* XML Namespace names (not the locations)
+= Introduction
+
+Today it is important for everything, https://www.troyhunt.com/heres-why-your-static-website-needs-https/[including static sites], to be over https.
+It can be difficult to switch to `https://` and then to maintain using `https://`.
+This project aims to help at both.
+
+== Modules
+
+The project is split up into the following modules:
+
+* https://github.com/spring-io/nohttp/tree/master/nohttp[nohttp] - the core project that allows finding and replacing `http://` URLs
+* https://github.com/spring-io/nohttp/tree/master/nohttp-cli[nohttp-cli] - a thin wrapper around `nohttp` that allows running it from the command line
+* https://github.com/spring-io/nohttp/tree/master/nohttp-checkstyle[nohttp-checkstyle] - provides https://checkstyle.org/[checkstyle] integration with nohttp
+* https://github.com/spring-io/nohttp/tree/master/nohttp-gradle[nohttp-gradle] - provides https://gradle.org[Gradle] integration with nohttp

@@ -10,11 +10,20 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
+ * An API that is typically used with {@link RegexHttpMatcher} that allows whitelisting
+ * URLs using a provided list of {@link Pattern}s.
+ *
  * @author Rob Winch
+ * @see RegexHttpMatcher
+ * @see #createDefaultWhitelistPatterns(InputStream)
  */
 public class RegexPredicate implements Predicate<String> {
 	private final List<Pattern> patterns;
 
+	/**
+	 * Creates a whitelist with the provided {@link Pattern}s
+	 * @param patterns the patterns to use.
+	 */
 	public RegexPredicate(List<Pattern> patterns) {
 		if (patterns == null || patterns.isEmpty()) {
 			throw new IllegalArgumentException("patterns cannot be null or empty. Got " + patterns);
@@ -28,11 +37,48 @@ public class RegexPredicate implements Predicate<String> {
 				.anyMatch(p -> p.matcher(httpUrl).matches());
 	}
 
-	static Predicate<String> createDefaultWhitelist() {
+	/**
+	 * Creates an instance that uses the default whitelist. The whitelist is expected to
+	 * be updated in upcoming releases, but generally contains
+	 *
+	 * <ul>
+	 *     <li>localhost</li>
+	 *     <li>URLs that use a TLD defined in https://tools.ietf.org/html/rfc2606 (i.e. tld of test, .example, invalid, localhost)</li>
+	 *     <li>XML Namespace names (not the locations)</li>
+	 *     <li>Java specific URLs that do not work over http. For example, Java Properties
+	 *     <a href="http://hg.openjdk.java.net/jdk8u/jdk8u/jdk/file/43ca3768126e/src/share/classes/sun/util/xml/PlatformXmlPropertiesProvider.java#l198">hard codes</a> using http.
+	 *     </li>
+	 * </ul>
+	 * @return
+	 */
+	public static Predicate<String> createDefaultWhitelist() {
 		InputStream resource = RegexPredicate.class.getResourceAsStream("whitelist.txt");
 		return createWhitelist(resource);
 	}
 
+	/**
+	 * Allows creating a instance of {@link RegexHttpMatcher} from an {@link InputStream}.
+	 * The format of the {@link InputStream} contains regular expressions of what URLs
+	 * should be whitelisted such that:
+	 *
+	 * <ul>
+	 *     <li>Each line contains a regular expression that should be whitelisted</li>
+	 *     <li>Lines can begin with // to create a comment within the file</li>
+	 *     <li>Lines are trimmed for whitespace</li>
+	 *     <li>Lines that are empty are ignored</li>
+	 * </ul>
+	 *
+	 * An example file can be found below:
+	 *
+	 * <pre>
+	 * // Ignore Maven XML Namespace id of http://maven.apache.org/POM/4.0.0
+	 * ^http://maven\.apache\.org/POM/4.0.0$
+	 * // Whitelist Company XML namespace names but not the locations (which end in .xsd)
+	 * ^http://mycompany.test/xml/.*(?<!\.(xsd))$
+	 * </pre>
+	 * @param resource
+	 * @return
+	 */
 	public static Predicate<String> createWhitelist(InputStream resource) {
 		List<Pattern> patterns = createDefaultWhitelistPatterns(resource);
 		return httpUrl -> patterns.stream()
