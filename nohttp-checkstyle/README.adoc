@@ -11,6 +11,14 @@ If you are using https://gradle.org/[Gradle], see https://github.com/spring-io/n
 
 While many checkstyle configurations only impact your source and resources, it is important that no http checks are performed on all the files within your repository.
 For example, you will want to ensure that you validate your build files like `pom.xml` and `build.gradle`.
+
+== Samples
+
+* https://github.com/spring-io/nohttp/tree/master/samples/nohttp-gradle-sample[nohttp-gradle-sample] - Demonstrates using nohttp with Gradle
+* https://github.com/spring-io/nohttp/tree/master/samples/nohttp-maven-sample[nohttp-maven-sample] - Demonstrates using nohttp with Maven
+
+== Configurations
+
 An example configuration can be found below:
 
 [source,xml]

@@ -1,1 +1,34 @@
+= nohttp-gradle
+
 Configures Gradle's https://docs.gradle.org/current/dsl/org.gradle.api.plugins.quality.Checkstyle.html[Checkstyle] task to verify there are no restricted usages of `http://`.
+
+== Sample
+
+You can find a working sample at https://github.com/spring-io/nohttp/tree/master/samples/nohttp-gradle-sample[nohttp-gradle-sample].
+
+== Configuration
+
+In it's simplest form, you just need to add the Plugin to your build.
+
+For example:
+
+[source,groovy]
+----
+buildscript {
+	repositories {
+		maven { url 'https://repo.spring.io/libs-snapshot' }
+	}
+	dependencies {
+		classpath 'io.spring.nohttp:nohttp-gradle:0.0.1.BUILD-SNAPSHOT'
+	}
+}
+
+repositories {
+	mavenCentral()
+	maven { url 'https://repo.spring.io/libs-snapshot' }
+}
+
+apply plugin: 'io.spring.nohttp'
+----
+
+If you need to provide a custom whitelist, you can create a whitelist

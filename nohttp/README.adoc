@@ -39,3 +39,27 @@ For example, Java Properties http://hg.openjdk.java.net/jdk8u/jdk8u/jdk/file/43c
 This project provides a default whitelist.
 However, other projects may end up with their own usecases.
 Fortunately, nohttp supports custom whitelist as well.
+
+==== RegexHttpMatcher.addHttpUrlWhitelist(Predicate<String>)
+
+You can invoke `RegexHttpMatcher.addHttpUrlWhitelist(Predicate<String>)` to add whitelists to the existing whitelist.
+The input to the `Predicate` is the URL that was found and should be checked as whitelisted or not.
+
+==== RegexPredicate.createWhitelist(InputStream)
+The simplest way to add custom whitelist is to use `RegexPredicate.createWhitelist(InputStream)`.
+The format of the InputStream is defined as:
+
+* Each line contains a regular expression that should be whitelisted
+* Lines can begin with `//` to create a comment within the file
+* Lines are trimmed for whitespace
+* Lines that are empty are ignored
+
+For example:
+
+[source,regex]
+----
+// Ignore Maven XML Namespace id of http://maven.apache.org/POM/4.0.0
+^http://maven\.apache\.org/POM/4.0.0$
+// Whitelist Company XML namespace names but not the locations (which end in .xsd)
+^http://mycompany.test/xml/.*(?<!\.(xsd))$
+----

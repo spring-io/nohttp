@@ -27,6 +27,7 @@ import java.util.regex.Pattern;
 
 /**
  * @author Rob Winch
+ * @see RegexPredicate
  */
 public class RegexHttpMatcher implements HttpMatcher, HttpReplacer {
 	private Pattern pattern = Pattern.compile("\\b(http://[-a-zA-Z0-9+&@/%?=~_|!:,.;]*[-a-zA-Z0-9+&@/%=~_|])");
