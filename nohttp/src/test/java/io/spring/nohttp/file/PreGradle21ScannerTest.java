@@ -116,6 +116,16 @@ public class PreGradle21ScannerTest {
 		assertThat(this.fileNames).isEmpty();
 	}
 
+	@Test
+	public void scanWhenNoDotGradleThenFindsNone() throws IOException {
+		File dir = new File(SOURCES_DIR, "nodotgradlefiles");
+
+		PreGradle21Scanner.create(dir)
+				.scan(this::collectFileNames);
+
+		assertThat(this.fileNames).isEmpty();
+	}
+
 	private void collectFileNames(File file) {
 		this.fileNames.add(file.getName());
 	}
