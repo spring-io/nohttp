@@ -43,6 +43,17 @@ public class RegexHttpMatcherTest {
 		this.matcher = new RegexHttpMatcher(this.whitelisted);
 	}
 
+	// for .properties files
+	@Test
+	public void findWhenHttpEscapleColonThenFound() {
+		List<HttpMatchResult> results = this.matcher.findHttp("http\\://example.com");
+		assertThat(results).hasSize(1);
+
+		HttpMatchResult result = results.get(0);
+		assertThat(result.getHttpUrl()).isEqualTo("http\\://example.com");
+		assertThat(result.getStart()).isEqualTo(0);
+	}
+
 	@Test
 	public void findWhenHttpsThenNotFound() {
 		List<HttpMatchResult> results = this.matcher.findHttp("https://example.com");
