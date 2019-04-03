@@ -35,17 +35,17 @@ public class RegexHttpMatcher implements HttpMatcher, HttpReplacer {
 
 	private Function<String, String> httpReplacer = httpUrl -> httpUrl.replaceFirst("http", "https");
 
-	private Predicate<String> httpUrlWhitelist;
+	private Predicate<String> whitelist;
 
 	public RegexHttpMatcher() {
 		this(RegexPredicate.createDefaultUrlWhitelist());
 	}
 
-	public RegexHttpMatcher(Predicate<String> httpUrlWhitelist) {
-		if (httpUrlWhitelist == null) {
-			throw new IllegalArgumentException("httpUrlWhitelist cannot be null");
+	public RegexHttpMatcher(Predicate<String> whitelist) {
+		if (whitelist == null) {
+			throw new IllegalArgumentException("whitelist cannot be null");
 		}
-		this.httpUrlWhitelist = httpUrlWhitelist;
+		this.whitelist = whitelist;
 	}
 
 	public void setPattern(Pattern pattern) {
@@ -81,7 +81,7 @@ public class RegexHttpMatcher implements HttpMatcher, HttpReplacer {
 				break;
 			}
 			String httpUrl = matcher.group();
-			if (this.httpUrlWhitelist.test(httpUrl)) {
+			if (this.whitelist.test(httpUrl)) {
 				continue;
 			}
 			try {
@@ -109,22 +109,7 @@ public class RegexHttpMatcher implements HttpMatcher, HttpReplacer {
 		if (whitelist == null) {
 			throw new IllegalArgumentException("whitelist cannot be null");
 		}
-		this.httpUrlWhitelist = this.httpUrlWhitelist.or(whitelist);
-	}
-
-	public static RegexHttpMatcher createGradleDslMatcher() {
-		RegexHttpMatcher matcher = new RegexHttpMatcher(h -> false);
-		matcher.setPattern(Pattern.compile("(mavenCentral\\(\\)|jcenter\\(\\))"));
-		matcher.setHttpReplacer(http -> {
-			if (http.equals("mavenCentral()")) {
-				return "maven { url 'https://repo.maven.apache.org/maven2/' }";
-			} else if (http.equals("jcenter()")) {
-				return "maven { url 'https://jcenter.bintray.com/' }";
-			} else {
-				throw new IllegalArgumentException("Expected either mavenCentral() or jcenter() but got '" + http + "'");
-			}
-		});
-		return matcher;
+		this.whitelist = this.whitelist.or(whitelist);
 	}
 
 	private static class NoOpWriter extends Writer {

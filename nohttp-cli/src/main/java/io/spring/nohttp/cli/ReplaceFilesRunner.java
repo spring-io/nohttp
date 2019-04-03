@@ -16,7 +16,10 @@
 
 package io.spring.nohttp.cli;
 
+import io.spring.nohttp.GradleHttpDsl;
 import io.spring.nohttp.HttpMatchResult;
+import io.spring.nohttp.HttpMatcher;
+import io.spring.nohttp.HttpReplacer;
 import io.spring.nohttp.RegexHttpMatcher;
 import io.spring.nohttp.RegexPredicate;
 import io.spring.nohttp.file.DirScanner;
@@ -85,7 +88,7 @@ public class ReplaceFilesRunner implements CommandLineRunner, Callable<Void> {
 	public Void call() throws Exception {
 		RegexHttpMatcher matcher = createMatcher();
 
-		HttpProcessor processor = createHttpProcessor(matcher);
+		HttpProcessor processor = createHttpProcessor(matcher, matcher);
 
 		DirScanner.create(this.dir)
 			.textFiles(this.textFilesOnly)
@@ -98,8 +101,9 @@ public class ReplaceFilesRunner implements CommandLineRunner, Callable<Void> {
 		System.out.println();
 		System.out.println("Looking for old Gradle DSLs that use http");
 		System.out.println();
-		RegexHttpMatcher gradleMatcher = RegexHttpMatcher.createGradleDslMatcher();
-		HttpProcessor gradleProcessor = createHttpProcessor(gradleMatcher);
+		HttpMatcher gradleMatcher = GradleHttpDsl.createMatcher();
+		HttpReplacer gradleReplacer = GradleHttpDsl.createReplacer();
+		HttpProcessor gradleProcessor = createHttpProcessor(gradleMatcher, gradleReplacer);
 		PreGradle21Scanner gradleScanner = PreGradle21Scanner.create(this.dir);
 
 		gradleScanner.scan(withHttpProcessor(gradleProcessor));
@@ -110,9 +114,9 @@ public class ReplaceFilesRunner implements CommandLineRunner, Callable<Void> {
 		return null;
 	}
 
-	private HttpProcessor createHttpProcessor(RegexHttpMatcher matcher) {
+	private HttpProcessor createHttpProcessor(HttpMatcher matcher, HttpReplacer replacer) {
 		return isReplace() ?
-				new HttpReplacerProcessor(matcher) :
+				new HttpReplacerProcessor(replacer) :
 				new HttpMatcherProcessor(matcher);
 	}
 

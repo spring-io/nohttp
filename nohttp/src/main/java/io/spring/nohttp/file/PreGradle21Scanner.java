@@ -29,6 +29,7 @@ import static io.spring.nohttp.file.FilePredicates.fileHasName;
  * 2.1 and were switched to https after.
  *
  * @author Rob Winch
+ * @see io.spring.nohttp.GradleHttpDsl
  */
 public class PreGradle21Scanner {
 
