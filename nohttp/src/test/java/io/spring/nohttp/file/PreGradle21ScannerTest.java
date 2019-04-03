@@ -106,6 +106,16 @@ public class PreGradle21ScannerTest {
 		assertThat(this.fileNames).isEmpty();
 	}
 
+	@Test
+	public void scanWhenNoWrapperThenFindsNone() throws IOException {
+		File dir = new File(SOURCES_DIR, "nogradlewrapper");
+
+		PreGradle21Scanner.create(dir)
+				.scan(this::collectFileNames);
+
+		assertThat(this.fileNames).isEmpty();
+	}
+
 	private void collectFileNames(File file) {
 		this.fileNames.add(file.getName());
 	}
