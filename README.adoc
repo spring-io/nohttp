@@ -1,4 +1,4 @@
-A project for ensuring that `http://` is used for everything except where `https://` cannot be used.
+A project for ensuring that `https://` is used for everything except where it is not possible.
 
 = Introduction
 
