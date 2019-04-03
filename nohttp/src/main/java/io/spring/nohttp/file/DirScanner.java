@@ -55,6 +55,9 @@ public class DirScanner {
 	private List<Predicate<File>> excludeFiles = new ArrayList<>();
 
 	private DirScanner(File dir) {
+		if (dir == null) {
+			throw new IllegalArgumentException("dir cannot be null");
+		}
 		if (!dir.isDirectory()) {
 			throw new IllegalArgumentException(dir + " is not a directory");
 		}
@@ -104,6 +107,9 @@ public class DirScanner {
 	 * @return the FileScanner for additional customizations
 	 */
 	public DirScanner excludeDirs(Predicate<File> dirExclusion) {
+		if (dirExclusion == null) {
+			throw new IllegalArgumentException("dirExclusion cannot be null");
+		}
 		this.excludeDirs.add(dirExclusion);
 		return this;
 	}
@@ -114,6 +120,9 @@ public class DirScanner {
 	 * @return the FileScanner for additional customizations
 	 */
 	public DirScanner excludeFiles(Predicate<File> fileExclusion) {
+		if (fileExclusion == null) {
+			throw new IllegalArgumentException("fileExclusion cannot be null");
+		}
 		this.excludeFiles.add(fileExclusion);
 		return this;
 	}
@@ -121,10 +130,13 @@ public class DirScanner {
 	/**
 	 * Scans the directory provided in {@link #create(File)} and passes any matching
 	 * {@link File} to the provided {@link Consumer}
-	 * @param file the {@link Consumer} to process each matching file
+	 * @param fileProcessor the {@link Consumer} to process each matching file
 	 */
-	public void scan(Consumer<File> file) {
-		FileScannerVisitor visitor = new FileScannerVisitor(file);
+	public void scan(Consumer<File> fileProcessor) {
+		if (fileProcessor == null) {
+			throw new IllegalArgumentException("fileProcessor cannot be null");
+		}
+		FileScannerVisitor visitor = new FileScannerVisitor(fileProcessor);
 		try {
 			Files.walkFileTree(this.dir.toPath(), visitor);
 		} catch (IOException e) {
