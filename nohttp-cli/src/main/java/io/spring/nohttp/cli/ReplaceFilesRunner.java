@@ -16,6 +16,7 @@
 
 package io.spring.nohttp.cli;
 
+import io.spring.nohttp.HttpMatchResult;
 import io.spring.nohttp.RegexHttpMatcher;
 import io.spring.nohttp.RegexPredicate;
 import io.spring.nohttp.file.DirScanner;
@@ -61,6 +62,13 @@ public class ReplaceFilesRunner implements CommandLineRunner, Callable<Void> {
 	@CommandLine.Option(names = "-F", paramLabel = "<regex>", description = "Regular expression of files to exclude scanning. Specify multiple times to provide multiple exclusions. Default is no file exclusions.")
 	private List<Pattern> fileExclusions = new ArrayList<>();
 
+	@CommandLine.Option(names = "-M", description = "Disables printing the matches for specific files.", defaultValue = "false")
+	private boolean disablePrintMatches;
+
+
+	@CommandLine.Option(names = "-f", description = "If true, prints out the file names.", defaultValue = "false")
+	private boolean printFiles;
+
 	@CommandLine.Option(names = "-w", description = "The path to file that contains additional whitelist of allowed URLs. The format is a regular expression to whitelist (ignore http URLs) per line.")
 	public void setWhitelistFile(File whitelistFile) throws FileNotFoundException {
 		this.whitelistExclusions = new FileInputStream(whitelistFile);
@@ -83,7 +91,20 @@ public class ReplaceFilesRunner implements CommandLineRunner, Callable<Void> {
 			.textFiles(this.textFilesOnly)
 			.excludeDirs(dirExclusions())
 			.excludeFiles(fileExclusions())
-			.scan(processor::processFile);
+			.scan(file -> {
+
+				List<HttpMatchResult> results = processor.processFile(file);
+
+				if ((!this.disablePrintMatches && !results.isEmpty()) || this.printFiles) {
+					System.out.println("Processing " + file);
+				}
+				if (!this.disablePrintMatches) {
+					results.forEach(r -> {
+						System.out.println("* Found " + r.getHttpUrl());
+					});
+				}
+
+			});
 
 		writeSummaryReport(processor.getHttpUrls());
 

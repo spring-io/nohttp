@@ -71,16 +71,18 @@ You can get help with additional options using `--help`.
 ----
 java -jar $NOHTTP --help
 ...
-Usage: nohttp [-hrTV] [-w=<whitelistFile>] [-D=<regex>]... [-F=<regex>]...
+Usage: nohttp [-fhMrTV] [-w=<whitelistFile>] [-D=<regex>]... [-F=<regex>]...
               [<dir>]
       [<dir>]           The directory to scan. Default is current working directory.
   -D=<regex>            Regular expression of directories to exclude scanning.
                           Specify multiple times to provide multiple exclusions.
                           Default is to exclude .git
+  -f                    If true, prints out the file names.
   -F=<regex>            Regular expression of files to exclude scanning. Specify
                           multiple times to provide multiple exclusions. Default is
                           no file exclusions.
   -h, --help            Show this help message and exit.
+  -M                    Disables printing the matches for specific files.
   -r                    Enables replacing the values that were found. The default is
                           to just find the results.
   -T                    Disable searching only text based files. This is determined

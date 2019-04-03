@@ -31,14 +31,14 @@ public abstract class HttpUrlsProcessor {
 
 	private Set<String> httpUrls = new TreeSet<String>();
 
-	public void processFile(File file) {
-		System.out.println("Processing " + file);
-
+	public List<HttpMatchResult> processFile(File file) {
 		List<HttpMatchResult> matches = processHttpInFile(file);
 
 		matches.forEach(match -> {
 			this.httpUrls.add(match.getHttpUrl());
 		});
+
+		return matches;
 	}
 
 	protected abstract List<HttpMatchResult> processHttpInFile(File file);
