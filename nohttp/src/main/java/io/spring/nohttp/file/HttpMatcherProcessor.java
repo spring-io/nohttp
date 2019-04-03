@@ -37,7 +37,7 @@ public class HttpMatcherProcessor extends HttpProcessor {
 
 	@Override
 	protected List<HttpMatchResult> processHttpInFile(File file) {
-		String originalText = FileUtils.readText(file);
+		String originalText = FileUtils.readTextFrom(file);
 		return this.matcher.findHttp(originalText);
 	}
 }

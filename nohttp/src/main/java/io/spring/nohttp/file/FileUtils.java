@@ -24,22 +24,47 @@ import java.io.Writer;
 import java.nio.file.Files;
 
 /**
+ * Utilities for working with {@link File}s
  * @author Rob Winch
  */
-class FileUtils {
-	static String readText(File file) {
+abstract class FileUtils {
+
+	/**
+	 * Reads text from a file
+	 * @param file the file to read from
+	 * @return the text within the {@link File}
+	 */
+	static String readTextFrom(File file) {
+		assertValidFile(file);
 		try {
 			return new String(Files.readAllBytes(file.toPath()));
 		} catch (IOException e) {
-			throw new RuntimeException("Could not read " + file, e);
+			throw new IllegalArgumentException("Could not read " + file, e);
 		}
 	}
 
+	/**
+	 * Writes text to a file overriding any existing text
+	 * @param text the text to write to the {@link File}
+	 * @param file the {@link File} to write to
+	 */
 	static void writeTextTo(String text, File file) {
+		if (text == null) {
+			throw new IllegalArgumentException("text cannot be null");
+		}
+		assertValidFile(file);
 		try (Writer writer = new OutputStreamWriter(new FileOutputStream(file))) {
 			writer.write(text);
 		} catch (IOException e) {
-			throw new RuntimeException(e);
+			throw new IllegalArgumentException("Could not write to " + file, e);
 		}
 	}
+
+	private static void assertValidFile(File file) {
+		if (file == null) {
+			throw new IllegalArgumentException("file cannot be null");
+		}
+	}
+
+	private FileUtils() {}
 }
