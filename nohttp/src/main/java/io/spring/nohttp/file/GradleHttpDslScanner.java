@@ -17,16 +17,17 @@
 package io.spring.nohttp.file;
 
 import io.spring.nohttp.HttpMatchResult;
-import io.spring.nohttp.RegexHttpMatcher;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.regex.Pattern;
 
 /**
+ * A scanner which finds .gradle files that contain dsl specific references
+ * (i.e. mavenCentral() and jcenter()) that use http. In Gradle >= 2.1 it was updated to
+ * use https, so only older versions of Gradle are processed.
+ *
  * @author Rob Winch
  */
 public class GradleHttpDslScanner {
@@ -34,13 +35,29 @@ public class GradleHttpDslScanner {
 	private final File dir;
 
 	private GradleHttpDslScanner(File dir) {
+		if (dir == null) {
+			throw new IllegalArgumentException("dir cannot be null");
+		}
+		if (!dir.isDirectory()) {
+			throw new IllegalArgumentException(dir + " is not a valid directory");
+		}
 		this.dir = dir;
 	}
 
-	public static GradleHttpDslScanner create(File file) {
-		return new GradleHttpDslScanner(file);
+	/**
+	 * Create a new instance
+	 * @param dir the directory to scan
+	 * @return a {@link GradleHttpDslScanner} to use
+	 */
+	public static GradleHttpDslScanner create(File dir) {
+		return new GradleHttpDslScanner(dir);
 	}
 
+	/**
+	 * Finds all .gradle files in projects using Gradle < 2.1 and allows processing them
+	 * with the provided {@link Consumer}
+	 * @param file the {@link Consumer} to process any .gradle files that were found
+	 */
 	public void scan(Consumer<File> file) {
 		List<File> gradleRootDirs = findLegacyGradleRootDir(this.dir);
 		if (gradleRootDirs.isEmpty()) {
@@ -55,6 +72,12 @@ public class GradleHttpDslScanner {
 		}
 	}
 
+	/**
+	 * Find the Gradle Root Project directory for any Gradle version < 2.1 by looking in
+	 * gradle/wrapper/gradle-wrapper.properties
+	 * @param dir the directory to scan
+	 * @return a List of Gradle root project directories
+	 */
 	private List<File> findLegacyGradleRootDir(File dir) {
 		List<File> gradleRoots = new ArrayList<>();
 
@@ -63,12 +86,17 @@ public class GradleHttpDslScanner {
 				if(!f.getName().equals("gradle-wrapper.properties")) {
 					return true;
 				}
-				String wrapperText = FileUtils.readText(f);
+				String wrapperText = FileUtils.readTextFrom(f);
 				return !(wrapperText.contains("/gradle-0") ||
 						wrapperText.contains("/gradle-1") ||
 						wrapperText.contains("/gradle-2.0"));
 			})
-			.scan(gradleWrapperPropertiesFile -> gradleRoots.add(gradleWrapperPropertiesFile.getParentFile().getParentFile().getParentFile()));
+			.scan(gradleWrapperPropertiesFile -> {
+				File gradleRootDir = gradleWrapperPropertiesFile.getParentFile()
+						.getParentFile().getParentFile();
+				gradleRoots
+						.add(gradleRootDir);
+			});
 
 		return gradleRoots;
 	}
