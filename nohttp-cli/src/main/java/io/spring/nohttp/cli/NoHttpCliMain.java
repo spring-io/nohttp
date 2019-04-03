@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2002-2019 the original author or authors.
  *
@@ -15,14 +14,17 @@
  * limitations under the License.
  */
 
-dependencyManagement {
-	dependencies {
-		dependency 'ch.qos.logback:logback-classic:1.2.3'
-		dependency 'com.puppycrawl.tools:checkstyle:8.18'
-		dependency 'junit:junit:4.12'
-		dependency 'org.assertj:assertj-core:3.11.1'
-		dependency 'org.slf4j:slf4j-api:1.7.26'
-		dependency 'org.springframework:spring-test:5.1.4.RELEASE'
-		dependency 'org.mockito:mockito-core:2.23.4'
+package io.spring.nohttp.cli;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+/**
+ * @author Rob Winch
+ */
+@SpringBootApplication
+public class NoHttpCliMain {
+	public static void main(String[] args) {
+		SpringApplication.run(NoHttpCliMain.class, args);
 	}
 }

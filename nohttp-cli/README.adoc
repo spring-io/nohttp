@@ -1,21 +1,31 @@
-This is a utility for finding and replacing http URLs. It takes into account whitelisting rules that nohttp uses.
+This is a utility for finding and replacing http URLs.
+It takes into account whitelisting rules that nohttp uses.
 
 = Usage
 
-The application uses Gradle's https://docs.gradle.org/current/userguide/application_plugin.html[Application Plugin].
-This summarizes the behavior, but for additional details read about the plugin in the link above.
+The application is a https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/[Spring Boot] application.
+The application requires JDK 8+ to compile and run.
 
-== Installing
+== Compiling
 
-To use it first install the app
+To use this app first create the jar
 
 [source,bash]
 ----
-./gradlew :nohttp-cli:installDist
+./gradlew :nohttp-cli:assemble
 ----
 
-The shell script is now available at `nohttp-cli/build/install/nohttp-cli/bin/nohttp-cli`.
-Our guide will only type in `nohttp-cli` but you should type in the absolute path.
+The jar will now available at `nohttp-cli/build/libs/nohttp-cli-0.0.1.BUILD-SNAPSHOT.jar`.
+
+You can then export the full path to a variable.
+
+[source,bash]
+----
+export NOHTTP=$(pwd)/nohttp-cli/build/libs/nohttp-cli-0.0.1.BUILD-SNAPSHOT.jar
+----
+
+The guide assumes that the jar is now available in the variable `$NOHTTP`.
+If that is not true, you can substitute `$NOHTTP` for the absolute path of `nohttp-cli-0.0.1.BUILD-SNAPSHOT.jar`.
 
 == Running
 
@@ -24,32 +34,60 @@ If you use git, a great way to ensure that there are no build output is to do a 
 Alternatively, you can remove all files not added to git using `git clean -dfx`.
 Keep in mind this may delete things you want (i.e. IDE related files).
 
-=== Current Working Directory
+=== Hello nohttp
 
 The easiest approach is to run the application with no arguments.
-This will attempt to find all text based files in the current directory.
+This will attempt to find http in all text based files in the current directory while ignoring `.git` folder.
+
+[NOTE]
+====
 The process for checking if it is a text file uses a native invocation of `grep`.
-If you cannot run `grep`, then you should try Specifying Paths option below.
+If you cannot run `grep`, then you can disable text using `-T` flag shown in <<help,Help>>.
+====
 
-You can try to process all text based files in the current directory by running the script with no arguments.
-
+.Find all http references in the current working directory
+====
 [source,bash]
 ----
-<path>/nohttp-cli
+java -jar $NOHTTP
 ----
+====
 
-=== Specifying Paths
-
-You can also specify one or more paths as arguments that you want to process explicitly.
-This allows you to customize what is processed.
-Any directory will be traversed and all files in the directory will be processed.
-You can specify absolute paths or paths that are relative to the current working directory.
-If you need finer grain control you can specify individual files.
-
-This sample shows how to process the `build.gradle` file and all the files within `src/main/java`.
-
+.Replace all http references in the current working directory
+====
 [source,bash]
 ----
-<path>/nohttp-cli build.gradle src/main/java/
+java -jar $NOHTTP -r
 ----
+====
 
+=== Help
+
+You can get help with additional options using `--help`.
+
+.Help
+====
+[source,bash]
+----
+java -jar $NOHTTP --help
+...
+Usage: nohttp [-hrTV] [-w=<whitelistFile>] [-D=<regex>]... [-F=<regex>]...
+              [<dir>]
+      [<dir>]           The directory to scan. Default is current working directory.
+  -D=<regex>            Regular expression of directories to exclude scanning.
+                          Specify multiple times to provide multiple exclusions.
+                          Default is to exclude .git
+  -F=<regex>            Regular expression of files to exclude scanning. Specify
+                          multiple times to provide multiple exclusions. Default is
+                          no file exclusions.
+  -h, --help            Show this help message and exit.
+  -r                    Enables replacing the values that were found. The default is
+                          to just find the results.
+  -T                    Disable searching only text based files. This is determined
+                          using native invocation of grep which will not work on all
+                          systems, so it can be disabled.
+  -V, --version         Print version information and exit.
+  -w=<whitelistFile>    The path to file that contains additional whitelist of
+                          allowed URLs. The format is a regular expression to
+                          whitelist (ignore http URLs) per line.
+----

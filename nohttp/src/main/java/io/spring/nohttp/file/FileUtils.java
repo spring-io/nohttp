@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.spring.nohttp.cli;
+package io.spring.nohttp.file;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -26,7 +26,7 @@ import java.nio.file.Files;
 /**
  * @author Rob Winch
  */
-class IOUtils {
+class FileUtils {
 	static String readText(File file) {
 		try {
 			return new String(Files.readAllBytes(file.toPath()));

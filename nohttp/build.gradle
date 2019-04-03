@@ -17,6 +17,8 @@
 apply plugin: 'io.spring.convention.spring-module'
 
 dependencies {
+	compile 'ch.qos.logback:logback-classic'
+	compile 'org.slf4j:slf4j-api'
 	testCompile 'junit:junit'
 	testCompile 'org.assertj:assertj-core'
 }
