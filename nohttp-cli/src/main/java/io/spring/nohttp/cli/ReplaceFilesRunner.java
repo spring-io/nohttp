@@ -20,6 +20,7 @@ import io.spring.nohttp.HttpMatchResult;
 import io.spring.nohttp.RegexHttpMatcher;
 import io.spring.nohttp.RegexPredicate;
 import io.spring.nohttp.file.DirScanner;
+import io.spring.nohttp.file.GradleHttpDslScanner;
 import io.spring.nohttp.file.HttpMatcherProcessor;
 import io.spring.nohttp.file.HttpReplacerProcessor;
 import io.spring.nohttp.file.HttpProcessor;
@@ -36,6 +37,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
@@ -83,41 +85,60 @@ public class ReplaceFilesRunner implements CommandLineRunner, Callable<Void> {
 	public Void call() throws Exception {
 		RegexHttpMatcher matcher = createMatcher();
 
-		HttpProcessor processor = isReplace() ?
-				new HttpReplacerProcessor(matcher) :
-				new HttpMatcherProcessor(matcher);
+		HttpProcessor processor = createHttpProcessor(matcher);
 
 		DirScanner.create(this.dir)
 			.textFiles(this.textFilesOnly)
 			.excludeDirs(dirExclusions())
 			.excludeFiles(fileExclusions())
-			.scan(file -> {
-
-				List<HttpMatchResult> results = processor.processFile(file);
-
-				if ((!this.disablePrintMatches && !results.isEmpty()) || this.printFiles) {
-					System.out.println("Processing " + file);
-				}
-				if (!this.disablePrintMatches) {
-					results.forEach(r -> {
-						System.out.println("* Found " + r.getHttp());
-					});
-				}
-
-			});
+			.scan(withHttpProcessor(processor));
 
 		writeSummaryReport(processor.getHttpUrls());
+
+		System.out.println();
+		System.out.println("Looking for old Gradle DSLs that use http");
+		System.out.println();
+		RegexHttpMatcher gradleMatcher = RegexHttpMatcher.createGradleDslMatcher();
+		HttpProcessor gradleProcessor = createHttpProcessor(gradleMatcher);
+		GradleHttpDslScanner gradleScanner = GradleHttpDslScanner.create(this.dir);
+
+		gradleScanner.scan(withHttpProcessor(gradleProcessor));
+
+		writeSummaryReport(gradleProcessor.getHttpUrls());
 
 		System.out.println("Done!");
 		return null;
 	}
 
+	private HttpProcessor createHttpProcessor(RegexHttpMatcher matcher) {
+		return isReplace() ?
+				new HttpReplacerProcessor(matcher) :
+				new HttpMatcherProcessor(matcher);
+	}
+
+	private Consumer<File> withHttpProcessor(HttpProcessor processor) {
+		return file -> {
+
+			List<HttpMatchResult> results = processor.processFile(file);
+
+			if ((!this.disablePrintMatches && !results.isEmpty()) || this.printFiles) {
+				System.out.println("Processing " + file);
+			}
+			if (!this.disablePrintMatches) {
+				results.forEach(r -> {
+					System.out.println("* Found " + r.getHttp());
+				});
+			}
+
+		};
+	}
+
 	private void writeSummaryReport(Collection<String> httpUrls) {
 		System.out.println("");
 		if (isReplace()) {
-			System.out.println("The Following URLs were replaced");
+			System.out.println("The Following HTTP results were replaced");
 		} else {
-			System.out.println("The Following URLs were found");
+			System.out.println("The Following HTTP results were found");
 		}
 		System.out.println("");
 		for (String httpUrl : httpUrls) {

@@ -16,6 +16,10 @@
 
 package io.spring.nohttp;
 
+import io.spring.nohttp.file.HttpMatcherProcessor;
+import io.spring.nohttp.file.HttpProcessor;
+import io.spring.nohttp.file.HttpReplacerProcessor;
+
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -110,6 +114,21 @@ public class RegexHttpMatcher implements HttpMatcher, HttpReplacer {
 			throw new IllegalArgumentException("whitelist cannot be null");
 		}
 		this.httpUrlWhitelist = this.httpUrlWhitelist.or(whitelist);
+	}
+
+	public static RegexHttpMatcher createGradleDslMatcher() {
+		RegexHttpMatcher matcher = new RegexHttpMatcher(h -> false);
+		matcher.setPattern(Pattern.compile("(mavenCentral\\(\\)|jcenter\\(\\))"));
+		matcher.setHttpReplacer(http -> {
+			if (http.equals("mavenCentral()")) {
+				return "maven { url 'https://repo.maven.apache.org/maven2/' }";
+			} else if (http.equals("jcenter()")) {
+				return "maven { url 'https://jcenter.bintray.com/' }";
+			} else {
+				throw new IllegalArgumentException("Expected either mavenCentral() or jcenter() but got '" + http + "'");
+			}
+		});
+		return matcher;
 	}
 
 	private static class NoOpWriter extends Writer {
