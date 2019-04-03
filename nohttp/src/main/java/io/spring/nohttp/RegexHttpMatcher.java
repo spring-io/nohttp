@@ -21,6 +21,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -31,6 +32,8 @@ import java.util.regex.Pattern;
  */
 public class RegexHttpMatcher implements HttpMatcher, HttpReplacer {
 	private Pattern pattern = Pattern.compile("\\b(http\\\\?://[-a-zA-Z0-9+&@/%?=~_|!:,.;]*[-a-zA-Z0-9+&@/%=~_|])");
+
+	private Function<String, String> httpReplacer = httpUrl -> httpUrl.replaceFirst("http", "https");
 
 	private Predicate<String> httpUrlWhitelist;
 
@@ -43,6 +46,20 @@ public class RegexHttpMatcher implements HttpMatcher, HttpReplacer {
 			throw new IllegalArgumentException("httpUrlWhitelist cannot be null");
 		}
 		this.httpUrlWhitelist = httpUrlWhitelist;
+	}
+
+	public void setPattern(Pattern pattern) {
+		if (pattern == null) {
+			throw new IllegalArgumentException("pattern cannot be null");
+		}
+		this.pattern = pattern;
+	}
+
+	public void setHttpReplacer(Function<String, String> httpReplacer) {
+		if (httpReplacer == null) {
+			throw new IllegalArgumentException("httpReplacer cannot be null");
+		}
+		this.httpReplacer = httpReplacer;
 	}
 
 	public List<HttpMatchResult> findHttp(String text) {
@@ -69,7 +86,7 @@ public class RegexHttpMatcher implements HttpMatcher, HttpReplacer {
 			}
 			try {
 				writer.append(text, currentStart, matcher.start());
-				writer.append(httpUrl.replaceFirst("http", "https"));
+				writer.append(this.httpReplacer.apply(httpUrl));
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
