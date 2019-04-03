@@ -16,8 +16,6 @@
 
 package io.spring.nohttp.file;
 
-import io.spring.nohttp.HttpMatchResult;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,22 +24,22 @@ import java.util.function.Consumer;
 import static io.spring.nohttp.file.FilePredicates.fileHasName;
 
 /**
- * A scanner which finds .gradle files that contain dsl specific references
- * (i.e. mavenCentral() and jcenter()) that use http. In Gradle >= 2.1 it was updated to
- * use https, so only older versions of Gradle are processed.
+ * A scanner which finds .gradle files for Gradle < 2.1. This is useful for finding gradle
+ * DLS (i.e. mavenCentral() and jcenter()) that use http since they use http in Gradle <
+ * 2.1 and were switched to https after.
  *
  * @author Rob Winch
  */
-public class GradleHttpDslScanner {
+public class PreGradle21Scanner {
 
 	private final File dir;
 
-	private GradleHttpDslScanner(File dir) {
+	private PreGradle21Scanner(File dir) {
 		if (dir == null) {
 			throw new IllegalArgumentException("dir cannot be null");
 		}
 		if (!dir.isDirectory()) {
-			throw new IllegalArgumentException(dir + " is not a valid directory");
+			throw new IllegalArgumentException(dir + " is not a directory");
 		}
 		this.dir = dir;
 	}
@@ -49,18 +47,21 @@ public class GradleHttpDslScanner {
 	/**
 	 * Create a new instance
 	 * @param dir the directory to scan
-	 * @return a {@link GradleHttpDslScanner} to use
+	 * @return a {@link PreGradle21Scanner} to use
 	 */
-	public static GradleHttpDslScanner create(File dir) {
-		return new GradleHttpDslScanner(dir);
+	public static PreGradle21Scanner create(File dir) {
+		return new PreGradle21Scanner(dir);
 	}
 
 	/**
 	 * Finds all .gradle files in projects using Gradle < 2.1 and allows processing them
 	 * with the provided {@link Consumer}
-	 * @param file the {@link Consumer} to process any .gradle files that were found
+	 * @param fileProcessor the {@link Consumer} to process any .gradle files that were found
 	 */
-	public void scan(Consumer<File> file) {
+	public void scan(Consumer<File> fileProcessor) {
+		if (fileProcessor == null) {
+			throw new IllegalArgumentException("fileProcessor cannot be null");
+		}
 		List<File> gradleRootDirs = findLegacyGradleRootDir(this.dir);
 		if (gradleRootDirs.isEmpty()) {
 			return;
@@ -69,7 +70,7 @@ public class GradleHttpDslScanner {
 		for (File gradleRootDir : gradleRootDirs) {
 			DirScanner.create(gradleRootDir)
 				.excludeFiles(f -> !f.getName().endsWith(".gradle"))
-				.scan(file);
+				.scan(fileProcessor);
 		}
 	}
 
@@ -86,8 +87,8 @@ public class GradleHttpDslScanner {
 			.excludeFiles(fileHasName("gradle-wrapper.properties").negate())
 			.excludeFiles(f -> {
 				String wrapperText = FileUtils.readTextFrom(f);
-				return !(wrapperText.contains("/gradle-0") ||
-						wrapperText.contains("/gradle-1") ||
+				return !(wrapperText.contains("/gradle-0.") ||
+						wrapperText.contains("/gradle-1.") ||
 						wrapperText.contains("/gradle-2.0"));
 			})
 			.scan(gradleWrapperPropertiesFile -> {

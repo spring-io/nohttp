@@ -20,7 +20,7 @@ import io.spring.nohttp.HttpMatchResult;
 import io.spring.nohttp.RegexHttpMatcher;
 import io.spring.nohttp.RegexPredicate;
 import io.spring.nohttp.file.DirScanner;
-import io.spring.nohttp.file.GradleHttpDslScanner;
+import io.spring.nohttp.file.PreGradle21Scanner;
 import io.spring.nohttp.file.HttpMatcherProcessor;
 import io.spring.nohttp.file.HttpReplacerProcessor;
 import io.spring.nohttp.file.HttpProcessor;
@@ -100,7 +100,7 @@ public class ReplaceFilesRunner implements CommandLineRunner, Callable<Void> {
 		System.out.println();
 		RegexHttpMatcher gradleMatcher = RegexHttpMatcher.createGradleDslMatcher();
 		HttpProcessor gradleProcessor = createHttpProcessor(gradleMatcher);
-		GradleHttpDslScanner gradleScanner = GradleHttpDslScanner.create(this.dir);
+		PreGradle21Scanner gradleScanner = PreGradle21Scanner.create(this.dir);
 
 		gradleScanner.scan(withHttpProcessor(gradleProcessor));
 
