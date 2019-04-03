@@ -37,7 +37,7 @@ public class HttpReplacerProcessor extends HttpProcessor {
 	}
 
 	@Override
-	protected List<HttpMatchResult> processHttpInFile(File file) {
+	List<HttpMatchResult> processHttpInFile(File file) {
 		String originalText = FileUtils.readTextFrom(file);
 
 		HttpReplaceResult result = this.replacer.replaceHttp(originalText);

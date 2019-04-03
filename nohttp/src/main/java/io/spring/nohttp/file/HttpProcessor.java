@@ -31,7 +31,22 @@ public abstract class HttpProcessor {
 
 	private Set<String> httpMatches = new TreeSet<String>();
 
+	/**
+	 * Processes the provided file.
+	 * @param file should be an existing File and should be a file (not a directory)
+	 * @return the match results
+	 */
 	public List<HttpMatchResult> processFile(File file) {
+		if (file == null) {
+			throw new IllegalArgumentException("file cannot be null");
+		}
+		if (!file.exists()) {
+			throw new IllegalArgumentException(file + " does not exist");
+		}
+		if (!file.isFile()) {
+			throw new IllegalArgumentException(file + " must be a valid file (i.e. not a directory)");
+		}
+
 		List<HttpMatchResult> matches = processHttpInFile(file);
 
 		matches.forEach(match -> {
@@ -41,7 +56,12 @@ public abstract class HttpProcessor {
 		return matches;
 	}
 
-	protected abstract List<HttpMatchResult> processHttpInFile(File file);
+	/**
+	 * processes the File for http matches
+	 * @param file the file to process. Guaranteed to be an existing file (not a directory).
+	 * @return the results found. Cannot be null.
+	 */
+	abstract List<HttpMatchResult> processHttpInFile(File file);
 
 	public Set<String> getHttpMatches() {
 		return Collections.unmodifiableSet(this.httpMatches);
