@@ -38,7 +38,7 @@ import java.util.function.Predicate;
  *     // only process text based files
  *     .textFiles(true)
  *     // do not process directories named .git or their contents
- *     .excludeDirs(d -> d.getName().equals(".git"))
+ *     .excludeDirs(FilePredicates.hasFileName(".git"))
  *     // only process files that end with ".java"
  *     .excludeFiles(f -> !f.getName().endsWith(".java"))
  *     // for each match print out the file name

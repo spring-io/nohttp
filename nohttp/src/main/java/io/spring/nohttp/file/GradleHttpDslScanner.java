@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+import static io.spring.nohttp.file.FilePredicates.fileHasName;
+
 /**
  * A scanner which finds .gradle files that contain dsl specific references
  * (i.e. mavenCentral() and jcenter()) that use http. In Gradle >= 2.1 it was updated to
@@ -64,7 +66,6 @@ public class GradleHttpDslScanner {
 			return;
 		}
 
-		List<HttpMatchResult> results = new ArrayList<>();
 		for (File gradleRootDir : gradleRootDirs) {
 			DirScanner.create(gradleRootDir)
 				.excludeFiles(f -> !f.getName().endsWith(".gradle"))
@@ -82,10 +83,8 @@ public class GradleHttpDslScanner {
 		List<File> gradleRoots = new ArrayList<>();
 
 		DirScanner.create(dir)
+			.excludeFiles(fileHasName("gradle-wrapper.properties").negate())
 			.excludeFiles(f -> {
-				if(!f.getName().equals("gradle-wrapper.properties")) {
-					return true;
-				}
 				String wrapperText = FileUtils.readTextFrom(f);
 				return !(wrapperText.contains("/gradle-0") ||
 						wrapperText.contains("/gradle-1") ||

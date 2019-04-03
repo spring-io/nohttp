@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
+import static io.spring.nohttp.file.FilePredicates.fileHasName;
 import static org.assertj.core.api.Assertions.*;
 
 /**
@@ -184,10 +185,6 @@ public class DirScannerTest {
 		assertThatCode(() -> scanner.scan(null))
 				.isInstanceOf(IllegalArgumentException.class)
 				.hasMessage("fileProcessor cannot be null");
-	}
-
-	private Predicate<File> fileHasName(String name) {
-		return f -> f.getName().equals(name);
 	}
 
 	private void collectFileNames(File file) {
