@@ -38,7 +38,7 @@ public class RegexHttpMatcher implements HttpMatcher, HttpReplacer {
 	private Predicate<String> httpUrlWhitelist;
 
 	public RegexHttpMatcher() {
-		this(RegexPredicate.createDefaultWhitelist());
+		this(RegexPredicate.createDefaultUrlWhitelist());
 	}
 
 	public RegexHttpMatcher(Predicate<String> httpUrlWhitelist) {

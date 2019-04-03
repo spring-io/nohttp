@@ -75,7 +75,7 @@ public class NoHttpCheck extends AbstractFileSetCheck implements ExternalResourc
 		RegexHttpMatcher matcher = new RegexHttpMatcher();
 
 		if (this.isWhitelistFileSet()) {
-			matcher.addHttpUrlWhitelist(RegexPredicate.createWhitelist(inputStream));
+			matcher.addHttpUrlWhitelist(RegexPredicate.createWhitelistFromPatterns(inputStream));
 		}
 		this.matcher = matcher;
 	}

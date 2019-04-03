@@ -18,7 +18,13 @@ package io.spring.nohttp;
 
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.function.Predicate;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -27,7 +33,93 @@ import static org.assertj.core.api.Assertions.*;
  */
 public class RegexPredicateTest {
 
-	private Predicate<String> whitelist = RegexPredicate.createDefaultWhitelist();
+	// constructor
+
+	@Test
+	public void constructorWhenNullThenIllegalArgumentException() {
+		assertThatCode(() -> new RegexPredicate(null))
+			.isInstanceOf(IllegalArgumentException.class)
+			.hasMessage("patterns cannot be null");
+	}
+
+	@Test
+	public void constructorWhenEmptyThenIllegalArgumentException() {
+		assertThatCode(() -> new RegexPredicate(Collections.emptyList()))
+			.isInstanceOf(IllegalArgumentException.class)
+			.hasMessage("patterns cannot be empty");
+	}
+
+	// test
+
+	@Test
+	public void testWhenMatchAllThenMatch() {
+		RegexPredicate test = new RegexPredicate(Arrays.asList(Pattern.compile(".*")));
+
+		assertThat(test.test("foo")).isTrue();
+	}
+
+	@Test
+	public void testWhenNotMatchThenNoMatch() {
+		RegexPredicate test = new RegexPredicate(Arrays.asList(Pattern.compile("^$")));
+
+		assertThat(test.test("foo")).isFalse();
+	}
+
+	@Test
+	public void testWhenNotMatchAndMatchThenNoMatch() {
+		RegexPredicate test = new RegexPredicate(Arrays.asList(Pattern.compile("^$"), Pattern.compile(".*")));
+
+		assertThat(test.test("foo")).isTrue();
+	}
+
+	// createWhitelistFromPatterns
+
+	@Test
+	public void createWhitelistFromPatternsWhenValid() {
+		Predicate<String> test = RegexPredicate.createWhitelistFromPatterns(inputStream(".*"));
+
+		assertThat(test.test("foo")).isTrue();
+	}
+
+	@Test
+	public void createWhitelistFromPatternsWhenCommentThenCommentIgnored() {
+		// the first line is an invalid regular expression (invalid repetition), but it is commented out
+		Predicate<String> test = RegexPredicate.createWhitelistFromPatterns(inputStream("// {v}\n.*"));
+
+		assertThat(test.test("foo")).isTrue();
+	}
+
+	@Test
+	public void createWhitelistFromPatternsWhenEmptyLineThenIgnored() {
+		// the first line is empty line which should be ignored
+		Predicate<String> test = RegexPredicate.createWhitelistFromPatterns(inputStream("\nNO MATCH"));
+
+		assertThat(test.test("")).isFalse();
+	}
+
+	@Test
+	public void createWhitelistFromPatternsWhenWhitespaceLineThenIgnored() {
+		// the first line is whitespace only line which should be ignored
+		Predicate<String> test = RegexPredicate.createWhitelistFromPatterns(inputStream(" \nNO MATCH"));
+
+		assertThat(test.test(" ")).isFalse();
+	}
+
+	@Test
+	public void createWhitelistFromPatternsWhenInvalidRegexThenUsefulException() {
+		// the first line is an invalid regular expression invalid repetition
+		assertThatCode(() -> RegexPredicate.createWhitelistFromPatterns(inputStream("{v}")))
+			.isInstanceOf(PatternSyntaxException.class);
+	}
+
+	private static InputStream inputStream(String s) {
+		return new ByteArrayInputStream(s.getBytes());
+	}
+
+	////
+	// default whitelist
+
+	private Predicate<String> whitelist = RegexPredicate.createDefaultUrlWhitelist();
 
 	// xml
 	

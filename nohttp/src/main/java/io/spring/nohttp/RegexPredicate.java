@@ -27,11 +27,11 @@ import java.util.stream.Collectors;
 
 /**
  * An API that is typically used with {@link RegexHttpMatcher} that allows whitelisting
- * URLs using a provided list of {@link Pattern}s.
+ * http text using a provided list of {@link Pattern}s.
  *
  * @author Rob Winch
  * @see RegexHttpMatcher
- * @see #createDefaultWhitelistPatterns(InputStream)
+ * @see #createPatternsFromInputStream(InputStream)
  */
 public class RegexPredicate implements Predicate<String> {
 	private final List<Pattern> patterns;
@@ -41,20 +41,23 @@ public class RegexPredicate implements Predicate<String> {
 	 * @param patterns the patterns to use.
 	 */
 	public RegexPredicate(List<Pattern> patterns) {
-		if (patterns == null || patterns.isEmpty()) {
-			throw new IllegalArgumentException("patterns cannot be null or empty. Got " + patterns);
+		if (patterns == null) {
+			throw new IllegalArgumentException("patterns cannot be null");
+		}
+		if (patterns.isEmpty()) {
+			throw new IllegalArgumentException("patterns cannot be empty");
 		}
 		this.patterns = patterns;
 	}
 
 	@Override
-	public boolean test(String httpUrl) {
+	public boolean test(String httpText) {
 		return this.patterns.stream()
-				.anyMatch(p -> p.matcher(httpUrl).matches());
+				.anyMatch(p -> p.matcher(httpText).matches());
 	}
 
 	/**
-	 * Creates an instance that uses the default whitelist. The whitelist is expected to
+	 * Creates an instance that uses the default URL whitelist. The whitelist is expected to
 	 * be updated in upcoming releases, but generally contains
 	 *
 	 * <ul>
@@ -65,16 +68,16 @@ public class RegexPredicate implements Predicate<String> {
 	 *     <a href="https://hg.openjdk.java.net/jdk8u/jdk8u/jdk/file/43ca3768126e/src/share/classes/sun/util/xml/PlatformXmlPropertiesProvider.java#l198">hard codes</a> using http.
 	 *     </li>
 	 * </ul>
-	 * @return
-	 */
-	public static Predicate<String> createDefaultWhitelist() {
+	 * @return the {@link Predicate} that determines what is whitelisted
+ 	 */
+	public static Predicate<String> createDefaultUrlWhitelist() {
 		InputStream resource = RegexPredicate.class.getResourceAsStream("whitelist.txt");
-		return createWhitelist(resource);
+		return createWhitelistFromPatterns(resource);
 	}
 
 	/**
-	 * Allows creating a instance of {@link RegexHttpMatcher} from an {@link InputStream}.
-	 * The format of the {@link InputStream} contains regular expressions of what URLs
+	 * Creates a {@link Predicate} from an {@link InputStream}.
+	 * The format of the {@link InputStream} contains regular expressions of what inputs
 	 * should be whitelisted such that:
 	 *
 	 * <ul>
@@ -93,15 +96,20 @@ public class RegexPredicate implements Predicate<String> {
 	 * ^http://mycompany.test/xml/.*(?<!\.(xsd))$
 	 * </pre>
 	 * @param resource
-	 * @return
+	 * @return the {@link Predicate} that determines what is whitelisted
 	 */
-	public static Predicate<String> createWhitelist(InputStream resource) {
-		List<Pattern> patterns = createDefaultWhitelistPatterns(resource);
-		return httpUrl -> patterns.stream()
-				.anyMatch(p -> p.matcher(httpUrl).matches());
+	public static Predicate<String> createWhitelistFromPatterns(InputStream resource) {
+		List<Pattern> patterns = createPatternsFromInputStream(resource);
+		return new RegexPredicate(patterns);
 	}
 
-	private static List<Pattern> createDefaultWhitelistPatterns(InputStream resource) {
+	/**
+	 * Reads an input stream and creates {@link Pattern} from the {@link InputStream} using
+	 * logic defined in {@link #createPatternsFromInputStream(InputStream)}
+	 * @param resource the resource to load
+	 * @return a {@link List} of {@link Pattern}s
+	 */
+	private static List<Pattern> createPatternsFromInputStream(InputStream resource) {
 		if (resource == null) {
 			throw new IllegalStateException("Failed to load whitelist from " + resource);
 		}
