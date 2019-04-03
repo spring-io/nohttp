@@ -49,7 +49,7 @@ If you find the need to exclude additional URL patterns, you can do so by includ
 </module>
 ----
 
-It is important to note that you use http://checkstyle.sourceforge.net/config.html#Properties[checkstyle properties] to load the file as well.
+It is important to note that you use https://checkstyle.org/config.html#Properties[checkstyle properties] to load the file as well.
 If you want to make the property optional, you can specify a default of empty String in which case the additional whitelist is ignored.
 
 [source,xml]

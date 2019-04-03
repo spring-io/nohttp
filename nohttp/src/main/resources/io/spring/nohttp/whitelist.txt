@@ -10,8 +10,8 @@
 ^http://127\.0\.0\.1.*
 
 // JDK forces properties\.dtd to be http
-// http://hg.openjdk.java.net/jdk8u/jdk8u/jdk/file/43ca3768126e/src/share/classes/sun/util/xml/PlatformXmlPropertiesProvider.java#l54
-// http://hg.openjdk.java.net/jdk8u/jdk8u/jdk/file/43ca3768126e/src/share/classes/sun/util/xml/PlatformXmlPropertiesProvider.java#l198
+// https://hg.openjdk.java.net/jdk8u/jdk8u/jdk/file/43ca3768126e/src/share/classes/sun/util/xml/PlatformXmlPropertiesProvider.java#l54
+// https://hg.openjdk.java.net/jdk8u/jdk8u/jdk/file/43ca3768126e/src/share/classes/sun/util/xml/PlatformXmlPropertiesProvider.java#l198
 ^http://java\.sun\.com/dtd/properties\.dtd.*
 ^http://java\.sun\.com/xml/jaxp/properties/schemaLanguage.*
 

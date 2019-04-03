@@ -32,7 +32,7 @@ The default whitelist includes a whitelist that impacts these primary categories
 * URLs that use a TLD defined in https://tools.ietf.org/html/rfc2606 (i.e. tld of test, .example, invalid, localhost)
 * XML Namespace names (not the locations)
 * Java specific URLs that do not work over `http`.
-For example, Java Properties http://hg.openjdk.java.net/jdk8u/jdk8u/jdk/file/43ca3768126e/src/share/classes/sun/util/xml/PlatformXmlPropertiesProvider.java#l198[hard codes] using `http`.
+For example, Java Properties https://hg.openjdk.java.net/jdk8u/jdk8u/jdk/file/43ca3768126e/src/share/classes/sun/util/xml/PlatformXmlPropertiesProvider.java#l198[hard codes] using `http`.
 
 === Adding Custom Rules
 

@@ -62,7 +62,7 @@ public class RegexPredicate implements Predicate<String> {
 	 *     <li>URLs that use a TLD defined in https://tools.ietf.org/html/rfc2606 (i.e. tld of test, .example, invalid, localhost)</li>
 	 *     <li>XML Namespace names (not the locations)</li>
 	 *     <li>Java specific URLs that do not work over http. For example, Java Properties
-	 *     <a href="http://hg.openjdk.java.net/jdk8u/jdk8u/jdk/file/43ca3768126e/src/share/classes/sun/util/xml/PlatformXmlPropertiesProvider.java#l198">hard codes</a> using http.
+	 *     <a href="https://hg.openjdk.java.net/jdk8u/jdk8u/jdk/file/43ca3768126e/src/share/classes/sun/util/xml/PlatformXmlPropertiesProvider.java#l198">hard codes</a> using http.
 	 *     </li>
 	 * </ul>
 	 * @return
