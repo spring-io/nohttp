@@ -29,13 +29,13 @@ import java.util.TreeSet;
  */
 public abstract class HttpProcessor {
 
-	private Set<String> httpUrls = new TreeSet<String>();
+	private Set<String> httpMatches = new TreeSet<String>();
 
 	public List<HttpMatchResult> processFile(File file) {
 		List<HttpMatchResult> matches = processHttpInFile(file);
 
 		matches.forEach(match -> {
-			this.httpUrls.add(match.getHttp());
+			this.httpMatches.add(match.getHttp());
 		});
 
 		return matches;
@@ -43,7 +43,7 @@ public abstract class HttpProcessor {
 
 	protected abstract List<HttpMatchResult> processHttpInFile(File file);
 
-	public Set<String> getHttpUrls() {
-		return Collections.unmodifiableSet(this.httpUrls);
+	public Set<String> getHttpMatches() {
+		return Collections.unmodifiableSet(this.httpMatches);
 	}
 }

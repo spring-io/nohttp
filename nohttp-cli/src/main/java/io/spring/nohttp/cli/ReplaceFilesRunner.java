@@ -93,7 +93,7 @@ public class ReplaceFilesRunner implements CommandLineRunner, Callable<Void> {
 			.excludeFiles(fileExclusions())
 			.scan(withHttpProcessor(processor));
 
-		writeSummaryReport(processor.getHttpUrls());
+		writeSummaryReport(processor.getHttpMatches());
 
 		System.out.println();
 		System.out.println("Looking for old Gradle DSLs that use http");
@@ -104,7 +104,7 @@ public class ReplaceFilesRunner implements CommandLineRunner, Callable<Void> {
 
 		gradleScanner.scan(withHttpProcessor(gradleProcessor));
 
-		writeSummaryReport(gradleProcessor.getHttpUrls());
+		writeSummaryReport(gradleProcessor.getHttpMatches());
 
 		System.out.println("Done!");
 		return null;
