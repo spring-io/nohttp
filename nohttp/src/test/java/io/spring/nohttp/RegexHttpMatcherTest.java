@@ -23,7 +23,9 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.regex.Pattern;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -34,16 +36,83 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class RegexHttpMatcherTest {
 	@Mock
-	private Predicate<String> whitelisted;
+	private Predicate<String> whitelist;
 
 	private RegexHttpMatcher matcher;
 
 	@Before
 	public void setup() {
-		this.matcher = new RegexHttpMatcher(this.whitelisted);
+		this.matcher = new RegexHttpMatcher(this.whitelist);
 	}
 
-	// for .properties files
+	// constructor
+
+	@Test
+	public void constructorWhenNullPredicateThenIllegalArgumentException() {
+		this.whitelist = null;
+		assertThatCode(() -> new RegexHttpMatcher(this.whitelist))
+			.isInstanceOf(IllegalArgumentException.class)
+			.hasMessage("whitelist cannot be null");
+	}
+
+	// setPattern
+
+	@Test
+	public void setPatternWhenNullThenIllegalArgumentException() {
+		Pattern pattern = null;
+		assertThatCode(() -> this.matcher.setPattern(pattern))
+				.isInstanceOf(IllegalArgumentException.class)
+				.hasMessage("pattern cannot be null");
+	}
+
+	// setReplacer
+
+	@Test
+	public void setReplacerWhenNullThenIllegalArgumentException() {
+		Function<String, String> replacer = null;
+		assertThatCode(() -> this.matcher.setHttpReplacer(replacer))
+				.isInstanceOf(IllegalArgumentException.class)
+				.hasMessage("httpReplacer cannot be null");
+	}
+
+	// addHttpUrlWhitelist
+
+	@Test
+	public void addHttpUrlWhitelistWhenNullThenIllegalArgumentException() {
+		Predicate<String> whitelist = null;
+		assertThatCode(() -> this.matcher.addHttpWhitelist(whitelist))
+				.isInstanceOf(IllegalArgumentException.class)
+				.hasMessage("whitelist cannot be null");
+	}
+
+	// findHttp
+
+	@Test
+	public void findHttpWhenCustomPatternThenFound() {
+		Pattern pattern = Pattern.compile("a");
+		this.matcher.setPattern(pattern);
+
+		List<HttpMatchResult> results = this.matcher.findHttp("123a456");
+
+		assertThat(results).hasSize(1);
+		HttpMatchResult result = results.get(0);
+		assertThat(result.getHttp()).isEqualTo("a");
+		assertThat(result.getStart()).isEqualTo(3);
+	}
+
+	@Test
+	public void findWhenAddWhitelistThenWhitelisted() {
+		this.matcher = new RegexHttpMatcher(http -> false);
+		this.matcher.addHttpWhitelist(http -> true);
+		List<HttpMatchResult> results = this.matcher.findHttp("http://example.com");
+		assertThat(results).isEmpty();
+	}
+
+	// findHttp default pattern testing
+
+	/**
+	 * for .properties files
+ 	 */
 	@Test
 	public void findWhenHttpEscapleColonThenFound() {
 		List<HttpMatchResult> results = this.matcher.findHttp("http\\://example.com");
@@ -63,7 +132,7 @@ public class RegexHttpMatcherTest {
 	@Test
 	public void findWhenWhitelistedThenNotFound() {
 		String url = "http://example.com";
-		when(this.whitelisted.test(url)).thenReturn(true);
+		when(this.whitelist.test(url)).thenReturn(true);
 		List<HttpMatchResult> results = this.matcher.findHttp(url);
 		assertThat(results).isEmpty();
 	}
@@ -184,7 +253,7 @@ public class RegexHttpMatcherTest {
 		assertThat(results).isEmpty();
 	}
 
-	// replaceHttp
+	// replaceHttp default pattern testing
 
 	@Test
 	public void replaceHttpWhenJustUrlThenHttps() {
@@ -219,6 +288,33 @@ public class RegexHttpMatcherTest {
 	@Test
 	public void replaceHttpWhenMultiUrlThenHttps() {
 		assertReplaceHttpEquals("abc http://a.example def http://b.test ghi", "abc https://a.example def https://b.test ghi");
+	}
+
+	// replaceHttp
+
+	@Test
+	public void replaceHttpWhenCustomPatternAndReplacerThenFound() {
+		Pattern pattern = Pattern.compile("a");
+		this.matcher.setPattern(pattern);
+		this.matcher.setHttpReplacer(http -> http.toUpperCase());
+
+		HttpReplaceResult result = this.matcher.replaceHttp("123a456");
+
+		assertThat(result.isReplacement()).isTrue();
+		assertThat(result.getResult()).isEqualTo("123A456");
+		assertThat(result.getMatches()).hasSize(1);
+		HttpMatchResult match = result.getMatches().get(0);
+		assertThat(match.getHttp()).isEqualTo("a");
+		assertThat(match.getStart()).isEqualTo(3);
+	}
+
+	@Test
+	public void replaceHttpWhenAddWhitelistThenWhitelisted() {
+		this.matcher = new RegexHttpMatcher(http -> false);
+		this.matcher.addHttpWhitelist(http -> true);
+		HttpReplaceResult result = this.matcher
+				.replaceHttp("http://example.com");
+		assertThat(result.isReplacement()).isFalse();
 	}
 
 	private HttpReplaceResult assertReplaceHttpEquals(String text, String result) {

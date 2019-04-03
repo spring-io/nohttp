@@ -34,7 +34,7 @@ import java.util.Set;
  * @author Rob Winch
  */
 public class NoHttpCheck extends AbstractFileSetCheck implements ExternalResourceHolder {
-	private HttpMatcher matcher = new RegexHttpMatcher();
+	private HttpMatcher matcher;
 
 	private String whitelistFileName = "";
 
@@ -72,10 +72,10 @@ public class NoHttpCheck extends AbstractFileSetCheck implements ExternalResourc
 			return;
 		}
 
-		RegexHttpMatcher matcher = new RegexHttpMatcher();
+		RegexHttpMatcher matcher = new RegexHttpMatcher(RegexPredicate.createDefaultUrlWhitelist());
 
 		if (this.isWhitelistFileSet()) {
-			matcher.addHttpUrlWhitelist(RegexPredicate.createWhitelistFromPatterns(inputStream));
+			matcher.addHttpWhitelist(RegexPredicate.createWhitelistFromPatterns(inputStream));
 		}
 		this.matcher = matcher;
 	}

@@ -27,6 +27,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
+ * Allows finding and replacing http matches via a {@link Pattern}
  * @author Rob Winch
  * @see RegexPredicate
  */
@@ -37,10 +38,10 @@ public class RegexHttpMatcher implements HttpMatcher, HttpReplacer {
 
 	private Predicate<String> whitelist;
 
-	public RegexHttpMatcher() {
-		this(RegexPredicate.createDefaultUrlWhitelist());
-	}
-
+	/**
+	 * Creates a new instance with the provided whitelist
+	 * @param whitelist the whitelist to be used
+	 */
 	public RegexHttpMatcher(Predicate<String> whitelist) {
 		if (whitelist == null) {
 			throw new IllegalArgumentException("whitelist cannot be null");
@@ -48,6 +49,10 @@ public class RegexHttpMatcher implements HttpMatcher, HttpReplacer {
 		this.whitelist = whitelist;
 	}
 
+	/**
+	 * Sets the {@link Pattern} used to find http results. The default finds URLs that use http://
+	 * @param pattern the pattern to use
+	 */
 	public void setPattern(Pattern pattern) {
 		if (pattern == null) {
 			throw new IllegalArgumentException("pattern cannot be null");
@@ -55,6 +60,11 @@ public class RegexHttpMatcher implements HttpMatcher, HttpReplacer {
 		this.pattern = pattern;
 	}
 
+	/**
+	 * The {@link Function} to use to replace the matched http result with something that
+	 * uses https
+	 * @param httpReplacer the replacer to use
+	 */
 	public void setHttpReplacer(Function<String, String> httpReplacer) {
 		if (httpReplacer == null) {
 			throw new IllegalArgumentException("httpReplacer cannot be null");
@@ -105,7 +115,11 @@ public class RegexHttpMatcher implements HttpMatcher, HttpReplacer {
 		return new HttpReplaceResult(results, writer.toString());
 	}
 
-	public void addHttpUrlWhitelist(Predicate<String> whitelist) {
+	/**
+	 * Adds an additional whitelist to the existing whitelist
+	 * @param whitelist the whitelist to use
+	 */
+	public void addHttpWhitelist(Predicate<String> whitelist) {
 		if (whitelist == null) {
 			throw new IllegalArgumentException("whitelist cannot be null");
 		}

@@ -166,9 +166,9 @@ public class ReplaceFilesRunner implements CommandLineRunner, Callable<Void> {
 
 	private RegexHttpMatcher createMatcher() {
 
-		RegexHttpMatcher matcher = new RegexHttpMatcher();
+		RegexHttpMatcher matcher = new RegexHttpMatcher(RegexPredicate.createDefaultUrlWhitelist());
 		if (this.whitelistExclusions != null) {
-			matcher.addHttpUrlWhitelist(RegexPredicate.createWhitelistFromPatterns(this.whitelistExclusions));
+			matcher.addHttpWhitelist(RegexPredicate.createWhitelistFromPatterns(this.whitelistExclusions));
 		}
 		return matcher;
 	}
