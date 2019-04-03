@@ -50,7 +50,7 @@ public class RegexHttpMatcherTest {
 		assertThat(results).hasSize(1);
 
 		HttpMatchResult result = results.get(0);
-		assertThat(result.getHttpUrl()).isEqualTo("http\\://example.com");
+		assertThat(result.getHttp()).isEqualTo("http\\://example.com");
 		assertThat(result.getStart()).isEqualTo(0);
 	}
 
@@ -74,7 +74,7 @@ public class RegexHttpMatcherTest {
 		assertThat(results).hasSize(1);
 
 		HttpMatchResult result = results.get(0);
-		assertThat(result.getHttpUrl()).isEqualTo("http://example.com");
+		assertThat(result.getHttp()).isEqualTo("http://example.com");
 		assertThat(result.getStart()).isEqualTo(0);
 	}
 
@@ -84,7 +84,7 @@ public class RegexHttpMatcherTest {
 		assertThat(results).hasSize(1);
 
 		HttpMatchResult result = results.get(0);
-		assertThat(result.getHttpUrl()).isEqualTo("http://rob:password@example.com");
+		assertThat(result.getHttp()).isEqualTo("http://rob:password@example.com");
 		assertThat(result.getStart()).isEqualTo(4);
 	}
 
@@ -94,7 +94,7 @@ public class RegexHttpMatcherTest {
 		assertThat(results).hasSize(1);
 
 		HttpMatchResult result = results.get(0);
-		assertThat(result.getHttpUrl()).isEqualTo("http://example.com");
+		assertThat(result.getHttp()).isEqualTo("http://example.com");
 		assertThat(result.getStart()).isEqualTo(0);
 	}
 
@@ -104,7 +104,7 @@ public class RegexHttpMatcherTest {
 		assertThat(results).hasSize(1);
 
 		HttpMatchResult result = results.get(0);
-		assertThat(result.getHttpUrl()).isEqualTo("http://example.com");
+		assertThat(result.getHttp()).isEqualTo("http://example.com");
 		assertThat(result.getStart()).isEqualTo(4);
 	}
 
@@ -114,7 +114,7 @@ public class RegexHttpMatcherTest {
 		assertThat(results).hasSize(1);
 
 		HttpMatchResult result = results.get(0);
-		assertThat(result.getHttpUrl()).isEqualTo("http://example.com");
+		assertThat(result.getHttp()).isEqualTo("http://example.com");
 		assertThat(result.getStart()).isEqualTo(5);
 	}
 
@@ -124,7 +124,7 @@ public class RegexHttpMatcherTest {
 		assertThat(results).hasSize(1);
 
 		HttpMatchResult result = results.get(0);
-		assertThat(result.getHttpUrl()).isEqualTo("http://example.com");
+		assertThat(result.getHttp()).isEqualTo("http://example.com");
 		assertThat(result.getStart()).isEqualTo(5);
 	}
 
@@ -134,7 +134,7 @@ public class RegexHttpMatcherTest {
 		assertThat(results).hasSize(1);
 
 		HttpMatchResult result = results.get(0);
-		assertThat(result.getHttpUrl()).isEqualTo("http://example.com");
+		assertThat(result.getHttp()).isEqualTo("http://example.com");
 		assertThat(result.getStart()).isEqualTo(4);
 	}
 
@@ -144,7 +144,7 @@ public class RegexHttpMatcherTest {
 		assertThat(results).hasSize(1);
 
 		HttpMatchResult result = results.get(0);
-		assertThat(result.getHttpUrl()).isEqualTo("http://example.com?a=b");
+		assertThat(result.getHttp()).isEqualTo("http://example.com?a=b");
 		assertThat(result.getStart()).isEqualTo(4);
 	}
 
@@ -154,7 +154,7 @@ public class RegexHttpMatcherTest {
 		assertThat(results).hasSize(1);
 
 		HttpMatchResult result = results.get(0);
-		assertThat(result.getHttpUrl()).isEqualTo("http://example.com");
+		assertThat(result.getHttp()).isEqualTo("http://example.com");
 		assertThat(result.getStart()).isEqualTo(9);
 	}
 
@@ -164,11 +164,11 @@ public class RegexHttpMatcherTest {
 		assertThat(results).hasSize(2);
 
 		HttpMatchResult result = results.get(0);
-		assertThat(result.getHttpUrl()).isEqualTo("http://example.com");
+		assertThat(result.getHttp()).isEqualTo("http://example.com");
 		assertThat(result.getStart()).isEqualTo(4);
 
 		result = results.get(1);
-		assertThat(result.getHttpUrl()).isEqualTo("http://example.org");
+		assertThat(result.getHttp()).isEqualTo("http://example.org");
 		assertThat(result.getStart()).isEqualTo(27);
 	}
 

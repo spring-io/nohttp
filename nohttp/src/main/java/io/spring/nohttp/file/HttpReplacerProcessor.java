@@ -26,7 +26,7 @@ import java.util.List;
 /**
  * @author Rob Winch
  */
-public class HttpReplacerProcessor extends HttpUrlsProcessor {
+public class HttpReplacerProcessor extends HttpProcessor {
 	private final HttpReplacer replacer;
 
 	public HttpReplacerProcessor(HttpReplacer replacer) {

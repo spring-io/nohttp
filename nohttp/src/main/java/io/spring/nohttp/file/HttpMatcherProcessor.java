@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * @author Rob Winch
  */
-public class HttpMatcherProcessor extends HttpUrlsProcessor {
+public class HttpMatcherProcessor extends HttpProcessor {
 	private final HttpMatcher matcher;
 
 	public HttpMatcherProcessor(HttpMatcher matcher) {

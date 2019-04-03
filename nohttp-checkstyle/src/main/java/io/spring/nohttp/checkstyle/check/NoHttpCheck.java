@@ -89,7 +89,7 @@ public class NoHttpCheck extends AbstractFileSetCheck implements ExternalResourc
 			lineNum++;
 			List<HttpMatchResult> results = this.matcher.findHttp(line);
 			for(HttpMatchResult result : results) {
-				log(lineNum, result.getStart() + 1, "nohttp", result.getHttpUrl());
+				log(lineNum, result.getStart() + 1, "nohttp", result.getHttp());
 			}
 		}
 	}

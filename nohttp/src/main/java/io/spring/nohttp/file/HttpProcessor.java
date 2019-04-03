@@ -27,7 +27,7 @@ import java.util.TreeSet;
 /**
  * @author Rob Winch
  */
-public abstract class HttpUrlsProcessor {
+public abstract class HttpProcessor {
 
 	private Set<String> httpUrls = new TreeSet<String>();
 
@@ -35,7 +35,7 @@ public abstract class HttpUrlsProcessor {
 		List<HttpMatchResult> matches = processHttpInFile(file);
 
 		matches.forEach(match -> {
-			this.httpUrls.add(match.getHttpUrl());
+			this.httpUrls.add(match.getHttp());
 		});
 
 		return matches;

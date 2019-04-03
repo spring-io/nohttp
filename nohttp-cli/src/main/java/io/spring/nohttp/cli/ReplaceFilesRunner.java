@@ -22,7 +22,7 @@ import io.spring.nohttp.RegexPredicate;
 import io.spring.nohttp.file.DirScanner;
 import io.spring.nohttp.file.HttpMatcherProcessor;
 import io.spring.nohttp.file.HttpReplacerProcessor;
-import io.spring.nohttp.file.HttpUrlsProcessor;
+import io.spring.nohttp.file.HttpProcessor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import picocli.CommandLine;
@@ -83,7 +83,7 @@ public class ReplaceFilesRunner implements CommandLineRunner, Callable<Void> {
 	public Void call() throws Exception {
 		RegexHttpMatcher matcher = createMatcher();
 
-		HttpUrlsProcessor processor = isReplace() ?
+		HttpProcessor processor = isReplace() ?
 				new HttpReplacerProcessor(matcher) :
 				new HttpMatcherProcessor(matcher);
 
@@ -100,7 +100,7 @@ public class ReplaceFilesRunner implements CommandLineRunner, Callable<Void> {
 				}
 				if (!this.disablePrintMatches) {
 					results.forEach(r -> {
-						System.out.println("* Found " + r.getHttpUrl());
+						System.out.println("* Found " + r.getHttp());
 					});
 				}
 
