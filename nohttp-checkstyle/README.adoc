@@ -30,7 +30,7 @@ An example configuration can be found below:
 
     <!-- Configure checker to use UTF-8 encoding -->
     <property name="charset" value="UTF-8"/>
-    <!-- Configure checker to run on files with these extensions -->
+    <!-- Configure checker to run on files with all extensions -->
     <property name="fileExtensions" value=""/>
 
     <module name="io.spring.nohttp.checkstyle.check.NoHttpCheck">
