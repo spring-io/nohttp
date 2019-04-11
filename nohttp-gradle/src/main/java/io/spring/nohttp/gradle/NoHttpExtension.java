@@ -16,16 +16,44 @@
 
 package io.spring.nohttp.gradle;
 
-import org.gradle.api.Plugin;
-import org.gradle.api.Project;
+import org.gradle.api.file.FileTree;
+import org.gradle.api.tasks.SourceSet;
+
+import java.io.File;
+import java.util.Collection;
 
 /**
  * @author Rob Winch
  */
-public class NoHttpPlugin implements Plugin<Project> {
-	@Override
-	public void apply(Project project) {
-		// FIXME: only apply if checkstyle applied
-		project.getPluginManager().apply(NoHttpCheckstylePlugin.class);
+public class NoHttpExtension {
+
+	private String toolVersion;
+
+	private FileTree source;
+
+	public File getWhitelistsFile() {
+		return this.whitelistsFile;
+	}
+
+	public void setWhitelistsFile(File whitelistsFile) {
+		this.whitelistsFile = whitelistsFile;
+	}
+
+	private File whitelistsFile;
+
+	public FileTree getSource() {
+		return this.source;
+	}
+
+	public void setSource(FileTree source) {
+		this.source = source;
+	}
+
+	public String getToolVersion() {
+		return this.toolVersion;
+	}
+
+	public void setToolVersion(String toolVersion) {
+		this.toolVersion = toolVersion;
 	}
 }
