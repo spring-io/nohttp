@@ -186,7 +186,7 @@ public class NoHttpCheckstylePlugin implements Plugin<Project> {
 		});
 	}
 
-	protected void withBasePlugin(Action<Plugin> action) {
+	private void withBasePlugin(Action<Plugin> action) {
 		this.project.getPlugins().withType(JavaBasePlugin.class, action);
 	}
 }
