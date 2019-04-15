@@ -34,15 +34,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.JarURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
+import java.util.jar.Attributes;
+import java.util.jar.JarFile;
 
 /**
  * @author Rob Winch
  */
 public class NoHttpCheckstylePlugin implements Plugin<Project> {
+	private static final String NOHTTP_VERSION = determineNohttpVersion();
 
 	public static final String DEFAULT_WHITELIST_FILE_PATH = "etc/nohttp/whitelist.lines";
 
@@ -64,7 +70,7 @@ public class NoHttpCheckstylePlugin implements Plugin<Project> {
 	public void apply(Project project) {
 		this.project = project;
 		this.extension = this.project.getExtensions().create(NOHTTP_EXTENSION_NAME, NoHttpExtension.class);
-		this.extension.setToolVersion("0.0.1.BUILD-SNAPSHOT");
+		this.extension.setToolVersion(NOHTTP_VERSION);
 		this.extension.setSource(project.fileTree(project.getProjectDir(), new Action<ConfigurableFileTree>() {
 			@Override
 			public void execute(ConfigurableFileTree files) {
@@ -188,5 +194,41 @@ public class NoHttpCheckstylePlugin implements Plugin<Project> {
 
 	private void withBasePlugin(Action<Plugin> action) {
 		this.project.getPlugins().withType(JavaBasePlugin.class, action);
+	}
+
+	/**
+	 * Gets the nohttp version from the Manifest
+	 *
+	 * Code used from
+	 * <a href="https://github.com/spring-projects/spring-boot/blob/v2.1.4.RELEASE/spring-boot-project/spring-boot-tools/spring-boot-gradle-plugin/src/main/java/org/springframework/boot/gradle/plugin/SpringBootPlugin.java#L139-L165">SpringBootPlugin</a>
+	 * @return the nohttp version
+	 */
+	private static String determineNohttpVersion() {
+		Class<?> clazz = NoHttpCheckstylePlugin.class;
+		String implementationVersion = clazz.getPackage()
+				.getImplementationVersion();
+		if (implementationVersion != null) {
+			return implementationVersion;
+		}
+		URL codeSourceLocation = clazz
+				.getProtectionDomain().getCodeSource().getLocation();
+		try {
+			URLConnection connection = codeSourceLocation.openConnection();
+			if (connection instanceof JarURLConnection) {
+				return getImplementationVersion(
+						((JarURLConnection) connection).getJarFile());
+			}
+			try (JarFile jarFile = new JarFile(new File(codeSourceLocation.toURI()))) {
+				return getImplementationVersion(jarFile);
+			}
+		}
+		catch (Exception ex) {
+			return null;
+		}
+	}
+
+	private static String getImplementationVersion(JarFile jarFile) throws IOException {
+		return jarFile.getManifest().getMainAttributes()
+				.getValue(Attributes.Name.IMPLEMENTATION_VERSION);
 	}
 }
