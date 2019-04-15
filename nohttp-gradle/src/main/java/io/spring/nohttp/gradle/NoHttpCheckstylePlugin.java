@@ -104,6 +104,7 @@ public class NoHttpCheckstylePlugin implements Plugin<Project> {
 	}
 
 	private void createCheckstyleTaskForProject(Configuration configuration) {
+		Logger logger = this.logger;
 		Project project = this.project;
 		NoHttpExtension extension = this.extension;
 		Checkstyle checkstyleTask = project
