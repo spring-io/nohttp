@@ -24,6 +24,7 @@ import org.gradle.testkit.runner.TaskOutcome
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
+import java.io.File
 
 /**
  * @author Rob Winch
@@ -67,9 +68,12 @@ class NoHttpCheckstylePluginITest {
                 .withPluginClasspath()
     }
 
-    // FIXME: the fileTree needs to be specified separately
     fun buildFile(content: String = "") {
         val build = tempBuild.newFile("build.gradle");
+        val workingDir = File(System.getProperty("user.dir"))
+        val rootDir = workingDir.parentFile
+        val nohttpDir = File(rootDir, "nohttp")
+        val nohttpCheckstyleDir = File(rootDir, "nohttp-checkstyle")
         build.writeText("""
             plugins {
                 id 'io.spring.nohttp'
@@ -80,7 +84,8 @@ class NoHttpCheckstylePluginITest {
             }
 
             dependencies {
-                nohttp fileTree(dir: '/home/rwinch/code/spring-io/nohttp/', include: '**/*.jar')
+                nohttp fileTree(dir: '${nohttpDir.absolutePath}', include: '**/build/libs/*.jar')
+                nohttp fileTree(dir: '${nohttpCheckstyleDir.absolutePath}', include: '**/build/libs/*.jar')
             }
 
             $content
