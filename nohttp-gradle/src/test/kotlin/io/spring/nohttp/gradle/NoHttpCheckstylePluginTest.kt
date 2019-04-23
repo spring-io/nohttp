@@ -81,6 +81,18 @@ class NoHttpCheckstylePluginTest {
     }
 
     @Test
+    fun configuredNohttpExtensionWhenSpringHandlersThenExcludes() {
+        val project = projectWithTempDirs()
+                .build()
+        project.pluginManager.apply(NoHttpCheckstylePlugin::class.java)
+        project.file("src/main/resources/META-INF/spring.handlers").touch()
+
+        val nohttp: NoHttpExtension = project.extensions.getByName(NoHttpCheckstylePlugin.NOHTTP_EXTENSION_NAME) as NoHttpExtension
+
+        assertThat(nohttp.source.files).isEmpty()
+    }
+
+    @Test
     fun configuredNohttpExtensionWhenDotGradleThenExcludes() {
         val project = projectWithTempDirs()
                 .build()
