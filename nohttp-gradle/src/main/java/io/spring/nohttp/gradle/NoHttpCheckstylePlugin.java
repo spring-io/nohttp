@@ -88,6 +88,7 @@ public class NoHttpCheckstylePlugin implements Plugin<Project> {
 				files.exclude("**/*.class");
 				files.exclude("**/*.jks");
 				files.exclude("**/spring.handlers");
+				files.exclude("**/spring.schemas");
 			}
 		}));
 		File defaultWhiteListFile = project.file(DEFAULT_WHITELIST_FILE_PATH);
