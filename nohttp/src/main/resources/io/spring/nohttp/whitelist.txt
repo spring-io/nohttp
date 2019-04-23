@@ -45,7 +45,7 @@
 ^http://sodipodi\.sourceforge\.net/DTD/sodipodi-0\.dtd.*
 ^http://www\.inkscape\.org/namespaces/inkscape.*
 ^http://www\.openswatchbook\.org/uri/2009/osb.*
-^http://www\.w3\.org/1999/02/22-rdf-syntax-ns#.*
+^http://www\.w3\.org/1999/02/22-rdf-syntax-ns.*
 ^http://www\.inkscape\.org/namespaces/inkscape.*
 ^http://www\.w3\.org/1999/02/22-rdf-syntax-ns#.*
 ^http://www\.w3\.org/1999/xlink.*
