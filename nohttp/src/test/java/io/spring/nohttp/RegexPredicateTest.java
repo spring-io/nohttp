@@ -164,6 +164,11 @@ public class RegexPredicateTest {
 	// https://tools.ietf.org/html/rfc2606
 
 	@Test
+	public void findTestTldEscapedColonIsWhitelisted() {
+		assertWhitelisted("http\\://foo.test");
+	}
+
+	@Test
 	public void findTestTldIsWhitelisted() {
 		assertDomainAndSubdomainsWhitelisted("foo.test");
 	}

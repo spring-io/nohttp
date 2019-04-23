@@ -1,6 +1,6 @@
 // https://tools\.ietf\.org/html/rfc2606
 
-^http://[^/]+\.(test|example|invalid|localhost).*
+^http\\?://[^/]+\.(test|example|invalid|localhost).*
 
 // only top level domain (no \.) for testing
 ^http://[^\.\\]+/.*
