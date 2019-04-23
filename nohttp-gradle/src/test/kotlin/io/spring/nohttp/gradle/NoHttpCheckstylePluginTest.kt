@@ -17,12 +17,10 @@
 package io.spring.nohttp.gradle
 
 import org.assertj.core.api.Assertions.assertThat
-import org.gradle.api.Project
 import org.gradle.api.plugins.JavaBasePlugin
 import org.gradle.api.plugins.quality.Checkstyle
 import org.gradle.api.plugins.quality.CheckstylePlugin
 import org.gradle.testfixtures.ProjectBuilder
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
@@ -131,8 +129,6 @@ class NoHttpCheckstylePluginTest {
     }
 
     @Test
-    @Ignore
-    // FIXME: build dirs are not being excluded in test but work when actually used
     fun configuredNohttpExtensionWhenBuildDirThenExcludes() {
         val project = projectWithTempDirs()
                 .build()

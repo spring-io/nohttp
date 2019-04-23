@@ -74,10 +74,12 @@ public class NoHttpCheckstylePlugin implements Plugin<Project> {
 		this.extension.setSource(project.fileTree(project.getProjectDir(), new Action<ConfigurableFileTree>() {
 			@Override
 			public void execute(ConfigurableFileTree files) {
-				project.getGradle().allprojects(new Action<Project>() {
+				String projectDir = project.getProjectDir().getAbsolutePath();
+				files.exclude(createBuildExclusion(projectDir, project));
+				project.subprojects(new Action<Project>() {
 					@Override
-					public void execute(Project project) {
-						files.exclude(project.getBuildDir().getAbsolutePath());
+					public void execute(Project p) {
+						files.exclude(createBuildExclusion(projectDir, p));
 					}
 				});
 				files.exclude(".git/**");
@@ -87,12 +89,6 @@ public class NoHttpCheckstylePlugin implements Plugin<Project> {
 				files.exclude("**/*.jks");
 			}
 		}));
-		project.getGradle().allprojects(new Action<Project>() {
-			@Override
-			public void execute(Project project) {
-				System.out.println(project);
-			}
-		});
 		File defaultWhiteListFile = project.file(DEFAULT_WHITELIST_FILE_PATH);
 		if (defaultWhiteListFile.exists()) {
 			this.extension.setWhitelistsFile(defaultWhiteListFile);
@@ -107,6 +103,13 @@ public class NoHttpCheckstylePlugin implements Plugin<Project> {
 		configureDefaultDependenciesForProject(noHttpConfiguration);
 		createCheckstyleTaskForProject(checkstyleConfiguration);
 		configureCheckTask();
+	}
+
+	private String createBuildExclusion(String projectDir, Project p) {
+		File buildDir = p.getBuildDir();
+		String path = buildDir.getAbsolutePath().replace(projectDir + File.separator, "");
+		String pattern = path + "/**";
+		return pattern;
 	}
 
 	private void createCheckstyleTaskForProject(Configuration configuration) {
