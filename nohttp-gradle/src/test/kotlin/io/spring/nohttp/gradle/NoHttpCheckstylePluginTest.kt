@@ -141,6 +141,18 @@ class NoHttpCheckstylePluginTest {
     }
 
     @Test
+    fun configuredNohttpExtensionWhenDotJarThenExcludes() {
+        val project = projectWithTempDirs()
+                .build()
+        project.pluginManager.apply(NoHttpCheckstylePlugin::class.java)
+        project.file("dependency.jar").touch()
+
+        val nohttp: NoHttpExtension = project.extensions.getByName(NoHttpCheckstylePlugin.NOHTTP_EXTENSION_NAME) as NoHttpExtension
+
+        assertThat(nohttp.source.files).isEmpty()
+    }
+
+    @Test
     fun configuredNohttpExtensionWhenJksThenExcludes() {
         val project = projectWithTempDirs()
                 .build()
