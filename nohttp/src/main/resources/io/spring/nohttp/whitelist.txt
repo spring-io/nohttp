@@ -192,7 +192,7 @@ https://www\.w3schools\.com/furniture
 ^http://www\.springframework\.net/validation.*
 ^http://www\.springframework\.net/wcf.*
 ^http://www\.springframework\.org/dtd.*(?<!\.(dtd))$
-^http://www\.springframework\.org/schema.*(?<!\.(xsd))$
+^http\\?://www\.springframework\.org/schema.*(?<!\.(xsd))$
 ^http://www\.springframework\.org/security/tags.*
 ^http://www\.springframework\.org/springpython/schema/objects.*
 ^http://www\.springframework\.org/springpython/schema/objects/1\.1.*

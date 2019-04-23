@@ -122,10 +122,15 @@ public class RegexPredicateTest {
 	private Predicate<String> whitelist = RegexPredicate.createDefaultUrlWhitelist();
 
 	// xml
-	
+
 	@Test
 	public void testWhenDefaultWhitelistAndSpringNameThenWhitelisted() {
 		assertWhitelisted("http://www.springframework.org/schema/beans");
+	}
+
+	@Test
+	public void testWhenDefaultWhitelistAndEscapedColonSpringNameThenWhitelisted() {
+		assertWhitelisted("http\\://www.springframework.org/schema/beans");
 	}
 
 	@Test
