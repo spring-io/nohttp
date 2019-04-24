@@ -18,6 +18,7 @@ package io.spring.nohttp.gradle;
 
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
+import org.gradle.api.plugins.PluginManager;
 
 /**
  * @author Rob Winch
@@ -26,6 +27,8 @@ public class NoHttpPlugin implements Plugin<Project> {
 	@Override
 	public void apply(Project project) {
 		// FIXME: only apply if checkstyle applied
-		project.getPluginManager().apply(NoHttpCheckstylePlugin.class);
+		PluginManager pluginManager = project.getPluginManager();
+		pluginManager.apply(NoHttpCheckstylePlugin.class);
+		pluginManager.apply(NoHttpCliPlugin.class);
 	}
 }

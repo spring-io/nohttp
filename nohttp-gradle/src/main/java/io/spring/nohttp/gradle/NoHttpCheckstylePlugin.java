@@ -170,8 +170,7 @@ public class NoHttpCheckstylePlugin implements Plugin<Project> {
 			@Override
 			public void execute(DependencySet dependencies) {
 				NoHttpExtension extension = NoHttpCheckstylePlugin.this.extension;
-				dependencies.add(NoHttpCheckstylePlugin.this.project.getDependencies().create("io.spring.nohttp:nohttp-checkstyle:"  + extension.getToolVersion()));
-				dependencies.add(NoHttpCheckstylePlugin.this.project.getDependencies().create("io.spring.nohttp:nohttp:"  + extension.getToolVersion()));
+				dependencies.add(NoHttpCheckstylePlugin.this.project.getDependencies().create("io.spring.nohttp:nohttp-checkstyle:" + extension.getToolVersion()));
 			}
 		});
 	}
