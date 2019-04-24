@@ -222,6 +222,7 @@ https://www\.w3schools\.com/furniture
 ^http://www\.w3\.org/2001/XMLSchema-instance.*
 ^http://www\.w3\.org/2003/05/soap-envelope.*
 ^http://www\.w3\.org/2003/XInclude.*
+^http://www\.w3\.org/2004/08/xop/include.*
 ^http://www\.w3\.org/2005/Atom.*
 ^http://www\.w3\.org/TR/html4/.*
 ^http://www\.w3\.org/TR/xhtml1/transitional.*

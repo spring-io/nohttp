@@ -147,6 +147,7 @@ public class RegexPredicateTest {
 	public void testDefaultWehnW3XMLThenWhitelisted() {
 		assertWhitelisted("http://www.w3.org/1999/xhtml");
 		assertWhitelisted("http://www.w3.org/2001/XMLSchema-datatypes");
+		assertWhitelisted("http://www.w3.org/2004/08/xop/include");
 	}
 
 	// examples
