@@ -32,3 +32,9 @@ dependencies {
 	compile 'org.springframework.boot:spring-boot-starter'
 	testCompile 'org.springframework.boot:spring-boot-starter-test'
 }
+
+configurations.archives.artifacts.clear()
+
+artifacts {
+	archives bootJar
+}
