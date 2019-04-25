@@ -146,13 +146,15 @@ public class NoHttpCheckstylePlugin implements Plugin<Project> {
 					logger.debug("Using whitelist at {}", whitelistFile);
 					configProperties.put("nohttp.checkstyle.whitelistFileName", whitelistFile);
 				}
+				configProperties.put("config_loc", getConfigLocation());
 				return configProperties;
 			}
 		});
 		taskMapping.map("config", new Callable<TextResource>() {
 			@Override
 			public TextResource call() throws Exception {
-				File defaultCheckstyleFile = project.file("etc/nohttp/checkstyle.xml");
+				File configLoc = getConfigLocation();
+				File defaultCheckstyleFile = new File(configLoc, "checkstyle.xml");
 				if (defaultCheckstyleFile.exists()) {
 					logger.debug("Found default checkstyle configuration, so configuring checkstyleTask to use it");
 					return project.getResources().getText().fromFile(defaultCheckstyleFile);
@@ -163,6 +165,14 @@ public class NoHttpCheckstylePlugin implements Plugin<Project> {
 				return project.getResources().getText().fromUri(resource);
 			}
 		});
+	}
+
+	private File getConfigLocation() {
+		File whitelistFile = this.extension.getWhitelistFile();
+		if (whitelistFile == null) {
+			return this.project.file("etc/nohttp");
+		}
+		return whitelistFile.getParentFile();
 	}
 
 	private void configureDefaultDependenciesForProject(Configuration configuration) {
