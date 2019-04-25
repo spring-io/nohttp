@@ -51,6 +51,9 @@
 ^http://www\.w3\.org/1999/xlink.*
 ^http://www\.w3\.org/2000/svg.*
 
+// openoffice
+^http://openoffice.org/2000/.*
+
 // xml
 ^http://a9\.com/-/spec/opensearch/1\.1/.*
 ^http://activemq\.apache\.org/schema/core.*

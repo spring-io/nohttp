@@ -142,12 +142,19 @@ public class RegexPredicateTest {
 	public void testWhenDefaultWhitelistAndSpringDtdThenNotWhitelisted() {
 		assertNotWhitelisted("http://www.springframework.org/dtd/spring-beans-2.0.dtd");
 	}
-	
+
 	@Test
 	public void testDefaultWehnW3XMLThenWhitelisted() {
 		assertWhitelisted("http://www.w3.org/1999/xhtml");
 		assertWhitelisted("http://www.w3.org/2001/XMLSchema-datatypes");
 		assertWhitelisted("http://www.w3.org/2004/08/xop/include");
+	}
+
+	@Test
+	public void testDefaultWhenOpenofficeThenWhitelisted() {
+		assertWhitelisted("http://openoffice.org/2000/office");
+		assertWhitelisted("http://openoffice.org/2000/meta");
+		assertWhitelisted("http://openoffice.org/2000/presentation");
 	}
 
 	// examples
