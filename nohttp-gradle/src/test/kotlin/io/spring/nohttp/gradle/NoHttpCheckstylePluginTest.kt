@@ -213,7 +213,7 @@ class NoHttpCheckstylePluginTest {
     </module>
 
     <module name="SuppressionFilter">
-        <property name="file" value="${DOLLAR}{config_loc}/suppressions.xml"/>
+        <property name="file" value="${DOLLAR}{config_loc}/suppressions.xml" default=""/>
         <property name="optional" value="true"/>
     </module>
 </module>""")
