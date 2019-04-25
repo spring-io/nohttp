@@ -17,10 +17,8 @@
 package io.spring.nohttp.gradle;
 
 import org.gradle.api.file.FileTree;
-import org.gradle.api.tasks.SourceSet;
 
 import java.io.File;
-import java.util.Collection;
 
 /**
  * @author Rob Winch
@@ -31,15 +29,15 @@ public class NoHttpExtension {
 
 	private FileTree source;
 
-	public File getWhitelistsFile() {
-		return this.whitelistsFile;
+	private File whitelistFile;
+
+	public File getWhitelistFile() {
+		return this.whitelistFile;
 	}
 
-	public void setWhitelistsFile(File whitelistsFile) {
-		this.whitelistsFile = whitelistsFile;
+	public void setWhitelistFile(File whitelistFile) {
+		this.whitelistFile = whitelistFile;
 	}
-
-	private File whitelistsFile;
 
 	public FileTree getSource() {
 		return this.source;

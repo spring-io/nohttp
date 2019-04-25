@@ -95,7 +95,7 @@ public class NoHttpCheckstylePlugin implements Plugin<Project> {
 		}));
 		File defaultWhiteListFile = project.file(DEFAULT_WHITELIST_FILE_PATH);
 		if (defaultWhiteListFile.exists()) {
-			this.extension.setWhitelistsFile(defaultWhiteListFile);
+			this.extension.setWhitelistFile(defaultWhiteListFile);
 		}
 
 		project.getPluginManager().apply(CheckstylePlugin.class);
@@ -141,10 +141,10 @@ public class NoHttpCheckstylePlugin implements Plugin<Project> {
 			@Override
 			public Map<String, Object> call() throws Exception {
 				Map<String, Object> configProperties = new HashMap<>();
-				File whitelistsFile = extension.getWhitelistsFile();
-				if (whitelistsFile != null) {
-					logger.debug("Using whitelist at {}", whitelistsFile);
-					configProperties.put("nohttp.checkstyle.whitelistFileName", whitelistsFile);
+				File whitelistFile = extension.getWhitelistFile();
+				if (whitelistFile != null) {
+					logger.debug("Using whitelist at {}", whitelistFile);
+					configProperties.put("nohttp.checkstyle.whitelistFileName", whitelistFile);
 				}
 				return configProperties;
 			}

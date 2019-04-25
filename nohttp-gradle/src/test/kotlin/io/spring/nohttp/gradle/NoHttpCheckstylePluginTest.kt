@@ -53,7 +53,7 @@ class NoHttpCheckstylePluginTest {
 
         val nohttp: NoHttpExtension = project.extensions.getByName(NoHttpCheckstylePlugin.NOHTTP_EXTENSION_NAME) as NoHttpExtension
 
-        assertThat(nohttp.whitelistsFile).isEqualTo(whitelistFile)
+        assertThat(nohttp.whitelistFile).isEqualTo(whitelistFile)
     }
 
     @Test
@@ -241,7 +241,7 @@ class NoHttpCheckstylePluginTest {
         project.pluginManager.apply(NoHttpCheckstylePlugin::class.java)
 
         val nohttp: NoHttpExtension = project.extensions.getByName(NoHttpCheckstylePlugin.NOHTTP_EXTENSION_NAME) as NoHttpExtension
-        nohttp.whitelistsFile = whitelistFile
+        nohttp.whitelistFile = whitelistFile
         val task: Checkstyle = project.tasks.findByName(NoHttpCheckstylePlugin.CHECKSTYLE_NOHTTP_TASK_NAME)!! as Checkstyle
 
         assertThat(task.configProperties).containsEntry("nohttp.checkstyle.whitelistFileName", whitelistFile)
