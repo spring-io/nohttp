@@ -211,6 +211,11 @@ class NoHttpCheckstylePluginTest {
     <module name="io.spring.nohttp.checkstyle.check.NoHttpCheck">
         <property name="whitelistFileName" value="${DOLLAR}{nohttp.checkstyle.whitelistFileName}" default=""/>
     </module>
+
+    <module name="SuppressionFilter">
+        <property name="file" value="${DOLLAR}{config_loc}/suppressions.xml"/>
+        <property name="optional" value="true"/>
+    </module>
 </module>""")
         assertThat(task.configProperties).containsEntry("config_loc", project.file("etc/nohttp"))
         assertThat(task.reports.xml.destination).isEqualTo(project.file("build/reports/checkstyle/nohttp.xml"))

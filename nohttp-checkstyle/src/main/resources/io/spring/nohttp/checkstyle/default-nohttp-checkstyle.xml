@@ -27,4 +27,9 @@
     <module name="io.spring.nohttp.checkstyle.check.NoHttpCheck">
         <property name="whitelistFileName" value="${nohttp.checkstyle.whitelistFileName}" default=""/>
     </module>
+
+    <module name="SuppressionFilter">
+        <property name="file" value="${config_loc}/suppressions.xml"/>
+        <property name="optional" value="true"/>
+    </module>
 </module>
