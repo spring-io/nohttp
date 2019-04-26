@@ -71,7 +71,7 @@ You can get help with additional options using `--help`.
 ----
 java -jar $NOHTTP --help
 ...
-Usage: nohttp [-fhMrTV] [-w=<whitelistFile>] [-D=<regex>]... [-F=<regex>]...
+Usage: nohttp [-fhMrsTV] [-w=<whitelistFile>] [-D=<regex>]... [-F=<regex>]...
               [<dir>]
       [<dir>]           The directory to scan. Default is current working directory.
   -D=<regex>            Regular expression of directories to exclude scanning.
@@ -85,6 +85,8 @@ Usage: nohttp [-fhMrTV] [-w=<whitelistFile>] [-D=<regex>]... [-F=<regex>]...
   -M                    Disables printing the matches for specific files.
   -r                    Enables replacing the values that were found. The default is
                           to just find the results.
+  -s                    Enables checking the http status before determining if
+                          replacement should be done.
   -T                    Disable searching only text based files. This is determined
                           using native invocation of grep which will not work on all
                           systems, so it can be disabled.
