@@ -22,6 +22,7 @@ import io.spring.nohttp.HttpMatcher;
 import io.spring.nohttp.HttpReplacer;
 import io.spring.nohttp.RegexHttpMatcher;
 import io.spring.nohttp.RegexPredicate;
+import io.spring.nohttp.StatusHttpReplacer;
 import io.spring.nohttp.file.DirScanner;
 import io.spring.nohttp.file.PreGradle21Scanner;
 import io.spring.nohttp.file.HttpMatcherProcessor;
@@ -70,6 +71,8 @@ public class ReplaceFilesRunner implements CommandLineRunner, Callable<Void> {
 	@CommandLine.Option(names = "-M", description = "Disables printing the matches for specific files.", defaultValue = "false")
 	private boolean disablePrintMatches;
 
+	@CommandLine.Option(names = "-s", description = "Enables checking the http status before determining if replacement should be done.", defaultValue = "false")
+	private boolean statusCheck;
 
 	@CommandLine.Option(names = "-f", description = "If true, prints out the file names.", defaultValue = "false")
 	private boolean printFiles;
@@ -169,6 +172,9 @@ public class ReplaceFilesRunner implements CommandLineRunner, Callable<Void> {
 		RegexHttpMatcher matcher = new RegexHttpMatcher(RegexPredicate.createDefaultUrlWhitelist());
 		if (this.whitelistExclusions != null) {
 			matcher.addHttpWhitelist(RegexPredicate.createWhitelistFromPatterns(this.whitelistExclusions));
+		}
+		if (this.statusCheck) {
+			matcher.setHttpReplacer(new StatusHttpReplacer());
 		}
 		return matcher;
 	}
