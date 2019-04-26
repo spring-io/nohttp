@@ -91,6 +91,7 @@ public class RegexHttpMatcherTest {
 	public void findHttpWhenCustomPatternThenFound() {
 		Pattern pattern = Pattern.compile("a");
 		this.matcher.setPattern(pattern);
+		this.matcher.setHttpReplacer(h -> h.toUpperCase());
 
 		List<HttpMatchResult> results = this.matcher.findHttp("123a456");
 
@@ -315,6 +316,17 @@ public class RegexHttpMatcherTest {
 		HttpReplaceResult result = this.matcher
 				.replaceHttp("http://example.com");
 		assertThat(result.isReplacement()).isFalse();
+		assertThat(result.getResult()).isEqualTo("http://example.com");
+	}
+
+	@Test
+	public void replaceHttpWhenNotReplacedThenWhitelisted() {
+		this.matcher = new RegexHttpMatcher(http -> false);
+		this.matcher.setHttpReplacer(u -> u);
+		HttpReplaceResult result = this.matcher
+				.replaceHttp("http://example.com");
+		assertThat(result.isReplacement()).isFalse();
+		assertThat(result.getResult()).isEqualTo("http://example.com");
 	}
 
 	private HttpReplaceResult assertReplaceHttpEquals(String text, String result) {

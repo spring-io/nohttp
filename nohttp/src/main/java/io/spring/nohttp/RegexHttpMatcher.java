@@ -94,9 +94,13 @@ public class RegexHttpMatcher implements HttpMatcher, HttpReplacer {
 			if (this.whitelist.test(httpUrl)) {
 				continue;
 			}
+			String replacementUrl = this.httpReplacer.apply(httpUrl);
+			if (httpUrl.equals(replacementUrl)) {
+				continue;
+			}
 			try {
 				writer.append(text, currentStart, matcher.start());
-				writer.append(this.httpReplacer.apply(httpUrl));
+				writer.append(replacementUrl);
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
