@@ -216,6 +216,13 @@ class NoHttpCheckstylePluginTest {
         <property name="file" value="${DOLLAR}{config_loc}/suppressions.xml" default=""/>
         <property name="optional" value="true"/>
     </module>
+
+    <!-- Allow suppression with comments
+       // CHECKSTYLE:OFF
+       ... ignored content ...
+       // CHECKSTYLE:ON
+    -->
+    <module name="SuppressWithPlainTextCommentFilter"/>
 </module>""")
         assertThat(task.configProperties).containsEntry("config_loc", project.file("etc/nohttp"))
         assertThat(task.reports.xml.destination).isEqualTo(project.file("build/reports/checkstyle/nohttp.xml"))

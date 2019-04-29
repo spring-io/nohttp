@@ -32,4 +32,11 @@
         <property name="file" value="${config_loc}/suppressions.xml" default=""/>
         <property name="optional" value="true"/>
     </module>
+
+    <!-- Allow suppression with comments
+       // CHECKSTYLE:OFF
+       ... ignored content ...
+       // CHECKSTYLE:ON
+    -->
+    <module name="SuppressWithPlainTextCommentFilter"/>
 </module>
