@@ -229,6 +229,7 @@ https://www\.w3schools\.com/furniture
 ^http://www\.w3\.org/2005/Atom.*
 ^http://www\.w3\.org/TR/html4/.*
 ^http://www\.w3\.org/TR/xhtml1/transitional.*
+^\Qhttp://xslthl.sf.net\E$
 ^http://xmlns\.jcp\.org/xml/ns/javaee.*
 ^http://xmlns\.jcp\.org/xml/ns/persistence/orm.*
 ^http://xmlns\.oracle\.com/weblogic/weblogic-web-app.*

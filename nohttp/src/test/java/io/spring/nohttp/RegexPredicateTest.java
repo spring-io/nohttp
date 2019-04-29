@@ -157,6 +157,12 @@ public class RegexPredicateTest {
 		assertWhitelisted("http://openoffice.org/2000/presentation");
 	}
 
+	@Test
+	// gh-4
+	public void docbookXslthlWhenDefaultWhitelistThenWhitelisted() {
+		assertWhitelisted("http://xslthl.sf.net");
+	}
+
 	// examples
 
 	@Test
