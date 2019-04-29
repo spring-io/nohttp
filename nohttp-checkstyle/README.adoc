@@ -1,4 +1,4 @@
-This project allows adding checks for URLs with the `http://` scheme while ignoring URLs that cannot be `https://`.
+This project integrates https://github.com/spring-io/nohttp/tree/master/nohttp[nohttp] with https://checkstyle.org[checkstyle] to reject URLs with the `http://` scheme while ignoring URLs that cannot be `https://`.
 
 = NoHttpCheck
 
