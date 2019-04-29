@@ -1,4 +1,4 @@
-This is a utility for finding and replacing http URLs.
+This is a utility for finding and replacing http URLs using https://github.com/spring-io/nohttp/tree/master/nohttp[nohttp].
 It takes into account whitelisting rules that nohttp uses.
 
 = Usage
