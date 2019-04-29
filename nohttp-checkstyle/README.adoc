@@ -19,7 +19,7 @@ For example, you will want to ensure that you validate your build files like `po
 
 == Configuration
 
-An example configuration can be found below:
+The default nohttp checkstyle.xml configuration can be found below:
 
 [source,xml]
 ----
