@@ -6,6 +6,19 @@ It takes into account whitelisting rules that nohttp uses.
 The application is a https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/[Spring Boot] application.
 The application requires JDK 8+ to compile and run.
 
+== Downloading
+
+- Snapshots are available for download at https://repo.spring.io/libs-snapshot/io/spring/nohttp/nohttp-cli/
+- Releases are available for download at https://repo.maven.apache.org/maven2/io/spring/nohttp/nohttp-cli/
+
+Once you download, we recommend exporting the jar to a variable named `NOHTTP`.
+For example:
+
+[source,bash]
+----
+export NOHTTP=~/Downloads/nohttp-cli-0.0.1.BUILD-SNAPSHOT.jar
+----
+
 == Compiling
 
 To use this app first create the jar
