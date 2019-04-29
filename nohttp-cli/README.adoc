@@ -16,7 +16,7 @@ For example:
 
 [source,bash]
 ----
-export NOHTTP=~/Downloads/nohttp-cli-0.0.1.BUILD-SNAPSHOT.jar
+export NOHTTP='~/Downloads/nohttp-cli-0.0.1.BUILD-SNAPSHOT.jar'
 ----
 
 == Compiling
