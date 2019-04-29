@@ -95,7 +95,7 @@ Usage: nohttp [-fhMrsTV] [-w=<whitelistFile>] [-D=<regex>]... [-F=<regex>]...
                           multiple times to provide multiple exclusions. Default is
                           no file exclusions.
   -h, --help            Show this help message and exit.
-  -M                    Disables printing the matches for specific files.
+  -M                    Disables printing each match within their specific files.
   -r                    Enables replacing the values that were found. The default is
                           to just find the results.
   -s                    Enables checking the http status before determining if

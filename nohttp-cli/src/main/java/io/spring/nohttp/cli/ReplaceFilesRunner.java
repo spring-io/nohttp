@@ -40,17 +40,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
+
+import static java.lang.System.exit;
 
 /**
  * @author Rob Winch
  */
 @Component
 @CommandLine.Command(name = "nohttp", mixinStandardHelpOptions = true)
-public class ReplaceFilesRunner implements CommandLineRunner, Callable<Void> {
+public class ReplaceFilesRunner implements CommandLineRunner, Callable<Integer> {
 	private InputStream whitelistExclusions;
 
 	@CommandLine.Option(names = "-T", description = "Disable searching only text based files. This is determined using native invocation of grep which will not work on all systems, so it can be disabled.", defaultValue = "true")
@@ -68,7 +71,7 @@ public class ReplaceFilesRunner implements CommandLineRunner, Callable<Void> {
 	@CommandLine.Option(names = "-F", paramLabel = "<regex>", description = "Regular expression of files to exclude scanning. Specify multiple times to provide multiple exclusions. Default is no file exclusions.")
 	private List<Pattern> fileExclusions = new ArrayList<>();
 
-	@CommandLine.Option(names = "-M", description = "Disables printing the matches for specific files.", defaultValue = "false")
+	@CommandLine.Option(names = "-M", description = "Disables printing each match within their specific files.", defaultValue = "false")
 	private boolean disablePrintMatches;
 
 	@CommandLine.Option(names = "-s", description = "Enables checking the http status before determining if replacement should be done.", defaultValue = "false")
@@ -84,26 +87,32 @@ public class ReplaceFilesRunner implements CommandLineRunner, Callable<Void> {
 
 	@Override
 	public void run(String... args) throws Exception {
-		CommandLine.call(this, args);
+		Integer status = CommandLine.call(this, args);
+		if (status != null) {
+			exit(status);
+		}
 	}
 
 	@Override
-	public Void call() throws Exception {
+	public Integer call() throws Exception {
 		RegexHttpMatcher matcher = createMatcher();
 
 		HttpProcessor processor = createHttpProcessor(matcher, matcher);
 
+
+		System.out.println();
+		System.out.println("Looking for restricted http:// URLs");
 		DirScanner.create(this.dir)
 			.textFiles(this.textFilesOnly)
 			.excludeDirs(dirExclusions())
 			.excludeFiles(fileExclusions())
 			.scan(withHttpProcessor(processor));
 
-		writeSummaryReport(processor.getHttpMatches());
+		Set<String> httpUrlMatches = processor.getHttpMatches();
+		writeSummaryReport(httpUrlMatches);
 
 		System.out.println();
 		System.out.println("Looking for old Gradle DSLs that use http");
-		System.out.println();
 		HttpMatcher gradleMatcher = GradleHttpDsl.createMatcher();
 		HttpReplacer gradleReplacer = GradleHttpDsl.createReplacer();
 		HttpProcessor gradleProcessor = createHttpProcessor(gradleMatcher, gradleReplacer);
@@ -111,10 +120,11 @@ public class ReplaceFilesRunner implements CommandLineRunner, Callable<Void> {
 
 		gradleScanner.scan(withHttpProcessor(gradleProcessor));
 
-		writeSummaryReport(gradleProcessor.getHttpMatches());
+		Set<String> gradleMatches = gradleProcessor.getHttpMatches();
+		writeSummaryReport(gradleMatches);
 
 		System.out.println("Done!");
-		return null;
+		return httpUrlMatches.size() + gradleMatches.size();
 	}
 
 	private HttpProcessor createHttpProcessor(HttpMatcher matcher, HttpReplacer replacer) {
@@ -142,7 +152,10 @@ public class ReplaceFilesRunner implements CommandLineRunner, Callable<Void> {
 
 	private void writeSummaryReport(Collection<String> httpUrls) {
 		System.out.println("");
-		if (isReplace()) {
+		if (httpUrls.isEmpty()) {
+			System.out.println("No results found");
+		}
+		else if (isReplace()) {
 			System.out.println("The Following HTTP results were replaced");
 		} else {
 			System.out.println("The Following HTTP results were found");
