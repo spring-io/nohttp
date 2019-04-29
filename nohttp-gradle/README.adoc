@@ -1,12 +1,12 @@
-= nohttp-gradle
+= NoHttpPlugin
 
-Configures Gradle's https://docs.gradle.org/current/dsl/org.gradle.api.plugins.quality.Checkstyle.html[Checkstyle] task to verify there are no restricted usages of `http://`.
+Applies <<NoHttpCheckstylePlugin>> and <<NoHttpCliPlugin>>
 
 == Sample
 
 You can find a working sample at https://github.com/spring-io/nohttp/tree/master/samples/nohttp-gradle-sample[nohttp-gradle-sample].
 
-== Configuration
+== Usage
 
 In it's simplest form, you just need to add the Plugin to your build.
 
@@ -31,16 +31,119 @@ repositories {
 apply plugin: 'io.spring.nohttp'
 ----
 
-== Additional Whitelist
+== NoHttpCheckstylePlugin
 
-If you need to provide a custom whitelist, you can create a https://github.com/spring-io/nohttp/tree/master/nohttp#regexpredicatecreatewhitelistinputstream[whitelist with RegexPredicate] by adding a file at `config/nohttp/whitelist.lines`.
-For example:
+Configures Gradle's https://docs.gradle.org/current/dsl/org.gradle.api.plugins.quality.Checkstyle.html[Checkstyle] task to integrate with https://github.com/spring-io/nohttp/tree/master/nohttp-checkstyle[nohttp-checkstyle] to verify there are no restricted usages of `http://`.
 
-.config/nohttp/whitelist.lines
-[source,regex]
+
+=== Tasks
+
+The `NoHttpCheckstylePlugin` adds the following tasks to the project:
+
+`checkstyleNohttp` — https://docs.gradle.org/current/dsl/org.gradle.api.plugins.quality.Checkstyle.html[Checkstyle]::
+_Depends on_: `classes`
++
+Runs Checkstyle to verify no restricted uses of `http://`.
+
+==== Dependencies added to other tasks
+
+The `NoHttpCheckstylePlugin` adds the following dependencies to tasks defined by the Java plugin.
+
+`check`::
+_Depends on_: `checkstyleNohttp`.
+
+== Project layout
+
+By default, the `NoHttpCheckstylePlugin` expects configuration files to be placed in the root project, but this can be changed.
+
 ----
-// Ignore Maven XML Namespace id of http://maven.apache.org/POM/4.0.0
-^http://maven\.apache\.org/POM/4.0.0$
-// Whitelist Company XML namespace names but not the locations (which end in .xsd)
-^http://mycompany.test/xml/.*(?<!\.(xsd))$
+<root>
+└── etc
+    └── nohttp                 // <1>
+        └── checkstyle.xml     // <2>
+        └── suppressions.xml   // <3>
+        └── whitelist.lines    // <4>
 ----
+<1> Nohttp configuration files go here
+<2> A custom checkstyle.xml file to use for `checkstyleNohttp`. The default can be found in the https://github.com/spring-io/nohttp/blob/master/nohttp-checkstyle/README.adoc#configuration[nohttp-checkstyle documentation]
+<3> A suppressions file to use for `checkstyleNohttp`. The default is no suppressions
+<4> https://github.com/spring-io/nohttp/tree/master/nohttp-checkstyle#custom-whitelist[Custom whitelist] to use
+
+=== Dependency management
+
+The nohttp plugin adds the following dependency configurations:
+
+.nohttp plugin - dependency configurations
+[cols="a,a", options="header"]
+|===
+| Name
+| Meaning
+
+| `nohttp`
+| The nohttp libraries to use. The default is the same version of nohttp as the Nohttp Gradle Plugin.
+|===
+
+
+=== Configuration
+
+The https://github.com/spring-io/nohttp/blob/master/nohttp-gradle/src/main/java/io/spring/nohttp/gradle/NoHttpExtension.java[NohttpExtension] is used to customize the configuration. An example configuration is:
+
+[source,groovy]
+----
+nohttp {
+    whitelistFile = project.file('src/nohttp/whitelist.lines') <1>
+    source.exclude "**/test-output/**"                         <2>
+    toolVersion = '0.0.1.BUILD-SNAPSHOT'                       <3>
+}
+----
+
+<1> `whitelistFile` (https://docs.oracle.com/javase/8/docs/api/java/io/File.html[File]) - instructs nohttp to use `src/nohttp/whitelist.lines` to provide https://github.com/spring-io/nohttp/tree/master/nohttp#regexpredicatecreatewhitelistinputstream[Custom Rules] for whitelisting URLs. Modifying the `whitelistFile` also modifies the default <<project-layout>> to look for the other configuration in the parent directory of `whitelistFile` (i.e. `src/nohttp`) as apposed to `etc/nohttp`.
+<2> `source` (https://docs.gradle.org/current/userguide/working_with_files.html#sec:file_trees[FileTree]) - instructs nohttp what files to include / exclude. In this example, we exclude anything in the folder `test-output`.
+<3> `toolVersion` - Updates the version of nohttp to use. The default is the same version as the nohttp Gradle Plugin version being used.
+
+==== Configuring nohttpCheckstyle
+
+You can also configure `nohttpCheckstyle` https://docs.gradle.org/current/dsl/org.gradle.api.plugins.quality.Checkstyle.html[Checkstyle task] directly.
+
+=== Built-in variables
+
+The `NoHttpCheckstylePlugin` defines:
+
+- `config_loc` property that can be used in Checkstyle configuration files to define paths to other configuration files like `suppressions.xml`.
+- `nohttp.checkstyle.whitelistFileName` property that can be used in Checkstyle configuration files to define paths to other configuration files like `suppressions.xml`.
+
+== NoHttpCliPlugin
+
+Adds a https://docs.gradle.org/current/javadoc/org/gradle/api/tasks/JavaExec.html[JavaExec] task that allows running https://github.com/spring-io/nohttp/tree/master/nohttp-cli[nohttp-cli].
+
+=== Tasks
+
+The Application plugin adds the following tasks to the project.
+
+`nohttp` — https://docs.gradle.org/current/javadoc/org/gradle/api/tasks/JavaExec.html[JavaExec]::
++
+Runs https://github.com/spring-io/nohttp/tree/master/nohttp-cli[nohttp-cli] against the project.
+
+=== Examples
+
+Run with the defaults. It finds all restricted usages of `http://` and reports them.
+
+----
+./gradlew nohttp
+----
+
+Outputs the help
+
+----
+./gradlew nohttp --args='--help'
+----
+
+Advanced sample
+
+----
+./gradlew nohttp --args='-D=build -D=.git -F=spring.schemas -w etc/nohttp/whitelist.lines'
+----
+
+- Exclude the folders 'build', `.git'
+- Exclude the files 'spring.schemas`
+- Use additional `whitelistFile` to provide https://github.com/spring-io/nohttp/tree/master/nohttp#regexpredicatecreatewhitelistinputstream[Custom Rules] of `etc/nohttpwhitelist.lines`
