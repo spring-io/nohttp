@@ -17,45 +17,62 @@ For example, you will want to ensure that you validate your build files like `po
 * https://github.com/spring-io/nohttp/tree/master/samples/nohttp-gradle-sample[nohttp-gradle-sample] - Demonstrates using nohttp with Gradle
 * https://github.com/spring-io/nohttp/tree/master/samples/nohttp-maven-sample[nohttp-maven-sample] - Demonstrates using nohttp with Maven
 
-== Configurations
+== Configuration
 
 An example configuration can be found below:
 
 [source,xml]
 ----
-<?xml version="1.0"?>
 <!DOCTYPE module PUBLIC "-//Puppy Crawl//DTD Check Configuration 1.3//EN"
         "https://www.puppycrawl.com/dtds/configuration_1_3.dtd">
 <module name="Checker">
 
-    <!-- Configure checker to use UTF-8 encoding -->
     <property name="charset" value="UTF-8"/>
-    <!-- Configure checker to run on files with all extensions -->
+    <!-- Configure checker to run on files with all file extensions (empty is all) -->
     <property name="fileExtensions" value=""/>
 
     <module name="io.spring.nohttp.checkstyle.check.NoHttpCheck">
+        <property name="whitelistFileName" value="${nohttp.checkstyle.whitelistFileName}" default=""/>
     </module>
+
+    <module name="SuppressionFilter">
+        <property name="file" value="${config_loc}/suppressions.xml" default=""/>
+        <property name="optional" value="true"/>
+    </module>
+
+    <!-- Allow suppression with comments
+       // CHECKSTYLE:OFF
+       ... ignored content ...
+       // CHECKSTYLE:ON
+    -->
+    <module name="SuppressWithPlainTextCommentFilter"/>
 </module>
 ----
 
-If you find the need to exclude additional URL patterns, you can do so by including.
+=== Custom Whitelist
 
+The nohttp project provides a https://github.com/spring-io/nohttp/tree/master/nohttp#whitelisted-http-urls[default whitelist]. If you find the need to exclude additional URL patterns, you can do so with the above configuration by including a https://checkstyle.org/config.html#Properties[checkstyle property] named `nohttp.checkstyle.whitelistFileName` pointing to an whitelist file that is in the format of https://github.com/spring-io/nohttp/tree/master/nohttp#whitelisted-http-urls[RegexPredicate.createWhitelist(InputStream)].
 
-[source,xml]
-----
-<module name="io.spring.nohttp.checkstyle.check.NoHttpCheck">
-    <!-- the file name to load for white listing. If an empty String nothing is used -->
-    <property name="whitelistFileName" value="etc/nohttp/whitelist.lines"/>
-</module>
-----
+=== Suppress With Comments
 
-It is important to note that you use https://checkstyle.org/config.html#Properties[checkstyle properties] to load the file as well.
-If you want to make the property optional, you can specify a default of empty String in which case the additional whitelist is ignored.
+The above <<configuration>> demonstrates how to suppress checks using https://checkstyle.org/config_filters.html#SuppressWithPlainTextCommentFilter[SuppressWithPlainTextCommentFilter]. For example, the following will ignore the URL `http://example.org/schema/` only in the location of code surrounded by the `CHECKSTYLE:OFF` / `CHECKSTYLE:ON` comments.
 
-[source,xml]
-----
-<module name="io.spring.nohttp.checkstyle.check.NoHttpCheck">
-    <!-- the file name to load for white listing. If an empty String nothing is used -->
-    <property name="whitelistFileName" value="${nohttp.checkstyle.whitelistFileName}" default=""/>
-</module>
-----
+```java
+// CHECKSTYLE:OFF
+if (url.startsWith("http://example.org/schema/") {
+// CHECKSTYLE:ON
+```
+
+=== Suppressions with SuppressionFilter
+
+The above <<configuration>> demonstrates how to leverage https://checkstyle.org/config_filters.html#SuppressionFilter[SuppressionFilter] to ignore specific violations. To leverage it make sure a file exists at `${config_loc}/suppressions.xml` that contains the necessary suppressions. An example supressions file might look like:
+
+```xml
+<!DOCTYPE suppressions PUBLIC
+	"-//Checkstyle//DTD SuppressionFilter Configuration 1.2//EN"
+	"https://checkstyle.org/dtds/suppressions_1_2.dtd">
+
+<suppressions>
+	<suppress checks="io.spring.nohttp.checkstyle.check.NoHttpCheck" files="BeanDefinitionParserDelegate.java" lines="1409"/>
+</suppressions>
+```
