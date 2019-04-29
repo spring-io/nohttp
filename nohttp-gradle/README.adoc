@@ -1,4 +1,5 @@
 = NoHttpPlugin
+:toc:
 
 Applies <<NoHttpCheckstylePlugin>> and <<NoHttpCliPlugin>>
 
@@ -52,7 +53,7 @@ The `NoHttpCheckstylePlugin` adds the following dependencies to tasks defined by
 `check`::
 _Depends on_: `checkstyleNohttp`.
 
-== Project layout
+=== Project layout
 
 By default, the `NoHttpCheckstylePlugin` expects configuration files to be placed in the root project, but this can be changed.
 
@@ -124,7 +125,7 @@ The Application plugin adds the following tasks to the project.
 +
 Runs https://github.com/spring-io/nohttp/tree/master/nohttp-cli[nohttp-cli] against the project.
 
-=== Examples
+=== nohttp samples
 
 Run with the defaults. It finds all restricted usages of `http://` and reports them.
 
