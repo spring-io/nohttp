@@ -49,6 +49,8 @@ The default nohttp checkstyle.xml configuration can be found below:
 </module>
 ----
 
+NOTE: `SuppressWithPlainTextCommentFilter` was added in Checkstyle 8.6, so for the default configuration to work you must run with Checkstyle 8.6+
+
 === Custom Whitelist
 
 The nohttp project provides a https://github.com/spring-io/nohttp/tree/master/nohttp#whitelisted-http-urls[default whitelist]. If you find the need to exclude additional URL patterns, you can do so with the above configuration by including a https://checkstyle.org/config.html#Properties[checkstyle property] named `nohttp.checkstyle.whitelistFileName` pointing to an whitelist file that is in the format of https://github.com/spring-io/nohttp/tree/master/nohttp#whitelisted-http-urls[RegexPredicate.createWhitelist(InputStream)].
