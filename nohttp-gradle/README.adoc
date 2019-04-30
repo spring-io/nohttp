@@ -9,7 +9,7 @@ You can find a working sample at https://github.com/spring-io/nohttp/tree/master
 
 == Usage
 
-In it's simplest form, you just need to add the Plugin to your build.
+In it's simplest form, you just need to add the Plugin to the root project of your build.
 
 For example:
 
@@ -35,6 +35,8 @@ apply plugin: 'io.spring.nohttp'
 == NoHttpCheckstylePlugin
 
 Configures Gradle's https://docs.gradle.org/current/dsl/org.gradle.api.plugins.quality.Checkstyle.html[Checkstyle] task to integrate with https://github.com/spring-io/nohttp/tree/master/nohttp-checkstyle[nohttp-checkstyle] to verify there are no restricted usages of `http://`.
+
+The plugin only needs to be added to the root project as all subdirectories are checked.
 
 
 === Tasks
