@@ -195,7 +195,7 @@ public class NoHttpCheckstylePlugin implements Plugin<Project> {
 	}
 
 	private void configureCheckTaskDependents() {
-		this.project.getTasks().named(JavaBasePlugin.CHECK_TASK_NAME, new Action<Task>() {
+		this.project.getTasks().named(JavaBasePlugin.CHECK_TASK_NAME).configure(new Action<Task>() {
 			@Override
 			public void execute(Task task) {
 				task.dependsOn(new Callable() {
