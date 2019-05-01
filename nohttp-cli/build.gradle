@@ -26,15 +26,11 @@ repositories {
 	mavenCentral()
 }
 
+jar.dependsOn bootJar
+
 dependencies {
 	compile project(':nohttp')
 	compile 'info.picocli:picocli:3.9.5'
 	compile 'org.springframework.boot:spring-boot-starter'
 	testCompile 'org.springframework.boot:spring-boot-starter-test'
-}
-
-configurations.archives.artifacts.clear()
-
-artifacts {
-	archives bootJar
 }
