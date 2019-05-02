@@ -16,3 +16,8 @@ The project is split up into the following modules:
 * https://github.com/spring-io/nohttp/tree/master/nohttp-gradle[nohttp-gradle] - provides https://gradle.org[Gradle] integration with nohttp
 * https://github.com/spring-io/nohttp/tree/master/samples[samples] - provides samples of using nohttp
 
+== FAQ
+
+*How can I automate fixing my existing code?* 
+
+Automation is beyond the scope of this project. Howeve,r you can easily automate fixing your existing code by scripting along with https://github.com/spring-io/nohttp/tree/master/nohttp-cli[nohttp-cli]. If you use GitHub, you can leverage https://developer.github.com/v3/[GitHub APIs] to automatically clone repositories within a set of organizations. You can use https://github.com/github/hub[hub] to automate sending Pull Requests.
