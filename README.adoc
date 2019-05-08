@@ -24,8 +24,8 @@ Automation is beyond the scope of this project. However, you can easily automate
 
 *What URLs need to be https?*
 
-See [Thought Process](https://github.com/spring-io/nohttp/tree/master/nohttp#thought-process)
+See https://github.com/spring-io/nohttp/tree/master/nohttp#thought-process[Thought Process]
 
 *Are Whitelists Supported*
 
-See [Whitelisted HTTP URLs](https://github.com/spring-io/nohttp/tree/master/nohttp#whitelisted-http-urls)
+See https://github.com/spring-io/nohttp/tree/master/nohttp#whitelisted-http-urls[Whitelisted HTTP URLs]
