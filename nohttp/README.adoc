@@ -16,7 +16,7 @@ The recommended process for determining if it is ok to use `http://` is:
 ** If your project uses the URL to make a request over a network, then you need to use `https`
 ** It is acceptable to use `localhost` to make a request using `http` since it does not leave the machine
 ** If you need to test URLs that use `http`, then consider using TLD of `test`, `example`, `invalid`, or `localhost` as defined by https://tools.ietf.org/html/rfc2606[rfc2606].
-** Links that users click on should prefer `https`, but if the site does not support `http` you may decide to whitelist the URL
+** Links that users click on should prefer `https`, but if the site does not support `https` you may decide to whitelist the URL
 ** If the link is an XML namespace name (which is just an identifier), then you can use `http`. The XML namespace location should still be `https`.
 
 == Whitelisted HTTP URLs
