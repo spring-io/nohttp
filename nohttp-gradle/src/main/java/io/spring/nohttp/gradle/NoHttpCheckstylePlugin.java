@@ -186,30 +186,19 @@ public class NoHttpCheckstylePlugin implements Plugin<Project> {
 	}
 
 	private void configureCheckTask() {
-		withBasePlugin(new Action<Plugin>() {
-			@Override
-			public void execute(Plugin plugin) {
-				configureCheckTaskDependents();
-			}
-		});
-	}
-
-	private void configureCheckTaskDependents() {
-		this.project.getTasks().named(JavaBasePlugin.CHECK_TASK_NAME).configure(new Action<Task>() {
+		this.project.getTasks().whenTaskAdded(new Action<Task>() {
 			@Override
 			public void execute(Task task) {
-				task.dependsOn(new Callable() {
-					@Override
-					public Object call() {
-						return CHECKSTYLE_NOHTTP_TASK_NAME;
-					}
-				});
+				if (JavaBasePlugin.CHECK_TASK_NAME.equals(task.getName())) {
+					task.dependsOn(new Callable() {
+						@Override
+						public Object call() {
+							return CHECKSTYLE_NOHTTP_TASK_NAME;
+						}
+					});
+				}
 			}
 		});
-	}
-
-	private void withBasePlugin(Action<Plugin> action) {
-		this.project.getPlugins().withType(JavaBasePlugin.class, action);
 	}
 
 	/**

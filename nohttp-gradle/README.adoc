@@ -50,7 +50,7 @@ Runs Checkstyle to verify no restricted uses of `http://`.
 
 ==== Dependencies added to other tasks
 
-The `NoHttpCheckstylePlugin` adds the following dependencies to tasks defined by the Java plugin.
+The `NoHttpCheckstylePlugin` adds the following dependencies to tasks.
 
 `check`::
 _Depends on_: `checkstyleNohttp`.

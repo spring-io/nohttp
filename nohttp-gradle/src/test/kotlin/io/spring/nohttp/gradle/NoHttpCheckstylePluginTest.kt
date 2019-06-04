@@ -262,10 +262,20 @@ class NoHttpCheckstylePluginTest {
     }
 
     @Test
-    fun addsTaskToCheckLifecycleTask() {
+    fun addsTaskToCheckLifecycleTaskWhenJavaBasePlugin() {
         val project = projectWithTempDirs().build()
         project.pluginManager.apply(NoHttpCheckstylePlugin::class.java)
         project.pluginManager.apply(JavaBasePlugin::class.java)
+
+        val check = project.tasks.findByName("check")!!
+        assertThat(check.taskDependencies.getDependencies(check).map { t -> t.name }).contains(NoHttpCheckstylePlugin.CHECKSTYLE_NOHTTP_TASK_NAME)
+    }
+
+    @Test
+    fun addsTaskToCheckLifecycleTaskWhenNotJavaBasePlugin() {
+        val project = projectWithTempDirs().build()
+        project.pluginManager.apply(NoHttpCheckstylePlugin::class.java)
+        project.tasks.create("check")
 
         val check = project.tasks.findByName("check")!!
         assertThat(check.taskDependencies.getDependencies(check).map { t -> t.name }).contains(NoHttpCheckstylePlugin.CHECKSTYLE_NOHTTP_TASK_NAME)
