@@ -35,6 +35,13 @@ public class NoHttpCheckTest {
 	}
 
 	@Test
+	public void setWhitelistWhenNullThenIllegalArgumentException() {
+		assertThatCode(() -> this.check.setWhitelist(null))
+				.isInstanceOf(IllegalArgumentException.class)
+				.hasMessage("whitelist cannot be null");
+	}
+
+	@Test
 	public void getExternalResourceLocationsWhenNoWhitelistThenEmpty() {
 		assertThat(this.check.getExternalResourceLocations()).isEmpty();
 	}

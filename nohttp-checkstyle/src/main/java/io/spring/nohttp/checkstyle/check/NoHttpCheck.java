@@ -22,6 +22,7 @@ import com.puppycrawl.tools.checkstyle.api.ExternalResourceHolder;
 import com.puppycrawl.tools.checkstyle.api.FileText;
 import io.spring.nohttp.*;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -49,8 +50,10 @@ import java.util.Set;
  *
  * <h2>Configurations</h2>
  * <p>
- * An example configuration can be found below:
+ * Example configurations can be found below:
  * </p>
+ *
+ * This configuration allows externalizing the whitelist.
  *
  * <pre>
  * &lt;?xml version="1.0"?&gt;
@@ -68,6 +71,8 @@ import java.util.Set;
  * &lt;/module&gt;
  * </pre>
  *
+ * <h2>whitelistFileName</h2>
+ *
  * <p>
  * If you find the need to exclude additional URL patterns, you can do so by including.
  * </p>
@@ -80,13 +85,29 @@ import java.util.Set;
  * </pre>
  *
  * <p>
- * It is important to note that you use checkstyle properties to load the file as well. If you want to make the property optional, you can specify a default of empty String in which case the additional whitelist is ignored.
+ * It is important to note that you use checkstyle properties to load the file as well.
+ * If you want to make the property optional, you can specify a default of empty String
+ * in which case the additional whitelist is ignored.
  * </p>
  *
  * <pre>
  * &lt;module name="io.spring.nohttp.checkstyle.check.NoHttpCheck"&gt;
  *     &lt;!-- the file name to load for white listing. If an empty String nothing is used --&gt;
  *     &lt;property name="whitelistFileName" value="${nohttp.checkstyle.whitelistFileName}" default=""/&gt;
+ * &lt;/module&gt;
+ * </pre>
+ *
+ * <h2>whitelist</h2>
+ *
+ * This configuration property allows embedding the whitelist into the checkstyle
+ * configuration. The example below whitelists both http://example.com and
+ * http://example.org
+ *
+ * <pre>
+ * &lt;module name="io.spring.nohttp.checkstyle.check.NoHttpCheck"&gt;
+ *     &lt;!-- the whitelist. Make sure to use &amp;#10; for newlines --&gt;
+ *     &lt;property name="whitelist" value="^\Qhttp://example.com\E$&#10;
+ * ^\Qhttp://example.org\E$" default=""/&gt;
  * &lt;/module&gt;
  * </pre>
  *
@@ -97,6 +118,8 @@ public class NoHttpCheck extends AbstractFileSetCheck implements ExternalResourc
 
 	private String whitelistFileName = "";
 
+	private String whitelist = "";
+
 	public void setWhitelistFileName(String whitelistFileName) {
 		if (whitelistFileName == null) {
 			throw new IllegalArgumentException("whitelistFileName cannot be null");
@@ -104,8 +127,24 @@ public class NoHttpCheck extends AbstractFileSetCheck implements ExternalResourc
 		this.whitelistFileName = whitelistFileName;
 	}
 
+	/**
+	 * Sets the whitelist to use
+	 * @param whitelist the whitelist to use
+	 * @since 0.0.3
+	 */
+	public void setWhitelist(String whitelist) {
+		if (whitelist == null) {
+			throw new IllegalArgumentException("whitelist cannot be null");
+		}
+		this.whitelist = whitelist;
+	}
+
 	private boolean isWhitelistFileSet() {
 		return !this.whitelistFileName.isEmpty();
+	}
+
+	private boolean isWhitelistSet() {
+		return !this.whitelist.isEmpty();
 	}
 
 	private InputStream createWhitelistInputStream() {
@@ -121,8 +160,13 @@ public class NoHttpCheck extends AbstractFileSetCheck implements ExternalResourc
 	protected void finishLocalSetup() throws CheckstyleException {
 		RegexHttpMatcher matcher = new RegexHttpMatcher(RegexPredicate.createDefaultUrlWhitelist());
 
-		if (this.isWhitelistFileSet()) {
+		if (isWhitelistFileSet()) {
 			InputStream inputStream = createWhitelistInputStream();
+			matcher.addHttpWhitelist(RegexPredicate.createWhitelistFromPatterns(inputStream));
+		}
+
+		if (isWhitelistSet()) {
+			InputStream inputStream = new ByteArrayInputStream(this.whitelist.getBytes());
 			matcher.addHttpWhitelist(RegexPredicate.createWhitelistFromPatterns(inputStream));
 		}
 		this.matcher = matcher;

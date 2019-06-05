@@ -53,7 +53,25 @@ NOTE: `SuppressWithPlainTextCommentFilter` was added in Checkstyle 8.6, so for t
 
 === Custom Whitelist
 
-The nohttp project provides a https://github.com/spring-io/nohttp/tree/master/nohttp#whitelisted-http-urls[default whitelist]. If you find the need to exclude additional URL patterns, you can do so with the above configuration by including a https://checkstyle.org/config.html#Properties[checkstyle property] named `nohttp.checkstyle.whitelistFileName` pointing to an whitelist file that is in the format of https://github.com/spring-io/nohttp/tree/master/nohttp#whitelisted-http-urls[RegexPredicate.createWhitelist(InputStream)].
+The nohttp project provides a https://github.com/spring-io/nohttp/tree/master/nohttp#whitelisted-http-urls[default whitelist].
+If you find the need to exclude additional URL patterns, you can do so with the above configuration by including a https://checkstyle.org/config.html#Properties[checkstyle property] named `nohttp.checkstyle.whitelistFileName` pointing to an whitelist file that is in the format of https://github.com/spring-io/nohttp/tree/master/nohttp#whitelisted-http-urls[RegexPredicate.createWhitelist(InputStream)].
+
+=== Embedding a Whitelist
+
+If you prefer, you can embed a whitelist rather than externalizing it into a separate file by using the `whitelist` property.
+The value of `whitelist` should be in the format of https://github.com/spring-io/nohttp/tree/master/nohttp#whitelisted-http-urls[RegexPredicate.createWhitelist(InputStream)].
+For example, the following will whitelist `http://example.com` and `http://example.org`:
+
+[source,xml]
+----
+<module name="io.spring.nohttp.checkstyle.check.NoHttpCheck">
+	<property name="whitelist" value="^\Qhttp://example.com\E$&#10;
+^\Qhttp://example.org\E$"/>
+</module>
+----
+
+NOTE: Use `&#10` to specify new lines.
+
 
 === Suppress With Comments
 
