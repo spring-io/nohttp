@@ -20,6 +20,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.gradle.api.plugins.JavaBasePlugin
 import org.gradle.api.plugins.quality.Checkstyle
 import org.gradle.api.plugins.quality.CheckstylePlugin
+import org.gradle.language.base.plugins.LifecycleBasePlugin
 import org.gradle.testfixtures.ProjectBuilder
 import org.junit.Rule
 import org.junit.Test
@@ -272,12 +273,22 @@ class NoHttpCheckstylePluginTest {
     }
 
     @Test
-    fun addsTaskToCheckLifecycleTaskWhenNotJavaBasePlugin() {
+    fun addsTaskToCheckTaskWhenNotJavaBasePlugin() {
         val project = projectWithTempDirs().build()
         project.pluginManager.apply(NoHttpCheckstylePlugin::class.java)
         project.tasks.create("check")
 
-        val check = project.tasks.findByName("check")!!
+        val check = project.tasks.findByName(LifecycleBasePlugin.CHECK_TASK_NAME)!!
+        assertThat(check.taskDependencies.getDependencies(check).map { t -> t.name }).contains(NoHttpCheckstylePlugin.CHECKSTYLE_NOHTTP_TASK_NAME)
+    }
+
+    @Test
+    fun addsTaskToCheckTaskWhenCheckTaskAlreadyCreated() {
+        val project = projectWithTempDirs().build()
+        project.pluginManager.apply(LifecycleBasePlugin::class.java)
+        project.pluginManager.apply(NoHttpCheckstylePlugin::class.java)
+
+        val check = project.tasks.findByName(LifecycleBasePlugin.CHECK_TASK_NAME)!!
         assertThat(check.taskDependencies.getDependencies(check).map { t -> t.name }).contains(NoHttpCheckstylePlugin.CHECKSTYLE_NOHTTP_TASK_NAME)
     }
 

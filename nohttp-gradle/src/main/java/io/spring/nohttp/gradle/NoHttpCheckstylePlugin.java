@@ -26,10 +26,12 @@ import org.gradle.api.file.ConfigurableFileTree;
 import org.gradle.api.file.FileCollection;
 import org.gradle.api.file.FileTree;
 import org.gradle.api.internal.ConventionMapping;
-import org.gradle.api.plugins.JavaBasePlugin;
 import org.gradle.api.plugins.quality.Checkstyle;
 import org.gradle.api.plugins.quality.CheckstylePlugin;
 import org.gradle.api.resources.TextResource;
+import org.gradle.api.tasks.TaskContainer;
+import org.gradle.api.tasks.TaskProvider;
+import org.gradle.language.base.plugins.LifecycleBasePlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,6 +61,8 @@ public class NoHttpCheckstylePlugin implements Plugin<Project> {
 	public static final String CHECKSTYLE_NOHTTP_TASK_NAME = "checkstyleNohttp";
 
 	public static final String DEFAULT_CONFIGURATION_NAME = "nohttp";
+
+	private static final String CHECK_TASK_NAME = LifecycleBasePlugin.CHECK_TASK_NAME;
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -186,10 +190,9 @@ public class NoHttpCheckstylePlugin implements Plugin<Project> {
 	}
 
 	private void configureCheckTask() {
-		this.project.getTasks().whenTaskAdded(new Action<Task>() {
-			@Override
+		this.project.getTasks().withType(Task.class, new Action<Task>() {
 			public void execute(Task task) {
-				if (JavaBasePlugin.CHECK_TASK_NAME.equals(task.getName())) {
+				if (CHECK_TASK_NAME.equals(task.getName())) {
 					task.dependsOn(new Callable() {
 						@Override
 						public Object call() {
