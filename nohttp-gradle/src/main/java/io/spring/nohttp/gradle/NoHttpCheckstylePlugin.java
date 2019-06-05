@@ -29,8 +29,6 @@ import org.gradle.api.internal.ConventionMapping;
 import org.gradle.api.plugins.quality.Checkstyle;
 import org.gradle.api.plugins.quality.CheckstylePlugin;
 import org.gradle.api.resources.TextResource;
-import org.gradle.api.tasks.TaskContainer;
-import org.gradle.api.tasks.TaskProvider;
 import org.gradle.language.base.plugins.LifecycleBasePlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +50,9 @@ import java.util.jar.JarFile;
 public class NoHttpCheckstylePlugin implements Plugin<Project> {
 	private static final String NOHTTP_VERSION = determineNohttpVersion();
 
-	public static final String DEFAULT_WHITELIST_FILE_PATH = "etc/nohttp/whitelist.lines";
+	public static final String DEFAULT_WHITELIST_FILE_PATH = "config/nohttp/whitelist.lines";
+
+	public static final String LEGACY_WHITELIST_FILE_PATH = "etc/nohttp/whitelist.lines";
 
 	public static final String NOHTTP_EXTENSION_NAME = "nohttp";
 
@@ -97,6 +97,10 @@ public class NoHttpCheckstylePlugin implements Plugin<Project> {
 				files.exclude("**/spring.tooling");
 			}
 		}));
+		File legacyWhiteListFile = project.file(LEGACY_WHITELIST_FILE_PATH);
+		if (legacyWhiteListFile.exists()) {
+			this.extension.setWhitelistFile(legacyWhiteListFile);
+		}
 		File defaultWhiteListFile = project.file(DEFAULT_WHITELIST_FILE_PATH);
 		if (defaultWhiteListFile.exists()) {
 			this.extension.setWhitelistFile(defaultWhiteListFile);
@@ -173,10 +177,14 @@ public class NoHttpCheckstylePlugin implements Plugin<Project> {
 
 	private File getConfigLocation() {
 		File whitelistFile = this.extension.getWhitelistFile();
-		if (whitelistFile == null) {
-			return this.project.file("etc/nohttp");
+		if (whitelistFile != null) {
+			return whitelistFile.getParentFile();
 		}
-		return whitelistFile.getParentFile();
+		File legacy = this.project.file("etc/nohttp");
+		if (legacy.exists()) {
+			return legacy;
+		}
+		return this.project.file("config/nohttp");
 	}
 
 	private void configureDefaultDependenciesForProject(Configuration configuration) {

@@ -80,7 +80,7 @@ import java.util.Set;
  * <pre>
  * &lt;module name="io.spring.nohttp.checkstyle.check.NoHttpCheck"&gt;
  *     &lt;!-- the file name to load for white listing. If an empty String nothing is used --&gt;
- *     &lt;property name="whitelistFileName" value="etc/nohttp/whitelist.lines"/&gt;
+ *     &lt;property name="whitelistFileName" value="config/nohttp/whitelist.lines"/&gt;
  * &lt;/module&gt;
  * </pre>
  *

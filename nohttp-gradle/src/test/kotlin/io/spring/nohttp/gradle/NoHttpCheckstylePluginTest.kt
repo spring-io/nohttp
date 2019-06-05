@@ -193,6 +193,7 @@ class NoHttpCheckstylePluginTest {
     fun configuredCheckstyleNohttpTask() {
         val project = projectWithTempDirs()
                 .build()
+        project.file("etc/nohttp").touch()
         project.pluginManager.apply(NoHttpCheckstylePlugin::class.java)
 
         val task: Checkstyle = project.tasks.findByName(NoHttpCheckstylePlugin.CHECKSTYLE_NOHTTP_TASK_NAME)!! as Checkstyle
@@ -232,6 +233,53 @@ class NoHttpCheckstylePluginTest {
         assertThat(task.isShowViolations).isTrue()
         assertThat(task.maxErrors).isEqualTo(0)
         assertThat(task.maxWarnings).isEqualTo(Integer.MAX_VALUE)
+    }
+
+    @Test
+    fun configuredCheckstyleLegacyConfigDir() {
+        val project = projectWithTempDirs()
+                .build()
+        project.file("etc/nohttp").touch()
+        project.pluginManager.apply(NoHttpCheckstylePlugin::class.java)
+
+        val task: Checkstyle = project.tasks.findByName(NoHttpCheckstylePlugin.CHECKSTYLE_NOHTTP_TASK_NAME)!! as Checkstyle
+
+        assertThat(task.configProperties).containsEntry("config_loc", project.file("etc/nohttp"))
+    }
+
+    @Test
+    fun configuredCheckstyleLegacyWhitelist() {
+        val project = projectWithTempDirs()
+                .build()
+        project.file("etc/nohttp/whitelist.lines").touch()
+        project.pluginManager.apply(NoHttpCheckstylePlugin::class.java)
+
+        val task: Checkstyle = project.tasks.findByName(NoHttpCheckstylePlugin.CHECKSTYLE_NOHTTP_TASK_NAME)!! as Checkstyle
+
+        assertThat(task.configProperties).containsEntry("nohttp.checkstyle.whitelistFileName", project.file("etc/nohttp/whitelist.lines"))
+    }
+
+    @Test
+    fun configuredCheckstyleDefaultConfigDir() {
+        val project = projectWithTempDirs()
+                .build()
+        project.pluginManager.apply(NoHttpCheckstylePlugin::class.java)
+
+        val task: Checkstyle = project.tasks.findByName(NoHttpCheckstylePlugin.CHECKSTYLE_NOHTTP_TASK_NAME)!! as Checkstyle
+
+        assertThat(task.configProperties).containsEntry("config_loc", project.file("config/nohttp"))
+    }
+
+    @Test
+    fun configuredCheckstyleDefaultWhitelist() {
+        val project = projectWithTempDirs()
+                .build()
+        project.file("config/nohttp/whitelist.lines").touch()
+        project.pluginManager.apply(NoHttpCheckstylePlugin::class.java)
+
+        val task: Checkstyle = project.tasks.findByName(NoHttpCheckstylePlugin.CHECKSTYLE_NOHTTP_TASK_NAME)!! as Checkstyle
+
+        assertThat(task.configProperties).containsEntry("nohttp.checkstyle.whitelistFileName", project.file("config/nohttp/whitelist.lines"))
     }
 
     @Test
