@@ -6,3 +6,5 @@ Demo of using nohttp checkstyle with Maven. Run the following
 ----
 
 Try editing `has-url.txt` to contain an http URL and see the build fail.
+
+For detailed checkstyle configuration, see https://github.com/spring-io/nohttp/tree/master/nohttp-checkstyle
