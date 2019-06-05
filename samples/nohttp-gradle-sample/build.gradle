@@ -14,17 +14,6 @@
  * limitations under the License.
  */
 
-buildscript {
-	repositories {
-		maven { url 'https://repo.spring.io/libs-snapshot' }
-	}
-	dependencies {
-		classpath 'io.spring.nohttp:nohttp-gradle:0.0.1.BUILD-SNAPSHOT'
-	}
+plugins {
+	id "io.spring.nohttp" version "0.0.2.RELEASE"
 }
-
-repositories {
-	maven { url 'https://repo.spring.io/libs-snapshot' }
-}
-
-apply plugin: 'io.spring.nohttp'
