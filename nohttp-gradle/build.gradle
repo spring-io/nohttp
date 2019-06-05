@@ -27,15 +27,27 @@ buildscript {
 plugins {
 	id 'java-gradle-plugin'
 	id 'groovy'
+	id 'maven-publish'
+	id 'com.gradle.plugin-publish' version '0.10.1'
 }
 
 apply plugin: 'io.spring.convention.spring-module'
 apply plugin: 'kotlin'
 
+
+pluginBundle {
+	website = 'https://github.com/spring-io/nohttp'
+	vcsUrl = 'https://github.com/spring-io/nohttp.git'
+	description = project.description
+	tags = ['check']
+}
+
 gradlePlugin {
 	plugins {
-		simplePlugin {
+		nohttpPlugin {
 			id = 'io.spring.nohttp'
+			displayName = 'nohttp Plugin'
+			description = project.description
 			implementationClass = 'io.spring.nohttp.gradle.NoHttpPlugin'
 		}
 	}
@@ -62,4 +74,15 @@ compileTestKotlin {
 	kotlinOptions {
 		jvmTarget = "1.8"
 	}
+}
+
+ext.snapshotBuild = version.contains("SNAPSHOT")
+
+if (!snapshotBuild) {
+	project.tasks.named('deployArtifacts', new Action<Task>() {
+		@Override
+		void execute(Task deployArtifacts) {
+			deployArtifacts.dependsOn project.tasks.publishPlugins
+		}
+	})
 }
