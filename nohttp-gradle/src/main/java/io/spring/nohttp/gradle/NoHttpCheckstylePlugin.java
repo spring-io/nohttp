@@ -88,6 +88,7 @@ public class NoHttpCheckstylePlugin implements Plugin<Project> {
 				});
 				files.exclude(".git/**");
 				files.exclude(".gradle/**");
+				files.exclude("buildSrc/.gradle/**");
 				files.exclude(".idea/**");
 				files.exclude("**/*.class");
 				files.exclude("**/*.jar");
