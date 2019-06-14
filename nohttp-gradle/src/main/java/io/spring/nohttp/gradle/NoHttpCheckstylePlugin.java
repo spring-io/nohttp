@@ -92,6 +92,7 @@ public class NoHttpCheckstylePlugin implements Plugin<Project> {
 				files.exclude(".idea/**");
 				files.exclude("**/*.class");
 				files.exclude("**/*.jar");
+				files.exclude("**/*.jpg");
 				files.exclude("**/*.jks");
 				files.exclude("**/spring.handlers");
 				files.exclude("**/spring.schemas");
