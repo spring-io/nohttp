@@ -42,7 +42,7 @@
                     <dependency>
                         <groupId>io.spring.nohttp</groupId>
                         <artifactId>nohttp-checkstyle</artifactId>
-                        <version>0.0.1.BUILD-SNAPSHOT</version>
+                        <version>0.0.3.RELEASE</version>
                     </dependency>
                 </dependencies>
                 <configuration>
