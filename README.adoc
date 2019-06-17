@@ -6,6 +6,8 @@ Today it is important for everything, https://www.troyhunt.com/heres-why-your-st
 It can be difficult to switch to `https://` and then to maintain using `https://`.
 This project aims to help at both.
 
+NOTE: You can read more about the background of this project in the https://spring.io/blog/2019/06/10/announcing-nohttp[blog announcing nohttp].
+
 == Modules
 
 The project is split up into the following modules:
