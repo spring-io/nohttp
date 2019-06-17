@@ -16,7 +16,7 @@
 
 package io.spring.nohttp.gradle;
 
-import org.gradle.api.file.FileTree;
+import org.gradle.api.file.ConfigurableFileTree;
 
 import java.io.File;
 
@@ -27,7 +27,7 @@ public class NoHttpExtension {
 
 	private String toolVersion;
 
-	private FileTree source;
+	private ConfigurableFileTree source;
 
 	private File whitelistFile;
 
@@ -39,11 +39,11 @@ public class NoHttpExtension {
 		this.whitelistFile = whitelistFile;
 	}
 
-	public FileTree getSource() {
+	public ConfigurableFileTree getSource() {
 		return this.source;
 	}
 
-	public void setSource(FileTree source) {
+	public void setSource(ConfigurableFileTree source) {
 		this.source = source;
 	}
 
