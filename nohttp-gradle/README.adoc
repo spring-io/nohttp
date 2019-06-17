@@ -9,27 +9,34 @@ You can find a working sample at https://github.com/spring-io/nohttp/tree/master
 
 == Usage
 
-In it's simplest form, you just need to add the Plugin to the root project of your build.
+In it's simplest form, you just need to add the Plugin to the root project of your build. You can optionally configure it using `nohttp`.
 
-For example:
+For example in Groovy:
 
+`build.gradle`
 [source,groovy]
 ----
-buildscript {
-	repositories {
-		maven { url 'https://repo.spring.io/libs-snapshot' }
-	}
-	dependencies {
-		classpath 'io.spring.nohttp:nohttp-gradle:0.0.1.BUILD-SNAPSHOT'
-	}
+plugins {
+	id "io.spring.nohttp" version "0.0.2.RELEASE"
 }
 
-repositories {
-	mavenCentral()
-	maven { url 'https://repo.spring.io/libs-snapshot' }
+nohttp {
+	...
+}
+----
+
+Or in Kotlin:
+
+`build.gradle.kts`
+[source,kotlin]
+----
+plugins {
+	id("io.spring.nohttp") version "0.0.2.RELEASE"
 }
 
-apply plugin: 'io.spring.nohttp'
+nohttp {
+	...
+}
 ----
 
 == NoHttpCheckstylePlugin
