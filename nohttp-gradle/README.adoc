@@ -9,7 +9,7 @@ You can find a working sample at https://github.com/spring-io/nohttp/tree/master
 
 == Usage
 
-In it's simplest form, you just need to add the Plugin to the root project of your build. You can optionally configure it using `nohttp`.
+In its simplest form, you just need to add the Plugin to the root project of your build. You can optionally configure it using `nohttp`.
 
 For example in Groovy:
 
