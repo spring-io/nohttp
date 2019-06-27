@@ -222,4 +222,20 @@ public class RegexPredicateTest {
 		assertThat(this.whitelist.test(url)).describedAs("Should not be whitelisted and is").isFalse();
 	}
 
+	@Test
+	//gh-28
+	public void testJsfTaglibs() {
+		assertWhitelisted("http://xmlns.jcp.org/jsf");
+		assertWhitelisted("http://xmlns.jcp.org/jsf/html");
+		assertWhitelisted("http://xmlns.jcp.org/jsf/core");
+		assertWhitelisted("http://xmlns.jcp.org/jsf/facelets");
+		assertWhitelisted("http://xmlns.jcp.org/jsf/composite");
+		assertWhitelisted("http://xmlns.jcp.org/jsf/composite/foo-bar");
+		assertWhitelisted("http://xmlns.jcp.org/jsp/jstl/core");
+		assertWhitelisted("http://xmlns.jcp.org/jsp/jstl/functions");
+		assertWhitelisted("http://xmlns.jcp.org/jsf/passthrough");
+		assertWhitelisted("http://primefaces.org/ui");
+		assertWhitelisted("http://bootsfaces.net/ui");
+	}
+
 }
