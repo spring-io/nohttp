@@ -233,3 +233,15 @@ https://www\.w3schools\.com/furniture
 ^http://xmlns\.jcp\.org/xml/ns/javaee.*
 ^http://xmlns\.jcp\.org/xml/ns/persistence/orm.*
 ^http://xmlns\.oracle\.com/weblogic/weblogic-web-app.*
+
+^http://xmlns\.jcp\.org/jsf
+^http://xmlns\.jcp\.org/jsf/html
+^http://xmlns\.jcp\.org/jsf/core
+^http://xmlns\.jcp\.org/jsf/facelets
+^http://xmlns\.jcp\.org/jsf/composite
+^http://xmlns\.jcp\.org/jsf/composite/.*
+^http://xmlns\.jcp\.org/jsp/jstl/core
+^http://xmlns\.jcp\.org/jsp/jstl/functions
+^http://xmlns\.jcp\.org/jsf/passthrough
+^http://primefaces.org/ui
+^http://bootsfaces.net/ui
