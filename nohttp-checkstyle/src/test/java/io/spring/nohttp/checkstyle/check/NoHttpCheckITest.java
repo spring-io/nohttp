@@ -146,9 +146,9 @@ public class NoHttpCheckITest {
 			Properties properties = new Properties();
 			File whitelistFile = new File(WHITELIST_DIR, this.name + ".lines");
 			if (whitelistFile.exists()) {
-				properties.put("nohttp.checkstyle.whitelistFileName", whitelistFile.getAbsolutePath());
+				properties.put("nohttp.checkstyle.whitelistFileName", whitelistFile.getPath());
 			}
-			properties.put("config_loc", WHITELIST_DIR.getAbsolutePath());
+			properties.put("config_loc", WHITELIST_DIR.getPath());
 			this.properties = properties;
 			this.assersionsListener = new AssertionsAuditListener(
 					readChecks(this.name + ".txt"));

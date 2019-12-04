@@ -226,7 +226,7 @@ class NoHttpCheckstylePluginTest {
     -->
     <module name="SuppressWithPlainTextCommentFilter"/>
 </module>""")
-        assertThat(task.configProperties).containsEntry("config_loc", project.file("etc/nohttp"))
+        assertThat(task.configProperties).containsEntry("config_loc", project.relativePath("etc/nohttp"))
         assertThat(task.reports.xml.destination).isEqualTo(project.file("build/reports/checkstyle/nohttp.xml"))
         assertThat(task.reports.html.destination).isEqualTo(project.file("build/reports/checkstyle/nohttp.html"))
         assertThat(task.isIgnoreFailures).isFalse()
@@ -244,7 +244,7 @@ class NoHttpCheckstylePluginTest {
 
         val task: Checkstyle = project.tasks.findByName(NoHttpCheckstylePlugin.CHECKSTYLE_NOHTTP_TASK_NAME)!! as Checkstyle
 
-        assertThat(task.configProperties).containsEntry("config_loc", project.file("etc/nohttp"))
+        assertThat(task.configProperties).containsEntry("config_loc", project.relativePath("etc/nohttp"))
     }
 
     @Test
@@ -256,7 +256,7 @@ class NoHttpCheckstylePluginTest {
 
         val task: Checkstyle = project.tasks.findByName(NoHttpCheckstylePlugin.CHECKSTYLE_NOHTTP_TASK_NAME)!! as Checkstyle
 
-        assertThat(task.configProperties).containsEntry("nohttp.checkstyle.whitelistFileName", project.file("etc/nohttp/whitelist.lines"))
+        assertThat(task.configProperties).containsEntry("nohttp.checkstyle.whitelistFileName", project.relativePath("etc/nohttp/whitelist.lines"))
     }
 
     @Test
@@ -267,7 +267,7 @@ class NoHttpCheckstylePluginTest {
 
         val task: Checkstyle = project.tasks.findByName(NoHttpCheckstylePlugin.CHECKSTYLE_NOHTTP_TASK_NAME)!! as Checkstyle
 
-        assertThat(task.configProperties).containsEntry("config_loc", project.file("config/nohttp"))
+        assertThat(task.configProperties).containsEntry("config_loc", project.relativePath("config/nohttp"))
     }
 
     @Test
@@ -279,7 +279,7 @@ class NoHttpCheckstylePluginTest {
 
         val task: Checkstyle = project.tasks.findByName(NoHttpCheckstylePlugin.CHECKSTYLE_NOHTTP_TASK_NAME)!! as Checkstyle
 
-        assertThat(task.configProperties).containsEntry("nohttp.checkstyle.whitelistFileName", project.file("config/nohttp/whitelist.lines"))
+        assertThat(task.configProperties).containsEntry("nohttp.checkstyle.whitelistFileName", project.relativePath("config/nohttp/whitelist.lines"))
     }
 
     @Test
@@ -291,8 +291,8 @@ class NoHttpCheckstylePluginTest {
 
         val task: Checkstyle = project.tasks.findByName(NoHttpCheckstylePlugin.CHECKSTYLE_NOHTTP_TASK_NAME)!! as Checkstyle
 
-        assertThat(task.configProperties).containsEntry("nohttp.checkstyle.whitelistFileName", whitelistFile)
-        assertThat(task.configProperties).containsEntry("config_loc", whitelistFile.parentFile)
+        assertThat(task.configProperties).containsEntry("nohttp.checkstyle.whitelistFileName", project.relativePath(whitelistFile))
+        assertThat(task.configProperties).containsEntry("config_loc", project.relativePath(whitelistFile.parentFile))
     }
 
     @Test
@@ -306,8 +306,8 @@ class NoHttpCheckstylePluginTest {
         nohttp.whitelistFile = whitelistFile
         val task: Checkstyle = project.tasks.findByName(NoHttpCheckstylePlugin.CHECKSTYLE_NOHTTP_TASK_NAME)!! as Checkstyle
 
-        assertThat(task.configProperties).containsEntry("nohttp.checkstyle.whitelistFileName", whitelistFile)
-        assertThat(task.configProperties).containsEntry("config_loc", whitelistFile.parentFile)
+        assertThat(task.configProperties).containsEntry("nohttp.checkstyle.whitelistFileName", project.relativePath(whitelistFile))
+        assertThat(task.configProperties).containsEntry("config_loc", project.relativePath(whitelistFile.parentFile))
     }
 
     @Test

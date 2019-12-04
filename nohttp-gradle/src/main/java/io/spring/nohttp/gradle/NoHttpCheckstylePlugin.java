@@ -155,9 +155,9 @@ public class NoHttpCheckstylePlugin implements Plugin<Project> {
 				File whitelistFile = extension.getWhitelistFile();
 				if (whitelistFile != null) {
 					logger.debug("Using whitelist at {}", whitelistFile);
-					configProperties.put("nohttp.checkstyle.whitelistFileName", whitelistFile);
+					configProperties.put("nohttp.checkstyle.whitelistFileName", project.relativePath(whitelistFile));
 				}
-				configProperties.put("config_loc", getConfigLocation());
+				configProperties.put("config_loc", project.relativePath(getConfigLocation()));
 				return configProperties;
 			}
 		});
