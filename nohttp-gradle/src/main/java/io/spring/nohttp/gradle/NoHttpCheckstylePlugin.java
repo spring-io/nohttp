@@ -28,6 +28,8 @@ import org.gradle.api.file.FileTree;
 import org.gradle.api.internal.ConventionMapping;
 import org.gradle.api.plugins.quality.Checkstyle;
 import org.gradle.api.plugins.quality.CheckstylePlugin;
+import org.gradle.api.reporting.ReportingExtension;
+import org.gradle.api.reporting.SingleFileReport;
 import org.gradle.api.resources.TextResource;
 import org.gradle.language.base.plugins.LifecycleBasePlugin;
 import org.slf4j.Logger;
@@ -134,7 +136,17 @@ public class NoHttpCheckstylePlugin implements Plugin<Project> {
 		Checkstyle checkstyleTask = project
 				.getTasks().create("checkstyleNohttp", Checkstyle.class);
 		checkstyleTask.setDescription("Checks for illegal uses of http://");
-
+		checkstyleTask.getReports().all(new Action<SingleFileReport>() {
+			@Override
+			public void execute(final SingleFileReport report) {
+				String reportFileName = report.getDestination().getName();
+				report.setDestination(project.getExtensions().getByType(ReportingExtension.class)
+						.getBaseDirectory()
+						.dir(checkstyleTask.getName())
+						.map(reportDir -> reportDir.file(reportFileName).getAsFile())
+				);
+			}
+		});
 		ConventionMapping taskMapping = checkstyleTask.getConventionMapping();
 		taskMapping.map("classpath", new Callable<FileCollection>() {
 			@Override
@@ -220,6 +232,7 @@ public class NoHttpCheckstylePlugin implements Plugin<Project> {
 	 *
 	 * Code used from
 	 * <a href="https://github.com/spring-projects/spring-boot/blob/v2.1.4.RELEASE/spring-boot-project/spring-boot-tools/spring-boot-gradle-plugin/src/main/java/org/springframework/boot/gradle/plugin/SpringBootPlugin.java#L139-L165">SpringBootPlugin</a>
+	 *
 	 * @return the nohttp version
 	 */
 	private static String determineNohttpVersion() {
@@ -240,8 +253,7 @@ public class NoHttpCheckstylePlugin implements Plugin<Project> {
 			try (JarFile jarFile = new JarFile(new File(codeSourceLocation.toURI()))) {
 				return getImplementationVersion(jarFile);
 			}
-		}
-		catch (Exception ex) {
+		} catch (Exception ex) {
 			return null;
 		}
 	}
