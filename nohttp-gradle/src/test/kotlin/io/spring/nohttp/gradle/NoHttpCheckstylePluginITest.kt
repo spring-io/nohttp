@@ -17,7 +17,6 @@
 package io.spring.nohttp.gradle
 
 import org.assertj.core.api.Assertions.assertThat
-import org.gradle.testfixtures.ProjectBuilder
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
@@ -34,6 +33,14 @@ class NoHttpCheckstylePluginITest {
     @JvmField
     val tempBuild = TemporaryFolder()
 
+    @Rule
+    @JvmField
+    val tempBuild2 = TemporaryFolder()
+
+    @Rule
+    @JvmField
+    val sharedTestKitDir = TemporaryFolder()
+
     @Test
     fun httpsIsSuccess() {
         buildFile()
@@ -42,7 +49,7 @@ class NoHttpCheckstylePluginITest {
                 .writeText("""https://example.com""")
 
         val result = runner().build()
-        assertThat(checkstyleNohttpTaskOutcome(result)).isEqualTo(TaskOutcome.SUCCESS);
+        assertThat(checkstyleNohttpTaskOutcome(result)).isEqualTo(TaskOutcome.SUCCESS)
     }
 
     @Test
@@ -54,18 +61,62 @@ class NoHttpCheckstylePluginITest {
 
         val result = runner().buildAndFail()
         assertThat(result.output).contains("Checkstyle files with violations: 1")
-        assertThat(checkstyleNohttpTaskOutcome(result)).isEqualTo(TaskOutcome.FAILED);
+        assertThat(checkstyleNohttpTaskOutcome(result)).isEqualTo(TaskOutcome.FAILED)
     }
+
+    @Test
+    fun upToDate() {
+        buildFile()
+
+        tempBuild.newFile("has-https.txt")
+                .writeText("""https://example.com""")
+        runner().build()
+        
+        val upToDateResult = runner().build()
+        assertThat(checkstyleNohttpTaskOutcome(upToDateResult)).isEqualTo(TaskOutcome.UP_TO_DATE)
+    }
+
+    @Test
+    fun fromCache() {
+        buildFile()
+
+        tempBuild.newFile("has-https.txt")
+                .writeText("""https://example.com""")
+        runner(testKitDir = sharedTestKitDir.root).build()
+        File(tempBuild.root, "build").deleteRecursively()
+        
+        val fromCacheResult = runner(testKitDir = sharedTestKitDir.root).build()
+        assertThat(checkstyleNohttpTaskOutcome(fromCacheResult)).isEqualTo(TaskOutcome.FROM_CACHE)
+    }
+
+    @Test
+    fun fromCacheWhenSwitchDirectories() {
+        buildFile()
+        
+        tempBuild.newFile("has-https.txt")
+                .writeText("""https://example.com""")
+        tempBuild.root.copyRecursively(tempBuild2.root)
+        runner(testKitDir = sharedTestKitDir.root).build()
+        
+        val fromCacheResult = runner(projectDir = tempBuild2.root, testKitDir = sharedTestKitDir.root).build()
+        assertThat(checkstyleNohttpTaskOutcome(fromCacheResult)).isEqualTo(TaskOutcome.FROM_CACHE)
+    }
+
 
     fun checkstyleNohttpTaskOutcome(build: BuildResult): TaskOutcome? {
         return build.task(":" + NoHttpCheckstylePlugin.CHECKSTYLE_NOHTTP_TASK_NAME)?.outcome
     }
 
-    fun runner(): GradleRunner {
-        return GradleRunner.create()
-                .withProjectDir(tempBuild.root)
-                .withArguments(NoHttpCheckstylePlugin.CHECKSTYLE_NOHTTP_TASK_NAME, "--stacktrace")
+    fun runner(projectDir: File = tempBuild.root, testKitDir: File? = null): GradleRunner {
+        var gradleRunner = GradleRunner.create()
+                .withProjectDir(projectDir)
                 .withPluginClasspath()
+        val args = mutableListOf(NoHttpCheckstylePlugin.CHECKSTYLE_NOHTTP_TASK_NAME, "--stacktrace")
+        if (testKitDir != null) {
+            args.add("--build-cache")
+            gradleRunner = gradleRunner.withTestKitDir(testKitDir)
+        }
+        return gradleRunner.withArguments(args)
     }
 
     fun buildFile(content: String = "") {
