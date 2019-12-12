@@ -227,8 +227,8 @@ class NoHttpCheckstylePluginTest {
     <module name="SuppressWithPlainTextCommentFilter"/>
 </module>""")
         assertThat(task.configProperties).containsEntry("config_loc", project.relativePath("etc/nohttp"))
-        assertThat(task.reports.xml.destination).isEqualTo(project.file("build/reports/checkstyle/nohttp.xml"))
-        assertThat(task.reports.html.destination).isEqualTo(project.file("build/reports/checkstyle/nohttp.html"))
+        assertThat(task.reports.xml.destination).isEqualTo(project.file("build/reports/checkstyleNohttp/nohttp.xml"))
+        assertThat(task.reports.html.destination).isEqualTo(project.file("build/reports/checkstyleNohttp/nohttp.html"))
         assertThat(task.isIgnoreFailures).isFalse()
         assertThat(task.isShowViolations).isTrue()
         assertThat(task.maxErrors).isEqualTo(0)
