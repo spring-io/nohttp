@@ -23,6 +23,7 @@ import org.gradle.api.Task;
 import org.gradle.api.artifacts.Configuration;
 import org.gradle.api.artifacts.DependencySet;
 import org.gradle.api.file.ConfigurableFileTree;
+import org.gradle.api.file.DirectoryProperty;
 import org.gradle.api.file.FileCollection;
 import org.gradle.api.file.FileTree;
 import org.gradle.api.internal.ConventionMapping;
@@ -160,6 +161,7 @@ public class NoHttpCheckstylePlugin implements Plugin<Project> {
 				return extension.getSource();
 			}
 		});
+		boolean configureConfigLoc = configureConfigDirectory(checkstyleTask);
 		taskMapping.map("configProperties", new Callable<Map<String, Object>>() {
 			@Override
 			public Map<String, Object> call() throws Exception {
@@ -169,7 +171,9 @@ public class NoHttpCheckstylePlugin implements Plugin<Project> {
 					logger.debug("Using whitelist at {}", whitelistFile);
 					configProperties.put("nohttp.checkstyle.whitelistFileName", project.relativePath(whitelistFile));
 				}
-				configProperties.put("config_loc", project.relativePath(getConfigLocation()));
+				if (configureConfigLoc) {
+					configProperties.put("config_loc", project.relativePath(getConfigLocation()));
+				}
 				return configProperties;
 			}
 		});
@@ -188,6 +192,20 @@ public class NoHttpCheckstylePlugin implements Plugin<Project> {
 				return project.getResources().getText().fromUri(resource);
 			}
 		});
+	}
+
+	private boolean configureConfigDirectory(Checkstyle checkstyleTask) {
+		File configDirectory = new File(this.project.relativePath(getConfigLocation()));
+		try {
+			DirectoryProperty property = (DirectoryProperty) checkstyleTask.getClass().getMethod("getConfigDirectory").invoke(checkstyleTask);
+			property.set(configDirectory);
+			return false;
+		}
+		catch (Exception ex) {
+			// Fall back to configDir
+		}
+		checkstyleTask.setConfigDir(project.provider(() -> configDirectory));
+		return true;
 	}
 
 	private File getConfigLocation() {
