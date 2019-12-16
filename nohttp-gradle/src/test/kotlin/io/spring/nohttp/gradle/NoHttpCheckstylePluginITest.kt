@@ -102,12 +102,24 @@ class NoHttpCheckstylePluginITest {
         assertThat(checkstyleNohttpTaskOutcome(fromCacheResult)).isEqualTo(TaskOutcome.FROM_CACHE)
     }
 
+    @Test
+    fun noDeprecationWarningsWithGradle6() {
+        buildFile()
 
+        tempBuild.newFile("has-https.txt")
+                .writeText("""https://example.com""")
+
+        val result = runner(gradleVersion = "6.0.1").build()
+        println(result.output)
+        assertThat(result.output).doesNotContain("deprecation")
+        assertThat(checkstyleNohttpTaskOutcome(result)).isEqualTo(TaskOutcome.SUCCESS)
+    }
+    
     fun checkstyleNohttpTaskOutcome(build: BuildResult): TaskOutcome? {
         return build.task(":" + NoHttpCheckstylePlugin.CHECKSTYLE_NOHTTP_TASK_NAME)?.outcome
     }
 
-    fun runner(projectDir: File = tempBuild.root, testKitDir: File? = null): GradleRunner {
+    fun runner(projectDir: File = tempBuild.root, testKitDir: File? = null, gradleVersion: String? = null): GradleRunner {
         var gradleRunner = GradleRunner.create()
                 .withProjectDir(projectDir)
                 .withPluginClasspath()
@@ -115,6 +127,9 @@ class NoHttpCheckstylePluginITest {
         if (testKitDir != null) {
             args.add("--build-cache")
             gradleRunner = gradleRunner.withTestKitDir(testKitDir)
+        }
+        if (gradleVersion != null) {
+            gradleRunner = gradleRunner.withGradleVersion(gradleVersion)
         }
         return gradleRunner.withArguments(args)
     }
