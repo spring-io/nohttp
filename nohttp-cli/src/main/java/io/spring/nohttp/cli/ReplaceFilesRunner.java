@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2019 the original author or authors.
+ * Copyright 2002-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,8 +28,6 @@ import io.spring.nohttp.file.PreGradle21Scanner;
 import io.spring.nohttp.file.HttpMatcherProcessor;
 import io.spring.nohttp.file.HttpReplacerProcessor;
 import io.spring.nohttp.file.HttpProcessor;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Component;
 import picocli.CommandLine;
 
 import java.io.File;
@@ -51,9 +49,8 @@ import static java.lang.System.exit;
 /**
  * @author Rob Winch
  */
-@Component
 @CommandLine.Command(name = "nohttp", mixinStandardHelpOptions = true)
-public class ReplaceFilesRunner implements CommandLineRunner, Callable<Integer> {
+public class ReplaceFilesRunner implements Callable<Integer> {
 	private InputStream whitelistExclusions;
 
 	@CommandLine.Option(names = "-T", description = "Disable searching only text based files. This is determined using native invocation of grep which will not work on all systems, so it can be disabled.", defaultValue = "true")
@@ -85,7 +82,6 @@ public class ReplaceFilesRunner implements CommandLineRunner, Callable<Integer> 
 		this.whitelistExclusions = new FileInputStream(whitelistFile);
 	}
 
-	@Override
 	public void run(String... args) throws Exception {
 		Integer status = CommandLine.call(this, args);
 		if (status != null) {
