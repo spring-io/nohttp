@@ -39,4 +39,4 @@ shadowJar {
 }
 
 jar.enabled = false
-assemble.dependsOn shadowJar
+jar.dependsOn shadowJar
