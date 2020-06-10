@@ -31,6 +31,26 @@ public class NoHttpExtension {
 
 	private File allowlistFile;
 
+	/**
+	 *
+	 * @return
+	 * @deprecated use {@link #getAllowlistFile()}
+	 */
+	@Deprecated
+	public File getWhitelistFile() {
+		return getAllowlistFile();
+	}
+
+	/**
+	 *
+	 * @param whitelistFile
+	 * @deprecated use {@link #setAllowlistFile(File)}
+	 */
+	@Deprecated
+	public void setWhitelistFile(File whitelistFile) {
+		setAllowlistFile(whitelistFile);
+	}
+
 	public File getAllowlistFile() {
 		return this.allowlistFile;
 	}

@@ -104,6 +104,55 @@ public class RegexPredicate implements Predicate<String> {
 	}
 
 	/**
+	 * Creates an instance that uses the default URL allowlist. The allowlist is expected to
+	 * be updated in upcoming releases, but generally contains
+	 *
+	 * <ul>
+	 *     <li>localhost</li>
+	 *     <li>URLs that use a TLD defined in https://tools.ietf.org/html/rfc2606 (i.e. tld of test, .example, invalid, localhost)</li>
+	 *     <li>XML Namespace names (not the locations)</li>
+	 *     <li>Java specific URLs that do not work over http. For example, Java Properties
+	 *     <a href="https://hg.openjdk.java.net/jdk8u/jdk8u/jdk/file/43ca3768126e/src/share/classes/sun/util/xml/PlatformXmlPropertiesProvider.java#l198">hard codes</a> using http.
+	 *     </li>
+	 * </ul>
+	 * @return the {@link Predicate} that determines what is allowed
+	 * @deprecated Use {@link #createDefaultUrlAllowlist()}
+	 */
+	@Deprecated
+	public static Predicate<String> createDefaultUrlWhitelist() {
+		return createDefaultUrlAllowlist();
+	}
+
+	/**
+	 * Creates a {@link Predicate} from an {@link InputStream}.
+	 * The format of the {@link InputStream} contains regular expressions of what inputs
+	 * should be allowed such that:
+	 *
+	 * <ul>
+	 *     <li>Each line contains a regular expression that should be allowed</li>
+	 *     <li>Lines can begin with // to create a comment within the file</li>
+	 *     <li>Lines are trimmed for whitespace</li>
+	 *     <li>Lines that are empty are ignored</li>
+	 * </ul>
+	 *
+	 * An example file can be found below:
+	 *
+	 * <pre>
+	 * // Ignore Maven XML Namespace id of http://maven.apache.org/POM/4.0.0
+	 * ^http://maven\.apache\.org/POM/4.0.0$
+	 * // Allow Company XML namespace names but not the locations (which end in .xsd)
+	 * ^http://mycompany.test/xml/.*(?<!\.(xsd))$
+	 * </pre>
+	 * @param resource
+	 * @return the {@link Predicate} that determines what is allowed
+	 * @deprecated Use {@link #createAllowlistFromPatterns(InputStream)}
+	 */
+	@Deprecated
+	public static Predicate<String> createWhitelistFromPatterns(InputStream resource) {
+		return createAllowlistFromPatterns(resource);
+	}
+
+	/**
 	 * Reads an input stream and creates {@link Pattern} from the {@link InputStream} using
 	 * logic defined in {@link #createPatternsFromInputStream(InputStream)}
 	 * @param resource the resource to load

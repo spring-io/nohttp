@@ -251,12 +251,12 @@ class NoHttpCheckstylePluginTest {
 	fun configuredCheckstyleLegacyAllowlist() {
 		val project = projectWithTempDirs()
 				.build()
-		project.file("etc/nohttp/allowlist.lines").touch()
+		project.file("etc/nohttp/whitelist.lines").touch()
 		project.pluginManager.apply(NoHttpCheckstylePlugin::class.java)
 
 		val task: Checkstyle = project.tasks.findByName(NoHttpCheckstylePlugin.CHECKSTYLE_NOHTTP_TASK_NAME)!! as Checkstyle
 
-		assertThat(task.configProperties).containsEntry("nohttp.checkstyle.allowlistFileName", project.relativePath("etc/nohttp/allowlist.lines"))
+		assertThat(task.configProperties).containsEntry("nohttp.checkstyle.allowlistFileName", project.relativePath("etc/nohttp/whitelist.lines"))
 	}
 
     @Test

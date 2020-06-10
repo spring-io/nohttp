@@ -139,6 +139,26 @@ public class NoHttpCheck extends AbstractFileSetCheck implements ExternalResourc
 		this.allowlist = allowlist;
 	}
 
+	/**
+	 * Sets the allow list file name
+	 * @param allowlistFileName
+	 * @deprecated Use {@link #setAllowlistFileName(String)} instead
+	 */
+	@Deprecated
+	public void setWhitelistFileName(String allowlistFileName) {
+		setAllowlistFileName(allowlistFileName);
+	}
+
+	/**
+	 * Sets the allow list to use
+	 * @param allowlist the allowlist to use
+	 * @deprecated use {@link #setAllowlist(String)}
+	 */
+	@Deprecated
+	public void setWhitelist(String allowlist) {
+		setWhitelistFileName(allowlist);
+	}
+
 	private boolean isAllowlistFileSet() {
 		return !this.allowlistFileName.isEmpty();
 	}

@@ -130,6 +130,15 @@ public class RegexHttpMatcher implements HttpMatcher, HttpReplacer {
 		this.allow = this.allow.or(allow);
 	}
 
+	/**
+	 *
+	 * @param whitelist
+	 * @deprecated Use {@link #addHttpWhitelist(Predicate)}
+	 */
+	public void addHttpWhitelist(Predicate<String> whitelist) {
+		addHttpAllow(whitelist);
+	}
+
 	private static class NoOpWriter extends Writer {
 		public static final NoOpWriter INSTANCE = new NoOpWriter();
 

@@ -53,6 +53,18 @@ import java.util.jar.JarFile;
 public class NoHttpCheckstylePlugin implements Plugin<Project> {
 	private static final String NOHTTP_VERSION = determineNohttpVersion();
 
+	/**
+	 * @deprecated Prefer {@link #DEFAULT_ALLOWLIST_FILE_PATH}
+	 */
+	@Deprecated
+	public static final String DEFAULT_WHITELIST_FILE_PATH = "config/nohttp/whitelist.lines";
+
+	/**
+	 * @deprecated Prefer {@link #DEFAULT_ALLOWLIST_FILE_PATH}
+	 */
+	@Deprecated
+	public static final String LEGACY_WHITELIST_FILE_PATH = "etc/nohttp/whitelist.lines";
+
 	public static final String DEFAULT_ALLOWLIST_FILE_PATH = "config/nohttp/allowlist.lines";
 
 	public static final String NOHTTP_EXTENSION_NAME = "nohttp";
@@ -101,6 +113,14 @@ public class NoHttpCheckstylePlugin implements Plugin<Project> {
 				files.exclude("**/spring.tooling");
 			}
 		}));
+		File legacyWhiteListFile = project.file(LEGACY_WHITELIST_FILE_PATH);
+		if (legacyWhiteListFile.exists()) {
+			this.extension.setAllowlistFile(legacyWhiteListFile);
+		}
+		File defaultWhiteListFile = project.file(DEFAULT_WHITELIST_FILE_PATH);
+		if (defaultWhiteListFile.exists()) {
+			this.extension.setAllowlistFile(defaultWhiteListFile);
+		}
 		File allowlistFile = this.project.file(DEFAULT_ALLOWLIST_FILE_PATH);
 		if (allowlistFile.exists()) {
 			this.extension.setAllowlistFile(allowlistFile);
