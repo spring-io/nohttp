@@ -1,1 +1,1 @@
-+23:15: http:// URLs are not allowed but got 'http://repo.spring.io/libs-release'. Use https:// instead.
++23:23: http:// URLs are not allowed but got 'http://repo.spring.io/libs-release'. Use https:// instead.

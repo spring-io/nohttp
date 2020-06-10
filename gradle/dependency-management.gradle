@@ -18,7 +18,7 @@
 dependencyManagement {
 	dependencies {
 		dependency 'ch.qos.logback:logback-classic:1.2.3'
-		dependency 'com.puppycrawl.tools:checkstyle:8.18'
+		dependency 'com.puppycrawl.tools:checkstyle:8.33'
 		dependency 'junit:junit:4.12'
 		dependency 'org.assertj:assertj-core:3.11.1'
 		dependency 'org.slf4j:slf4j-api:1.7.26'
