@@ -45,17 +45,17 @@ class NoHttpCheckstylePluginTest {
 
     // See CheckstylePluginTest
 
-    @Test
-    fun configuredNohttpExtensionWhenWhitelistLinesFoundThenExists() {
-        val project = projectWithTempDirs().build()
-        val whitelistFile = project.file(NoHttpCheckstylePlugin.DEFAULT_WHITELIST_FILE_PATH)
-        whitelistFile.touch()
-        project.pluginManager.apply(NoHttpCheckstylePlugin::class.java)
+	@Test
+	fun configuredNohttpExtensionWhenAllowlistLinesFoundThenExists() {
+		val project = projectWithTempDirs().build()
+		val allowlistFile = project.file(NoHttpCheckstylePlugin.DEFAULT_ALLOWLIST_FILE_PATH)
+		allowlistFile.touch()
+		project.pluginManager.apply(NoHttpCheckstylePlugin::class.java)
 
-        val nohttp: NoHttpExtension = project.extensions.getByName(NoHttpCheckstylePlugin.NOHTTP_EXTENSION_NAME) as NoHttpExtension
+		val nohttp: NoHttpExtension = project.extensions.getByName(NoHttpCheckstylePlugin.NOHTTP_EXTENSION_NAME) as NoHttpExtension
 
-        assertThat(nohttp.whitelistFile).isEqualTo(whitelistFile)
-    }
+		assertThat(nohttp.allowlistFile).isEqualTo(allowlistFile)
+	}
 
     @Test
     fun configuredNohttpExtensionWhenBuildThenSourceIncludesBuild() {
@@ -211,7 +211,7 @@ class NoHttpCheckstylePluginTest {
     <property name="fileExtensions" value=""/>
 
     <module name="io.spring.nohttp.checkstyle.check.NoHttpCheck">
-        <property name="whitelistFileName" value="${DOLLAR}{nohttp.checkstyle.whitelistFileName}" default=""/>
+        <property name="allowlistFileName" value="${DOLLAR}{nohttp.checkstyle.allowlistFileName}" default=""/>
     </module>
 
     <module name="SuppressionFilter">
@@ -247,17 +247,17 @@ class NoHttpCheckstylePluginTest {
         assertThat(task.configProperties).containsEntry("config_loc", project.relativePath("etc/nohttp"))
     }
 
-    @Test
-    fun configuredCheckstyleLegacyWhitelist() {
-        val project = projectWithTempDirs()
-                .build()
-        project.file("etc/nohttp/whitelist.lines").touch()
-        project.pluginManager.apply(NoHttpCheckstylePlugin::class.java)
+	@Test
+	fun configuredCheckstyleLegacyAllowlist() {
+		val project = projectWithTempDirs()
+				.build()
+		project.file("etc/nohttp/allowlist.lines").touch()
+		project.pluginManager.apply(NoHttpCheckstylePlugin::class.java)
 
-        val task: Checkstyle = project.tasks.findByName(NoHttpCheckstylePlugin.CHECKSTYLE_NOHTTP_TASK_NAME)!! as Checkstyle
+		val task: Checkstyle = project.tasks.findByName(NoHttpCheckstylePlugin.CHECKSTYLE_NOHTTP_TASK_NAME)!! as Checkstyle
 
-        assertThat(task.configProperties).containsEntry("nohttp.checkstyle.whitelistFileName", project.relativePath("etc/nohttp/whitelist.lines"))
-    }
+		assertThat(task.configProperties).containsEntry("nohttp.checkstyle.allowlistFileName", project.relativePath("etc/nohttp/allowlist.lines"))
+	}
 
     @Test
     fun configuredCheckstyleDefaultConfigDir() {
@@ -271,43 +271,43 @@ class NoHttpCheckstylePluginTest {
     }
 
     @Test
-    fun configuredCheckstyleDefaultWhitelist() {
+    fun configuredCheckstyleDefaultAllowlist() {
         val project = projectWithTempDirs()
                 .build()
-        project.file("config/nohttp/whitelist.lines").touch()
+        project.file("config/nohttp/allowlist.lines").touch()
         project.pluginManager.apply(NoHttpCheckstylePlugin::class.java)
 
         val task: Checkstyle = project.tasks.findByName(NoHttpCheckstylePlugin.CHECKSTYLE_NOHTTP_TASK_NAME)!! as Checkstyle
 
-        assertThat(task.configProperties).containsEntry("nohttp.checkstyle.whitelistFileName", project.relativePath("config/nohttp/whitelist.lines"))
+        assertThat(task.configProperties).containsEntry("nohttp.checkstyle.allowlistFileName", project.relativePath("config/nohttp/allowlist.lines"))
     }
 
     @Test
-    fun configuredCheckstyleNohttpTaskWhenDefaultWhitelist() {
+    fun configuredCheckstyleNohttpTaskWhenDefaultAllowlist() {
         val project = projectWithTempDirs()
                 .build()
-        val whitelistFile = project.file(NoHttpCheckstylePlugin.DEFAULT_WHITELIST_FILE_PATH).touch()
+        val allowlistFile = project.file(NoHttpCheckstylePlugin.DEFAULT_ALLOWLIST_FILE_PATH).touch()
         project.pluginManager.apply(NoHttpCheckstylePlugin::class.java)
 
         val task: Checkstyle = project.tasks.findByName(NoHttpCheckstylePlugin.CHECKSTYLE_NOHTTP_TASK_NAME)!! as Checkstyle
 
-        assertThat(task.configProperties).containsEntry("nohttp.checkstyle.whitelistFileName", project.relativePath(whitelistFile))
-        assertThat(task.configProperties).containsEntry("config_loc", project.relativePath(whitelistFile.parentFile))
+        assertThat(task.configProperties).containsEntry("nohttp.checkstyle.allowlistFileName", project.relativePath(allowlistFile))
+        assertThat(task.configProperties).containsEntry("config_loc", project.relativePath(allowlistFile.parentFile))
     }
 
     @Test
-    fun configuredCheckstyleNohttpTaskWhenCustomWhitelist() {
+    fun configuredCheckstyleNohttpTaskWhenCustomAllowlist() {
         val project = projectWithTempDirs()
                 .build()
-        val whitelistFile = project.file("customFile").touch()
+        val allowlistFile = project.file("customFile").touch()
         project.pluginManager.apply(NoHttpCheckstylePlugin::class.java)
 
         val nohttp: NoHttpExtension = project.extensions.getByName(NoHttpCheckstylePlugin.NOHTTP_EXTENSION_NAME) as NoHttpExtension
-        nohttp.whitelistFile = whitelistFile
+        nohttp.allowlistFile = allowlistFile
         val task: Checkstyle = project.tasks.findByName(NoHttpCheckstylePlugin.CHECKSTYLE_NOHTTP_TASK_NAME)!! as Checkstyle
 
-        assertThat(task.configProperties).containsEntry("nohttp.checkstyle.whitelistFileName", project.relativePath(whitelistFile))
-        assertThat(task.configProperties).containsEntry("config_loc", project.relativePath(whitelistFile.parentFile))
+        assertThat(task.configProperties).containsEntry("nohttp.checkstyle.allowlistFileName", project.relativePath(allowlistFile))
+        assertThat(task.configProperties).containsEntry("config_loc", project.relativePath(allowlistFile.parentFile))
     }
 
     @Test

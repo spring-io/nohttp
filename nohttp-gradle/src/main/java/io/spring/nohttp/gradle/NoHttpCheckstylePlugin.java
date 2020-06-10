@@ -53,9 +53,7 @@ import java.util.jar.JarFile;
 public class NoHttpCheckstylePlugin implements Plugin<Project> {
 	private static final String NOHTTP_VERSION = determineNohttpVersion();
 
-	public static final String DEFAULT_WHITELIST_FILE_PATH = "config/nohttp/whitelist.lines";
-
-	public static final String LEGACY_WHITELIST_FILE_PATH = "etc/nohttp/whitelist.lines";
+	public static final String DEFAULT_ALLOWLIST_FILE_PATH = "config/nohttp/allowlist.lines";
 
 	public static final String NOHTTP_EXTENSION_NAME = "nohttp";
 
@@ -103,13 +101,9 @@ public class NoHttpCheckstylePlugin implements Plugin<Project> {
 				files.exclude("**/spring.tooling");
 			}
 		}));
-		File legacyWhiteListFile = project.file(LEGACY_WHITELIST_FILE_PATH);
-		if (legacyWhiteListFile.exists()) {
-			this.extension.setWhitelistFile(legacyWhiteListFile);
-		}
-		File defaultWhiteListFile = project.file(DEFAULT_WHITELIST_FILE_PATH);
-		if (defaultWhiteListFile.exists()) {
-			this.extension.setWhitelistFile(defaultWhiteListFile);
+		File allowlistFile = this.project.file(DEFAULT_ALLOWLIST_FILE_PATH);
+		if (allowlistFile.exists()) {
+			this.extension.setAllowlistFile(allowlistFile);
 		}
 
 		project.getPluginManager().apply(CheckstylePlugin.class);
@@ -166,10 +160,11 @@ public class NoHttpCheckstylePlugin implements Plugin<Project> {
 			@Override
 			public Map<String, Object> call() throws Exception {
 				Map<String, Object> configProperties = new HashMap<>();
-				File whitelistFile = extension.getWhitelistFile();
-				if (whitelistFile != null) {
-					logger.debug("Using whitelist at {}", whitelistFile);
-					configProperties.put("nohttp.checkstyle.whitelistFileName", project.relativePath(whitelistFile));
+				File allowlistFile = extension.getAllowlistFile();
+				if (allowlistFile != null) {
+					logger.debug("Using allowlist at {}", allowlistFile);
+					String allowlistPath = project.relativePath(allowlistFile);
+					configProperties.put("nohttp.checkstyle.allowlistFileName", allowlistPath);
 				}
 				if (configureConfigLoc) {
 					configProperties.put("config_loc", project.relativePath(getConfigLocation()));
@@ -209,9 +204,9 @@ public class NoHttpCheckstylePlugin implements Plugin<Project> {
 	}
 
 	private File getConfigLocation() {
-		File whitelistFile = this.extension.getWhitelistFile();
-		if (whitelistFile != null) {
-			return whitelistFile.getParentFile();
+		File allowlistFile = this.extension.getAllowlistFile();
+		if (allowlistFile != null) {
+			return allowlistFile.getParentFile();
 		}
 		File legacy = this.project.file("etc/nohttp");
 		if (legacy.exists()) {

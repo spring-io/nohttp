@@ -72,12 +72,12 @@ By default, the `NoHttpCheckstylePlugin` expects configuration files to be place
     └── nohttp                 // <1>
         └── checkstyle.xml     // <2>
         └── suppressions.xml   // <3>
-        └── whitelist.lines    // <4>
+        └── allowlist.lines    // <4>
 ----
 <1> Nohttp configuration files go here
 <2> A custom checkstyle.xml file to use for `checkstyleNohttp`. The default can be found in the https://github.com/spring-io/nohttp/blob/master/nohttp-checkstyle/README.adoc#configuration[nohttp-checkstyle documentation]
 <3> A suppressions file to use for `checkstyleNohttp`. The default is no suppressions
-<4> https://github.com/spring-io/nohttp/tree/master/nohttp-checkstyle#custom-whitelist[Custom whitelist] to use
+<4> https://github.com/spring-io/nohttp/tree/master/nohttp-checkstyle#custom-allowlist[Custom allowlist] to use
 
 === Dependency management
 
@@ -101,13 +101,13 @@ The https://github.com/spring-io/nohttp/blob/master/nohttp-gradle/src/main/java/
 [source,groovy]
 ----
 nohttp {
-    whitelistFile = project.file('src/nohttp/whitelist.lines') <1>
+    allowlistFile = project.file('src/nohttp/allowlist.lines') <1>
     source.exclude "**/test-output/**"                         <2>
     toolVersion = '0.0.1.BUILD-SNAPSHOT'                       <3>
 }
 ----
 
-<1> `whitelistFile` (https://docs.oracle.com/javase/8/docs/api/java/io/File.html[File]) - instructs nohttp to use `src/nohttp/whitelist.lines` to provide https://github.com/spring-io/nohttp/tree/master/nohttp#regexpredicatecreatewhitelistinputstream[Custom Rules] for whitelisting URLs. Modifying the `whitelistFile` also modifies the default <<project-layout>> to look for the other configuration in the parent directory of `whitelistFile` (i.e. `src/nohttp`) as apposed to `config/nohttp`. This means if you have a file named `checkstyle.xml` in the same folder as `whitelistFile` you either need to include https://github.com/spring-io/nohttp/tree/master/nohttp-checkstyle#nohttpcheck[NoHttpCheck] in the file or you need to explicitly <<Configuring nohttpCheckstyle,configure nohttpCheckstyle task>> with a https://github.com/spring-io/nohttp/tree/master/nohttp-checkstyle#configuration[different checkstyle file].
+<1> `allowlistFile` (https://docs.oracle.com/javase/8/docs/api/java/io/File.html[File]) - instructs nohttp to use `src/nohttp/allowlist.lines` to provide https://github.com/spring-io/nohttp/tree/master/nohttp#regexpredicatecreateallowlistinputstream[Custom Rules] for allowing HTTP URLs. Modifying the `allowlistFile` also modifies the default <<project-layout>> to look for the other configuration in the parent directory of `allowlistFile` (i.e. `src/nohttp`) as apposed to `config/nohttp`. This means if you have a file named `checkstyle.xml` in the same folder as `allowlistFile` you either need to include https://github.com/spring-io/nohttp/tree/master/nohttp-checkstyle#nohttpcheck[NoHttpCheck] in the file or you need to explicitly <<Configuring nohttpCheckstyle,configure nohttpCheckstyle task>> with a https://github.com/spring-io/nohttp/tree/master/nohttp-checkstyle#configuration[different checkstyle file].
 <2> `source` (https://docs.gradle.org/current/userguide/working_with_files.html#sec:file_trees[FileTree]) - instructs nohttp what files to include / exclude. In this example, we exclude anything in the folder `test-output`.
 <3> `toolVersion` - Updates the version of nohttp to use. The default is the same version as the nohttp Gradle Plugin version being used.
 
@@ -120,7 +120,7 @@ You can also configure `nohttpCheckstyle` https://docs.gradle.org/current/dsl/or
 The `NoHttpCheckstylePlugin` defines:
 
 - `config_loc` property that can be used in Checkstyle configuration files to define paths to other configuration files like `suppressions.xml`.
-- `nohttp.checkstyle.whitelistFileName` property that can be used in Checkstyle configuration files to define paths to other configuration files like `suppressions.xml`.
+- `nohttp.checkstyle.allowlistFileName` property that can be used in Checkstyle configuration files to define paths to other configuration files like `suppressions.xml`.
 
 == NoHttpCliPlugin
 
@@ -151,9 +151,9 @@ Outputs the help
 Advanced sample
 
 ----
-./gradlew nohttp --args='-D=build -D=.git -F=spring.schemas -w config/nohttp/whitelist.lines'
+./gradlew nohttp --args='-D=build -D=.git -F=spring.schemas -w config/nohttp/allowlist.lines'
 ----
 
 - Exclude the folders 'build', `.git'
 - Exclude the files 'spring.schemas`
-- Use additional `whitelistFile` to provide https://github.com/spring-io/nohttp/tree/master/nohttp#regexpredicatecreatewhitelistinputstream[Custom Rules] of `config/nohttpwhitelist.lines`
+- Use additional `allowlistFile` to provide https://github.com/spring-io/nohttp/tree/master/nohttp#regexpredicatecreateallowlistinputstream[Custom Rules] of `config/nohttp/allowlist.lines`

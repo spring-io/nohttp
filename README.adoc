@@ -28,6 +28,6 @@ Automation is beyond the scope of this project. However, you can easily automate
 
 See https://github.com/spring-io/nohttp/tree/master/nohttp#thought-process[Thought Process]
 
-*Are Whitelists Supported*
+*Are Allow Lists Supported*
 
-See https://github.com/spring-io/nohttp/tree/master/nohttp#whitelisted-http-urls[Whitelisted HTTP URLs]
+See https://github.com/spring-io/nohttp/tree/master/nohttp#allow-http-urls[Allow HTTP URLs]

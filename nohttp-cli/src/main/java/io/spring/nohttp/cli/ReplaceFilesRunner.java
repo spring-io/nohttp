@@ -51,7 +51,7 @@ import static java.lang.System.exit;
  */
 @CommandLine.Command(name = "nohttp", mixinStandardHelpOptions = true)
 public class ReplaceFilesRunner implements Callable<Integer> {
-	private InputStream whitelistExclusions;
+	private InputStream allowlistExclusions;
 
 	@CommandLine.Option(names = "-T", description = "Disable searching only text based files. This is determined using native invocation of grep which will not work on all systems, so it can be disabled.", defaultValue = "true")
 	private boolean textFilesOnly = true;
@@ -77,9 +77,9 @@ public class ReplaceFilesRunner implements Callable<Integer> {
 	@CommandLine.Option(names = "-f", description = "If true, prints out the file names.", defaultValue = "false")
 	private boolean printFiles;
 
-	@CommandLine.Option(names = "-w", description = "The path to file that contains additional whitelist of allowed URLs. The format is a regular expression to whitelist (ignore http URLs) per line.")
-	public void setWhitelistFile(File whitelistFile) throws FileNotFoundException {
-		this.whitelistExclusions = new FileInputStream(whitelistFile);
+	@CommandLine.Option(names = "-w", description = "The path to file that contains additional HTTP URLs that are allowed. The format is a regular expression to allow HTTP URLs (ignore http URLs) per line.")
+	public void setAllowlistExclusions(File allowListFile) throws FileNotFoundException {
+		this.allowlistExclusions = new FileInputStream(allowListFile);
 	}
 
 	public void run(String... args) throws Exception {
@@ -178,9 +178,9 @@ public class ReplaceFilesRunner implements Callable<Integer> {
 
 	private RegexHttpMatcher createMatcher() {
 
-		RegexHttpMatcher matcher = new RegexHttpMatcher(RegexPredicate.createDefaultUrlWhitelist());
-		if (this.whitelistExclusions != null) {
-			matcher.addHttpWhitelist(RegexPredicate.createWhitelistFromPatterns(this.whitelistExclusions));
+		RegexHttpMatcher matcher = new RegexHttpMatcher(RegexPredicate.createDefaultUrlAllowlist());
+		if (this.allowlistExclusions != null) {
+			matcher.addHttpAllow(RegexPredicate.createAllowlistFromPatterns(this.allowlistExclusions));
 		}
 		if (this.statusCheck) {
 			matcher.setHttpReplacer(new StatusHttpReplacer());

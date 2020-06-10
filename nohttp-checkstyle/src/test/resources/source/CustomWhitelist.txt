@@ -1,1 +1,0 @@
-This has http://example.com but it is whitelisted

@@ -32,7 +32,7 @@ The default nohttp checkstyle.xml configuration can be found below:
     <property name="fileExtensions" value=""/>
 
     <module name="io.spring.nohttp.checkstyle.check.NoHttpCheck">
-        <property name="whitelistFileName" value="${nohttp.checkstyle.whitelistFileName}" default=""/>
+        <property name="allowlistFileName" value="${nohttp.checkstyle.allowlistFileName}" default=""/>
     </module>
 
     <module name="SuppressionFilter">
@@ -51,21 +51,21 @@ The default nohttp checkstyle.xml configuration can be found below:
 
 NOTE: `SuppressWithPlainTextCommentFilter` was added in Checkstyle 8.6, so for the default configuration to work you must run with Checkstyle 8.6+
 
-=== Custom Whitelist
+=== Custom Allowlist
 
-The nohttp project provides a https://github.com/spring-io/nohttp/tree/master/nohttp#whitelisted-http-urls[default whitelist].
-If you find the need to exclude additional URL patterns, you can do so with the above configuration by including a https://checkstyle.org/config.html#Properties[checkstyle property] named `nohttp.checkstyle.whitelistFileName` pointing to an whitelist file that is in the format of https://github.com/spring-io/nohttp/tree/master/nohttp#whitelisted-http-urls[RegexPredicate.createWhitelist(InputStream)].
+The nohttp project provides a https://github.com/spring-io/nohttp/tree/master/nohttp#allow-http-urls[default allowlist].
+If you find the need to exclude additional URL patterns, you can do so with the above configuration by including a https://checkstyle.org/config.html#Properties[checkstyle property] named `nohttp.checkstyle.allowlistFileName` pointing to an allowlist file that is in the format of https://github.com/spring-io/nohttp/tree/master/nohttp#allow-http-urls[RegexPredicate.createAllowlist(InputStream)].
 
-=== Embedding a Whitelist
+=== Embedding an Allowlist
 
-If you prefer, you can embed a whitelist rather than externalizing it into a separate file by using the `whitelist` property.
-The value of `whitelist` should be in the format of https://github.com/spring-io/nohttp/tree/master/nohttp#whitelisted-http-urls[RegexPredicate.createWhitelist(InputStream)].
-For example, the following will whitelist `http://example.com` and `http://example.org`:
+If you prefer, you can embed an allowlist rather than externalizing it into a separate file by using the `allowlist` property.
+The value of `allowlist` should be in the format of https://github.com/spring-io/nohttp/tree/master/nohttp#allow-http-urls[RegexPredicate.createAllowlist(InputStream)].
+For example, the following will allowlist `http://example.com` and `http://example.org`:
 
 [source,xml]
 ----
 <module name="io.spring.nohttp.checkstyle.check.NoHttpCheck">
-	<property name="whitelist" value="^\Qhttp://example.com\E$&#10;
+	<property name="allowlist" value="^\Qhttp://example.com\E$&#10;
 ^\Qhttp://example.org\E$"/>
 </module>
 ----

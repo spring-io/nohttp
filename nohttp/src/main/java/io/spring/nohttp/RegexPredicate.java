@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
- * An API that is typically used with {@link RegexHttpMatcher} that allows whitelisting
+ * An API that is typically used with {@link RegexHttpMatcher} that allows
  * http text using a provided list of {@link Pattern}s.
  *
  * @author Rob Winch
@@ -37,7 +37,7 @@ public class RegexPredicate implements Predicate<String> {
 	private final List<Pattern> patterns;
 
 	/**
-	 * Creates a whitelist with the provided {@link Pattern}s
+	 * Creates an allowlist with the provided {@link Pattern}s
 	 * @param patterns the patterns to use.
 	 */
 	public RegexPredicate(List<Pattern> patterns) {
@@ -57,7 +57,7 @@ public class RegexPredicate implements Predicate<String> {
 	}
 
 	/**
-	 * Creates an instance that uses the default URL whitelist. The whitelist is expected to
+	 * Creates an instance that uses the default URL allowlist. The allowlist is expected to
 	 * be updated in upcoming releases, but generally contains
 	 *
 	 * <ul>
@@ -68,20 +68,20 @@ public class RegexPredicate implements Predicate<String> {
 	 *     <a href="https://hg.openjdk.java.net/jdk8u/jdk8u/jdk/file/43ca3768126e/src/share/classes/sun/util/xml/PlatformXmlPropertiesProvider.java#l198">hard codes</a> using http.
 	 *     </li>
 	 * </ul>
-	 * @return the {@link Predicate} that determines what is whitelisted
+	 * @return the {@link Predicate} that determines what is allowed
  	 */
-	public static Predicate<String> createDefaultUrlWhitelist() {
-		InputStream resource = RegexPredicate.class.getResourceAsStream("whitelist.txt");
-		return createWhitelistFromPatterns(resource);
+	public static Predicate<String> createDefaultUrlAllowlist() {
+		InputStream resource = RegexPredicate.class.getResourceAsStream("allowlist.txt");
+		return createAllowlistFromPatterns(resource);
 	}
 
 	/**
 	 * Creates a {@link Predicate} from an {@link InputStream}.
 	 * The format of the {@link InputStream} contains regular expressions of what inputs
-	 * should be whitelisted such that:
+	 * should be allowed such that:
 	 *
 	 * <ul>
-	 *     <li>Each line contains a regular expression that should be whitelisted</li>
+	 *     <li>Each line contains a regular expression that should be allowed</li>
 	 *     <li>Lines can begin with // to create a comment within the file</li>
 	 *     <li>Lines are trimmed for whitespace</li>
 	 *     <li>Lines that are empty are ignored</li>
@@ -92,13 +92,13 @@ public class RegexPredicate implements Predicate<String> {
 	 * <pre>
 	 * // Ignore Maven XML Namespace id of http://maven.apache.org/POM/4.0.0
 	 * ^http://maven\.apache\.org/POM/4.0.0$
-	 * // Whitelist Company XML namespace names but not the locations (which end in .xsd)
+	 * // Allow Company XML namespace names but not the locations (which end in .xsd)
 	 * ^http://mycompany.test/xml/.*(?<!\.(xsd))$
 	 * </pre>
 	 * @param resource
-	 * @return the {@link Predicate} that determines what is whitelisted
+	 * @return the {@link Predicate} that determines what is allowed
 	 */
-	public static Predicate<String> createWhitelistFromPatterns(InputStream resource) {
+	public static Predicate<String> createAllowlistFromPatterns(InputStream resource) {
 		List<Pattern> patterns = createPatternsFromInputStream(resource);
 		return new RegexPredicate(patterns);
 	}
@@ -111,7 +111,7 @@ public class RegexPredicate implements Predicate<String> {
 	 */
 	private static List<Pattern> createPatternsFromInputStream(InputStream resource) {
 		if (resource == null) {
-			throw new IllegalStateException("Failed to load whitelist from " + resource);
+			throw new IllegalStateException("Failed to load allowed from " + resource);
 		}
 		InputStreamReader input = new InputStreamReader(resource);
 

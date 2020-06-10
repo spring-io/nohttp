@@ -1,5 +1,5 @@
 This is a utility for finding and replacing http URLs using https://github.com/spring-io/nohttp/tree/master/nohttp[nohttp].
-It takes into account whitelisting rules that nohttp uses.
+It takes into account which URLs are allowed by nohttp.
 
 = Usage
 
@@ -84,7 +84,7 @@ You can get help with additional options using `--help`.
 ----
 java -jar $NOHTTP --help
 ...
-Usage: nohttp [-fhMrsTV] [-w=<whitelistFile>] [-D=<regex>]... [-F=<regex>]...
+Usage: nohttp [-fhMrsTV] [-w=<allowlistFile>] [-D=<regex>]... [-F=<regex>]...
               [<dir>]
       [<dir>]           The directory to scan. Default is current working directory.
   -D=<regex>            Regular expression of directories to exclude scanning.
@@ -104,7 +104,7 @@ Usage: nohttp [-fhMrsTV] [-w=<whitelistFile>] [-D=<regex>]... [-F=<regex>]...
                           using native invocation of grep which will not work on all
                           systems, so it can be disabled.
   -V, --version         Print version information and exit.
-  -w=<whitelistFile>    The path to file that contains additional whitelist of
+  -w=<allowlistFile>    The path to file that contains additional allowlist of
                           allowed URLs. The format is a regular expression to
-                          whitelist (ignore http URLs) per line.
+                          allowlist (ignore http URLs) per line.
 ----

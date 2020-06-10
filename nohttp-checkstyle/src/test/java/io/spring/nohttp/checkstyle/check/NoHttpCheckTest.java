@@ -28,28 +28,28 @@ public class NoHttpCheckTest {
 	private NoHttpCheck check = new NoHttpCheck();
 
 	@Test
-	public void setWhitelistFilenameWhenNullThenIllegalArgumentException() {
-		assertThatCode(() -> this.check.setWhitelistFileName(null))
+	public void setAllowlistFilenameWhenNullThenIllegalArgumentException() {
+		assertThatCode(() -> this.check.setAllowlistFileName(null))
 			.isInstanceOf(IllegalArgumentException.class)
-			.hasMessage("whitelistFileName cannot be null");
+			.hasMessage("allowlistFileName cannot be null");
 	}
 
 	@Test
-	public void setWhitelistWhenNullThenIllegalArgumentException() {
-		assertThatCode(() -> this.check.setWhitelist(null))
+	public void setAllowlistWhenNullThenIllegalArgumentException() {
+		assertThatCode(() -> this.check.setAllowlist(null))
 				.isInstanceOf(IllegalArgumentException.class)
-				.hasMessage("whitelist cannot be null");
+				.hasMessage("allowlist cannot be null");
 	}
 
 	@Test
-	public void getExternalResourceLocationsWhenNoWhitelistThenEmpty() {
+	public void getExternalResourceLocationsWhenNoAllowlistlistThenEmpty() {
 		assertThat(this.check.getExternalResourceLocations()).isEmpty();
 	}
 
 	@Test
-	public void getExternalResourceLocationsWhenWhitelistThenEmpty() {
-		String whitelistFileName = "whitelist.lines";
-		this.check.setWhitelistFileName(whitelistFileName);
-		assertThat(this.check.getExternalResourceLocations()).containsOnly(whitelistFileName);
+	public void getExternalResourceLocationsWhenAllowlistlistThenEmpty() {
+		String allowlistFileName = "allowlist.lines";
+		this.check.setAllowlistFileName(allowlistFileName);
+		assertThat(this.check.getExternalResourceLocations()).containsOnly(allowlistFileName);
 	}
 }

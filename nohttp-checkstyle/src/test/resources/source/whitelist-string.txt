@@ -1,2 +1,0 @@
-This doc has http://example.org and http://example.com which are custom whitelisted
-but http://evil.com is not whitelisted

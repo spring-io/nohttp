@@ -53,7 +53,7 @@ import java.util.Set;
  * Example configurations can be found below:
  * </p>
  *
- * This configuration allows externalizing the whitelist.
+ * This configuration allows externalizing the allowlist.
  *
  * <pre>
  * &lt;?xml version="1.0"?&gt;
@@ -71,7 +71,7 @@ import java.util.Set;
  * &lt;/module&gt;
  * </pre>
  *
- * <h2>whitelistFileName</h2>
+ * <h2>allowlistFileName</h2>
  *
  * <p>
  * If you find the need to exclude additional URL patterns, you can do so by including.
@@ -80,33 +80,33 @@ import java.util.Set;
  * <pre>
  * &lt;module name="io.spring.nohttp.checkstyle.check.NoHttpCheck"&gt;
  *     &lt;!-- the file name to load for white listing. If an empty String nothing is used --&gt;
- *     &lt;property name="whitelistFileName" value="config/nohttp/whitelist.lines"/&gt;
+ *     &lt;property name="allowlistFileName" value="config/nohttp/allowlist.lines"/&gt;
  * &lt;/module&gt;
  * </pre>
  *
  * <p>
  * It is important to note that you use checkstyle properties to load the file as well.
  * If you want to make the property optional, you can specify a default of empty String
- * in which case the additional whitelist is ignored.
+ * in which case the additional allowlist is ignored.
  * </p>
  *
  * <pre>
  * &lt;module name="io.spring.nohttp.checkstyle.check.NoHttpCheck"&gt;
  *     &lt;!-- the file name to load for white listing. If an empty String nothing is used --&gt;
- *     &lt;property name="whitelistFileName" value="${nohttp.checkstyle.whitelistFileName}" default=""/&gt;
+ *     &lt;property name="allowlistFileName" value="${nohttp.checkstyle.allowlistFileName}" default=""/&gt;
  * &lt;/module&gt;
  * </pre>
  *
- * <h2>whitelist</h2>
+ * <h2>allowlist</h2>
  *
- * This configuration property allows embedding the whitelist into the checkstyle
- * configuration. The example below whitelists both http://example.com and
+ * This configuration property allows embedding the allowlist into the checkstyle
+ * configuration. The example below allowlists both http://example.com and
  * http://example.org
  *
  * <pre>
  * &lt;module name="io.spring.nohttp.checkstyle.check.NoHttpCheck"&gt;
- *     &lt;!-- the whitelist. Make sure to use &amp;#10; for newlines --&gt;
- *     &lt;property name="whitelist" value="^\Qhttp://example.com\E$&#10;
+ *     &lt;!-- the allowlist. Make sure to use &amp;#10; for newlines --&gt;
+ *     &lt;property name="allowlist" value="^\Qhttp://example.com\E$&#10;
  * ^\Qhttp://example.org\E$" default=""/&gt;
  * &lt;/module&gt;
  * </pre>
@@ -116,58 +116,58 @@ import java.util.Set;
 public class NoHttpCheck extends AbstractFileSetCheck implements ExternalResourceHolder {
 	private HttpMatcher matcher;
 
-	private String whitelistFileName = "";
+	private String allowlistFileName = "";
 
-	private String whitelist = "";
+	private String allowlist = "";
 
-	public void setWhitelistFileName(String whitelistFileName) {
-		if (whitelistFileName == null) {
-			throw new IllegalArgumentException("whitelistFileName cannot be null");
+	public void setAllowlistFileName(String allowlistFileName) {
+		if (allowlistFileName == null) {
+			throw new IllegalArgumentException("allowlistFileName cannot be null");
 		}
-		this.whitelistFileName = whitelistFileName;
+		this.allowlistFileName = allowlistFileName;
 	}
 
 	/**
-	 * Sets the whitelist to use
-	 * @param whitelist the whitelist to use
+	 * Sets the allowlist to use
+	 * @param allowlist the allowlist to use
 	 * @since 0.0.3
 	 */
-	public void setWhitelist(String whitelist) {
-		if (whitelist == null) {
-			throw new IllegalArgumentException("whitelist cannot be null");
+	public void setAllowlist(String allowlist) {
+		if (allowlist == null) {
+			throw new IllegalArgumentException("allowlist cannot be null");
 		}
-		this.whitelist = whitelist;
+		this.allowlist = allowlist;
 	}
 
-	private boolean isWhitelistFileSet() {
-		return !this.whitelistFileName.isEmpty();
+	private boolean isAllowlistFileSet() {
+		return !this.allowlistFileName.isEmpty();
 	}
 
-	private boolean isWhitelistSet() {
-		return !this.whitelist.isEmpty();
+	private boolean isAllowlistSet() {
+		return !this.allowlist.isEmpty();
 	}
 
-	private InputStream createWhitelistInputStream() {
-		File whitelistFile = new File(this.whitelistFileName);
+	private InputStream createAllowlistInputStream() {
+		File allowlistFile = new File(this.allowlistFileName);
 		try {
-			return new FileInputStream(whitelistFile);
+			return new FileInputStream(allowlistFile);
 		} catch (FileNotFoundException e) {
-			throw new IllegalStateException("Could not load file '" + whitelistFile +"'", e);
+			throw new IllegalStateException("Could not load file '" + allowlistFile +"'", e);
 		}
 	}
 
 	@Override
 	protected void finishLocalSetup() throws CheckstyleException {
-		RegexHttpMatcher matcher = new RegexHttpMatcher(RegexPredicate.createDefaultUrlWhitelist());
+		RegexHttpMatcher matcher = new RegexHttpMatcher(RegexPredicate.createDefaultUrlAllowlist());
 
-		if (isWhitelistFileSet()) {
-			InputStream inputStream = createWhitelistInputStream();
-			matcher.addHttpWhitelist(RegexPredicate.createWhitelistFromPatterns(inputStream));
+		if (isAllowlistFileSet()) {
+			InputStream inputStream = createAllowlistInputStream();
+			matcher.addHttpAllow(RegexPredicate.createAllowlistFromPatterns(inputStream));
 		}
 
-		if (isWhitelistSet()) {
-			InputStream inputStream = new ByteArrayInputStream(this.whitelist.getBytes());
-			matcher.addHttpWhitelist(RegexPredicate.createWhitelistFromPatterns(inputStream));
+		if (isAllowlistSet()) {
+			InputStream inputStream = new ByteArrayInputStream(this.allowlist.getBytes());
+			matcher.addHttpAllow(RegexPredicate.createAllowlistFromPatterns(inputStream));
 		}
 		this.matcher = matcher;
 	}
@@ -189,8 +189,8 @@ public class NoHttpCheck extends AbstractFileSetCheck implements ExternalResourc
 	@Override
 	public Set<String> getExternalResourceLocations() {
 		Set<String> result = new HashSet<>();
-		if (isWhitelistFileSet()) {
-			result.add(this.whitelistFileName);
+		if (isAllowlistFileSet()) {
+			result.add(this.allowlistFileName);
 		}
 		return result;
 	}

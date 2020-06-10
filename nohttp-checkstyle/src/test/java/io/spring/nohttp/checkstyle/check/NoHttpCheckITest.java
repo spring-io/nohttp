@@ -16,10 +16,8 @@
 
 package io.spring.nohttp.checkstyle.check;
 
-import com.puppycrawl.tools.checkstyle.AstTreeStringPrinter;
 import com.puppycrawl.tools.checkstyle.Checker;
 import com.puppycrawl.tools.checkstyle.ConfigurationLoader;
-import com.puppycrawl.tools.checkstyle.JavaParser;
 import com.puppycrawl.tools.checkstyle.ModuleFactory;
 import com.puppycrawl.tools.checkstyle.PackageObjectFactory;
 import com.puppycrawl.tools.checkstyle.PropertiesExpander;
@@ -61,7 +59,7 @@ public class NoHttpCheckITest {
 
 	private static final File CONFIGS_DIR = new File("src/test/resources/config");
 
-	private static final File WHITELIST_DIR = new File("src/test/resources/whitelist");
+	private static final File ALLOWLIST_DIR = new File("src/test/resources/allowlist");
 
 	private final Parameter parameter;
 
@@ -144,11 +142,11 @@ public class NoHttpCheckITest {
 				this.config = NoHttpCheck.class.getClassLoader().getResourceAsStream("io/spring/nohttp/checkstyle/default-nohttp-checkstyle.xml");
 			}
 			Properties properties = new Properties();
-			File whitelistFile = new File(WHITELIST_DIR, this.name + ".lines");
-			if (whitelistFile.exists()) {
-				properties.put("nohttp.checkstyle.whitelistFileName", whitelistFile.getPath());
+			File allowlistFile = new File(ALLOWLIST_DIR, this.name + ".lines");
+			if (allowlistFile.exists()) {
+				properties.put("nohttp.checkstyle.allowlistFileName", allowlistFile.getPath());
 			}
-			properties.put("config_loc", WHITELIST_DIR.getPath());
+			properties.put("config_loc", ALLOWLIST_DIR.getPath());
 			this.properties = properties;
 			this.assersionsListener = new AssertionsAuditListener(
 					readChecks(this.name + ".txt"));

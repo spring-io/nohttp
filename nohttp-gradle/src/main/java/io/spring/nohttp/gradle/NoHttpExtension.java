@@ -29,14 +29,14 @@ public class NoHttpExtension {
 
 	private ConfigurableFileTree source;
 
-	private File whitelistFile;
+	private File allowlistFile;
 
-	public File getWhitelistFile() {
-		return this.whitelistFile;
+	public File getAllowlistFile() {
+		return this.allowlistFile;
 	}
 
-	public void setWhitelistFile(File whitelistFile) {
-		this.whitelistFile = whitelistFile;
+	public void setAllowlistFile(File allowlistFile) {
+		this.allowlistFile = allowlistFile;
 	}
 
 	public ConfigurableFileTree getSource() {

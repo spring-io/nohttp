@@ -25,7 +25,7 @@
     <property name="fileExtensions" value=""/>
 
     <module name="io.spring.nohttp.checkstyle.check.NoHttpCheck">
-        <property name="whitelist" value="^\Qhttp://example.com\E$&#10;
+        <property name="allowlist" value="^\Qhttp://example.com\E$&#10;
 ^\Qhttp://example.org\E$" default=""/>
     </module>
 </module>

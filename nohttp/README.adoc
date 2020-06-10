@@ -16,17 +16,17 @@ The recommended process for determining if it is ok to use `http://` is:
 ** If your project uses the URL to make a request over a network, then you need to use `https`
 ** It is acceptable to use `localhost` to make a request using `http` since it does not leave the machine
 ** If you need to test URLs that use `http`, then consider using TLD of `test`, `example`, `invalid`, or `localhost` as defined by https://tools.ietf.org/html/rfc2606[rfc2606].
-** Links that users click on should prefer `https`, but if the site does not support `https` you may decide to whitelist the URL
+** Links that users click on should prefer `https`, but if the site does not support `https` you may decide to allow the URL
 ** If the link is an XML namespace name (which is just an identifier), then you can use `http`. The XML namespace location should still be `https`.
 
-== Whitelisted HTTP URLs
+== Allow HTTP URLs
 
 There are times when URLs cannot use `https://` that are beyond our control.
-Fortunately, nohttp provides a default whitelist and whitelisting additional URLs.
+Fortunately, nohttp provides a default allowlist and allowing additional URLs.
 
-=== Default Whitelist
+=== Default Allowlist
 
-The default whitelist includes a whitelist that impacts these primary categories:
+The default allowlist allows HTTP urls that impact these primary categories:
 
 * localhost
 * URLs that use a TLD defined in https://tools.ietf.org/html/rfc2606 (i.e. tld of test, .example, invalid, localhost)
@@ -34,32 +34,32 @@ The default whitelist includes a whitelist that impacts these primary categories
 * Java specific URLs that do not work over `http`.
 For example, Java Properties https://hg.openjdk.java.net/jdk8u/jdk8u/jdk/file/43ca3768126e/src/share/classes/sun/util/xml/PlatformXmlPropertiesProvider.java#l198[hard codes] using `http`.
 
-We will not add a whitelist entry for arbitrary sites that do not support `https`.
+We will not add an entry to allow for arbitrary sites that do not support `https`.
 The reasoning is that context is important.
 A specific project may provide a link to a site that does not support https.
 Ideally that site is updated to support https, but it is not considered a vulnerability.
-This means that the URL could be added to your custom whitelist.
+This means that the URL could be added to your custom allowlist.
 However, another project may be downloading from the same site that does not support https.
 In this case it is a vulnerability and needs to be fixed.
-Since nohttp cannot understand the context, it will not whitelist arbitrary sites that do not support `https`. 
+Since nohttp cannot understand the context, it will not allow arbitrary sites that do not support `https`.
 
 
 === Adding Custom Rules
 
-This project provides a default whitelist.
+This project provides a default allowlist.
 However, other projects may end up with their own usecases.
-Fortunately, nohttp supports custom whitelist as well.
+Fortunately, nohttp supports custom allowlist as well.
 
-==== RegexHttpMatcher.addHttpUrlWhitelist(Predicate<String>)
+==== RegexHttpMatcher.addHttpUrlAllowlist(Predicate<String>)
 
-You can invoke `RegexHttpMatcher.addHttpUrlWhitelist(Predicate<String>)` to add whitelists to the existing whitelist.
-The input to the `Predicate` is the URL that was found and should be checked as whitelisted or not.
+You can invoke `RegexHttpMatcher.addHttpUrlAllowlist(Predicate<String>)` to add additional rules to determine if a URL is allowed or not.
+The input to the `Predicate` is the URL that was found and should be checked as allowed or not.
 
-==== RegexPredicate.createWhitelist(InputStream)
-The simplest way to add custom whitelist is to use `RegexPredicate.createWhitelist(InputStream)`.
+==== RegexPredicate.createAllowlist(InputStream)
+The simplest way to add custom allowlist is to use `RegexPredicate.createAllowlist(InputStream)`.
 The format of the InputStream is defined as:
 
-* Each line contains a regular expression that should be whitelisted
+* Each line contains a regular expression that should be allowed
 * Lines can begin with `//` to create a comment within the file
 * Lines are trimmed for whitespace
 * Lines that are empty are ignored
@@ -70,6 +70,6 @@ For example:
 ----
 // Ignore Maven XML Namespace id of http://maven.apache.org/POM/4.0.0
 ^http://maven\.apache\.org/POM/4.0.0$
-// Whitelist Company XML namespace names but not the locations (which end in .xsd)
+// Allow Company XML namespace names but not the locations (which end in .xsd)
 ^http://mycompany.test/xml/.*(?<!\.(xsd))$
 ----

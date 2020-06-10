@@ -1,0 +1,2 @@
+This doc has http://example.org and http://example.com which are custom allowed
+but http://evil.com is not allowed

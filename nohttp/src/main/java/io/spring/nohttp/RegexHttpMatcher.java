@@ -36,17 +36,17 @@ public class RegexHttpMatcher implements HttpMatcher, HttpReplacer {
 
 	private Function<String, String> httpReplacer = httpUrl -> httpUrl.replaceFirst("http", "https");
 
-	private Predicate<String> whitelist;
+	private Predicate<String> allow;
 
 	/**
-	 * Creates a new instance with the provided whitelist
-	 * @param whitelist the whitelist to be used
+	 * Creates a new instance with the provided allow rule
+	 * @param allow the rule to be used determine if an HTTP URL is allowed
 	 */
-	public RegexHttpMatcher(Predicate<String> whitelist) {
-		if (whitelist == null) {
-			throw new IllegalArgumentException("whitelist cannot be null");
+	public RegexHttpMatcher(Predicate<String> allow) {
+		if (allow == null) {
+			throw new IllegalArgumentException("allow cannot be null");
 		}
-		this.whitelist = whitelist;
+		this.allow = allow;
 	}
 
 	/**
@@ -91,7 +91,7 @@ public class RegexHttpMatcher implements HttpMatcher, HttpReplacer {
 				break;
 			}
 			String httpUrl = matcher.group();
-			if (this.whitelist.test(httpUrl)) {
+			if (this.allow.test(httpUrl)) {
 				continue;
 			}
 			String replacementUrl = this.httpReplacer.apply(httpUrl);
@@ -120,14 +120,14 @@ public class RegexHttpMatcher implements HttpMatcher, HttpReplacer {
 	}
 
 	/**
-	 * Adds an additional whitelist to the existing whitelist
-	 * @param whitelist the whitelist to use
+	 * Adds an additional allow rules to the existing allowed rules
+	 * @param allow the allow to use
 	 */
-	public void addHttpWhitelist(Predicate<String> whitelist) {
-		if (whitelist == null) {
-			throw new IllegalArgumentException("whitelist cannot be null");
+	public void addHttpAllow(Predicate<String> allow) {
+		if (allow == null) {
+			throw new IllegalArgumentException("allow cannot be null");
 		}
-		this.whitelist = this.whitelist.or(whitelist);
+		this.allow = this.allow.or(allow);
 	}
 
 	private static class NoOpWriter extends Writer {

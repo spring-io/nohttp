@@ -36,23 +36,23 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class RegexHttpMatcherTest {
 	@Mock
-	private Predicate<String> whitelist;
+	private Predicate<String> allow;
 
 	private RegexHttpMatcher matcher;
 
 	@Before
 	public void setup() {
-		this.matcher = new RegexHttpMatcher(this.whitelist);
+		this.matcher = new RegexHttpMatcher(this.allow);
 	}
 
 	// constructor
 
 	@Test
 	public void constructorWhenNullPredicateThenIllegalArgumentException() {
-		this.whitelist = null;
-		assertThatCode(() -> new RegexHttpMatcher(this.whitelist))
+		this.allow = null;
+		assertThatCode(() -> new RegexHttpMatcher(this.allow))
 			.isInstanceOf(IllegalArgumentException.class)
-			.hasMessage("whitelist cannot be null");
+			.hasMessage("allow cannot be null");
 	}
 
 	// setPattern
@@ -75,14 +75,14 @@ public class RegexHttpMatcherTest {
 				.hasMessage("httpReplacer cannot be null");
 	}
 
-	// addHttpUrlWhitelist
+	// addHttpUrlAllowlist
 
 	@Test
-	public void addHttpUrlWhitelistWhenNullThenIllegalArgumentException() {
-		Predicate<String> whitelist = null;
-		assertThatCode(() -> this.matcher.addHttpWhitelist(whitelist))
+	public void addHttpUrlAllowlistWhenNullThenIllegalArgumentException() {
+		Predicate<String> allow = null;
+		assertThatCode(() -> this.matcher.addHttpAllow(allow))
 				.isInstanceOf(IllegalArgumentException.class)
-				.hasMessage("whitelist cannot be null");
+				.hasMessage("allow cannot be null");
 	}
 
 	// findHttp
@@ -102,9 +102,9 @@ public class RegexHttpMatcherTest {
 	}
 
 	@Test
-	public void findWhenAddWhitelistThenWhitelisted() {
+	public void findWhenAddAllowlistThenAllowed() {
 		this.matcher = new RegexHttpMatcher(http -> false);
-		this.matcher.addHttpWhitelist(http -> true);
+		this.matcher.addHttpAllow(http -> true);
 		List<HttpMatchResult> results = this.matcher.findHttp("http://example.com");
 		assertThat(results).isEmpty();
 	}
@@ -131,9 +131,9 @@ public class RegexHttpMatcherTest {
 	}
 
 	@Test
-	public void findWhenWhitelistedThenNotFound() {
+	public void findWhenAllowedThenNotFound() {
 		String url = "http://example.com";
-		when(this.whitelist.test(url)).thenReturn(true);
+		when(this.allow.test(url)).thenReturn(true);
 		List<HttpMatchResult> results = this.matcher.findHttp(url);
 		assertThat(results).isEmpty();
 	}
@@ -310,9 +310,9 @@ public class RegexHttpMatcherTest {
 	}
 
 	@Test
-	public void replaceHttpWhenAddWhitelistThenWhitelisted() {
+	public void replaceHttpWhenAddAllowlistThenAllowed() {
 		this.matcher = new RegexHttpMatcher(http -> false);
-		this.matcher.addHttpWhitelist(http -> true);
+		this.matcher.addHttpAllow(http -> true);
 		HttpReplaceResult result = this.matcher
 				.replaceHttp("http://example.com");
 		assertThat(result.isReplacement()).isFalse();
@@ -320,7 +320,7 @@ public class RegexHttpMatcherTest {
 	}
 
 	@Test
-	public void replaceHttpWhenNotReplacedThenWhitelisted() {
+	public void replaceHttpWhenNotReplacedThenAllowed() {
 		this.matcher = new RegexHttpMatcher(http -> false);
 		this.matcher.setHttpReplacer(u -> u);
 		HttpReplaceResult result = this.matcher
