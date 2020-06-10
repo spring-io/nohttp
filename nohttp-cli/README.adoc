@@ -3,7 +3,7 @@ It takes into account which URLs are allowed by nohttp.
 
 = Usage
 
-The application is a https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/[Spring Boot] application.
+The application is an executable jar application.
 The application requires JDK 8+ to compile and run.
 
 == Downloading
