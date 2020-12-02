@@ -1,0 +1,8 @@
+<!DOCTYPE suppressions PUBLIC
+	"-//Checkstyle//DTD SuppressionFilter Configuration 1.2//EN"
+	"https://checkstyle.org/dtds/suppressions_1_2.dtd">
+
+<suppressions>
+	<suppress checks="io.spring.nohttp.checkstyle.check.NoHttpCheck" files=".*?/src/test/.*"/>
+	<suppress checks="io.spring.nohttp.checkstyle.check.NoHttpCheck" files="nohttp/src/main/resources/io/spring/nohttp/allowlist.txt"/>
+</suppressions>
