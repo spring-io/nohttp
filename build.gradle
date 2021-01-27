@@ -16,7 +16,7 @@
 
 buildscript {
 	dependencies {
-		classpath 'io.spring.gradle:spring-build-conventions:0.0.35.RELEASE'
+		classpath 'io.spring.gradle:spring-build-conventions:0.0.37'
 		classpath 'io.spring.nohttp:nohttp-gradle:0.0.5.RELEASE'
 	}
 	repositories {
