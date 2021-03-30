@@ -226,7 +226,7 @@ class NoHttpCheckstylePluginTest {
     -->
     <module name="SuppressWithPlainTextCommentFilter"/>
 </module>""")
-        assertThat(task.configProperties).containsEntry("config_loc", project.relativePath("etc/nohttp"))
+        assertThat(task.configDirectory.asFile.get()).isEqualTo(project.file("etc/nohttp"))
         assertThat(task.reports.xml.destination).isEqualTo(project.file("build/reports/checkstyleNohttp/nohttp.xml"))
         assertThat(task.reports.html.destination).isEqualTo(project.file("build/reports/checkstyleNohttp/nohttp.html"))
         assertThat(task.isIgnoreFailures).isFalse()
@@ -244,7 +244,7 @@ class NoHttpCheckstylePluginTest {
 
         val task: Checkstyle = project.tasks.findByName(NoHttpCheckstylePlugin.CHECKSTYLE_NOHTTP_TASK_NAME)!! as Checkstyle
 
-        assertThat(task.configProperties).containsEntry("config_loc", project.relativePath("etc/nohttp"))
+        assertThat(task.configDirectory.asFile.get()).isEqualTo(project.file("etc/nohttp"))
     }
 
 	@Test
@@ -267,7 +267,7 @@ class NoHttpCheckstylePluginTest {
 
         val task: Checkstyle = project.tasks.findByName(NoHttpCheckstylePlugin.CHECKSTYLE_NOHTTP_TASK_NAME)!! as Checkstyle
 
-        assertThat(task.configProperties).containsEntry("config_loc", project.relativePath("config/nohttp"))
+        assertThat(task.configDirectory.asFile.get()).isEqualTo(project.file("config/nohttp"))
     }
 
     @Test
@@ -292,7 +292,6 @@ class NoHttpCheckstylePluginTest {
         val task: Checkstyle = project.tasks.findByName(NoHttpCheckstylePlugin.CHECKSTYLE_NOHTTP_TASK_NAME)!! as Checkstyle
 
         assertThat(task.configProperties).containsEntry("nohttp.checkstyle.allowlistFileName", project.relativePath(allowlistFile))
-        assertThat(task.configProperties).containsEntry("config_loc", project.relativePath(allowlistFile.parentFile))
     }
 
     @Test
@@ -307,7 +306,6 @@ class NoHttpCheckstylePluginTest {
         val task: Checkstyle = project.tasks.findByName(NoHttpCheckstylePlugin.CHECKSTYLE_NOHTTP_TASK_NAME)!! as Checkstyle
 
         assertThat(task.configProperties).containsEntry("nohttp.checkstyle.allowlistFileName", project.relativePath(allowlistFile))
-        assertThat(task.configProperties).containsEntry("config_loc", project.relativePath(allowlistFile.parentFile))
     }
 
     @Test
