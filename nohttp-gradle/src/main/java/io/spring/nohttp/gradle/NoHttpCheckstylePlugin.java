@@ -29,7 +29,6 @@ import org.gradle.api.file.FileTree;
 import org.gradle.api.internal.ConventionMapping;
 import org.gradle.api.plugins.quality.Checkstyle;
 import org.gradle.api.plugins.quality.CheckstylePlugin;
-import org.gradle.api.provider.Provider;
 import org.gradle.api.reporting.ReportingExtension;
 import org.gradle.api.reporting.SingleFileReport;
 import org.gradle.api.resources.TextResource;
@@ -39,7 +38,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -213,9 +211,6 @@ public class NoHttpCheckstylePlugin implements Plugin<Project> {
 
 	private boolean configureConfigDirectory(Checkstyle checkstyleTask) {
 		File configDirectory = new File(this.project.relativePath(getConfigLocation()));
-		if (!configDirectory.exists()) {
-			return true;
-		}
 		try {
 			DirectoryProperty property = (DirectoryProperty) checkstyleTask.getClass().getMethod("getConfigDirectory").invoke(checkstyleTask);
 			property.set(configDirectory);
@@ -224,14 +219,8 @@ public class NoHttpCheckstylePlugin implements Plugin<Project> {
 		catch (Exception ex) {
 			// Fall back to configDir
 		}
-		try {
-			Method configDir = checkstyleTask.getClass().getMethod("setConfigDir", Provider.class);
-			configDir.invoke(checkstyleTask, project.provider(() -> configDirectory));
-			return true;
-		} catch (Exception ex) {
-			// could not set it
-		}
-		return false;
+		checkstyleTask.setConfigDir(project.provider(() -> configDirectory));
+		return true;
 	}
 
 	private File getConfigLocation() {
