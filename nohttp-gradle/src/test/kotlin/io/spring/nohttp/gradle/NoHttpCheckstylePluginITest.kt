@@ -114,6 +114,19 @@ class NoHttpCheckstylePluginITest {
         assertThat(result.output).doesNotContain("deprecation")
         assertThat(checkstyleNohttpTaskOutcome(result)).isEqualTo(TaskOutcome.SUCCESS)
     }
+
+    @Test
+    fun worksWithGradle7() {
+        buildFile()
+
+        tempBuild.newFile("has-https.txt")
+                .writeText("""https://example.com""")
+
+        val result = runner(gradleVersion = "7.0-rc-1").build()
+        println(result.output)
+        assertThat(result.output).doesNotContain("deprecation")
+        assertThat(checkstyleNohttpTaskOutcome(result)).isEqualTo(TaskOutcome.SUCCESS)
+    }
     
     fun checkstyleNohttpTaskOutcome(build: BuildResult): TaskOutcome? {
         return build.task(":" + NoHttpCheckstylePlugin.CHECKSTYLE_NOHTTP_TASK_NAME)?.outcome
