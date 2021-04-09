@@ -20,14 +20,20 @@ import org.assertj.core.api.Assertions.assertThat
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
+import org.gradle.util.GradleVersion
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
+import org.junit.runner.RunWith
+import org.junit.runners.Parameterized
+import org.junit.runners.Parameterized.Parameter
+import org.junit.runners.Parameterized.Parameters
 import java.io.File
 
 /**
  * @author Rob Winch
  */
+@RunWith(Parameterized::class)
 class NoHttpCheckstylePluginITest {
     @Rule
     @JvmField
@@ -40,6 +46,15 @@ class NoHttpCheckstylePluginITest {
     @Rule
     @JvmField
     val sharedTestKitDir = TemporaryFolder()
+
+    companion object {
+        @Parameters(name = "{0}")
+        @JvmStatic
+        fun gradleVersions() = listOf("6.0.1", "6.8.3").map(GradleVersion::version)
+    }
+
+    @Parameter
+    lateinit var gradleVersion: GradleVersion
 
     @Test
     fun httpsIsSuccess() {
@@ -102,35 +117,21 @@ class NoHttpCheckstylePluginITest {
         assertThat(checkstyleNohttpTaskOutcome(fromCacheResult)).isEqualTo(TaskOutcome.FROM_CACHE)
     }
 
-    @Test
-    fun noDeprecationWarningsWithGradle6() {
-        buildFile()
-
-        tempBuild.newFile("has-https.txt")
-                .writeText("""https://example.com""")
-
-        val result = runner(gradleVersion = "6.0.1").build()
-        println(result.output)
-        assertThat(result.output).doesNotContain("deprecation")
-        assertThat(checkstyleNohttpTaskOutcome(result)).isEqualTo(TaskOutcome.SUCCESS)
-    }
-    
     fun checkstyleNohttpTaskOutcome(build: BuildResult): TaskOutcome? {
         return build.task(":" + NoHttpCheckstylePlugin.CHECKSTYLE_NOHTTP_TASK_NAME)?.outcome
     }
 
-    fun runner(projectDir: File = tempBuild.root, testKitDir: File? = null, gradleVersion: String? = null): GradleRunner {
+    fun runner(projectDir: File = tempBuild.root, testKitDir: File? = null): GradleRunner {
         var gradleRunner = GradleRunner.create()
                 .withProjectDir(projectDir)
                 .withPluginClasspath()
+                .withGradleVersion(gradleVersion.version)
         val args = mutableListOf(NoHttpCheckstylePlugin.CHECKSTYLE_NOHTTP_TASK_NAME, "--stacktrace")
         if (testKitDir != null) {
             args.add("--build-cache")
             gradleRunner = gradleRunner.withTestKitDir(testKitDir)
         }
-        if (gradleVersion != null) {
-            gradleRunner = gradleRunner.withGradleVersion(gradleVersion)
-        }
+        args.addAll(listOf("--warning-mode", "fail"))
         return gradleRunner.withArguments(args)
     }
 
