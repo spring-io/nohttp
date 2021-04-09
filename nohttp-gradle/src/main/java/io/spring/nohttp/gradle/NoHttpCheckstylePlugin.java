@@ -23,7 +23,6 @@ import org.gradle.api.Task;
 import org.gradle.api.artifacts.Configuration;
 import org.gradle.api.artifacts.DependencySet;
 import org.gradle.api.file.ConfigurableFileTree;
-import org.gradle.api.file.DirectoryProperty;
 import org.gradle.api.file.FileCollection;
 import org.gradle.api.file.FileTree;
 import org.gradle.api.internal.ConventionMapping;
@@ -148,11 +147,18 @@ public class NoHttpCheckstylePlugin implements Plugin<Project> {
 	}
 
 	private void createCheckstyleTaskForProject(Configuration configuration) {
-		Logger logger = this.logger;
 		Project project = this.project;
+		project.getTasks().register("checkstyleNohttp", Checkstyle.class, new Action<Checkstyle>() {
+			@Override
+			public void execute(Checkstyle checkstyleTask) {
+				configureCheckstyleTask(configuration, checkstyleTask);
+			}
+		});
+	}
+
+	private void configureCheckstyleTask(Configuration configuration, Checkstyle checkstyleTask) {
+		Logger logger = this.logger;
 		NoHttpExtension extension = this.extension;
-		Checkstyle checkstyleTask = project
-				.getTasks().create("checkstyleNohttp", Checkstyle.class);
 		checkstyleTask.setDescription("Checks for illegal uses of http://");
 		checkstyleTask.getReports().all(new Action<SingleFileReport>() {
 			@Override
@@ -260,7 +266,7 @@ public class NoHttpCheckstylePlugin implements Plugin<Project> {
 	}
 
 	private void configureCheckTask() {
-		this.project.getTasks().withType(Task.class, new Action<Task>() {
+		this.project.getTasks().withType(Task.class).configureEach(new Action<Task>() {
 			public void execute(Task task) {
 				if (CHECK_TASK_NAME.equals(task.getName())) {
 					task.dependsOn(new Callable() {
