@@ -17,7 +17,7 @@ For example in Groovy:
 [source,groovy]
 ----
 plugins {
-	id "io.spring.nohttp" version "0.0.2.RELEASE"
+	id "io.spring.nohttp" version "0.0.6.RELEASE"
 }
 
 nohttp {
@@ -31,7 +31,7 @@ Or in Kotlin:
 [source,kotlin]
 ----
 plugins {
-	id("io.spring.nohttp") version "0.0.2.RELEASE"
+	id("io.spring.nohttp") version "0.0.6.RELEASE"
 }
 
 nohttp {
