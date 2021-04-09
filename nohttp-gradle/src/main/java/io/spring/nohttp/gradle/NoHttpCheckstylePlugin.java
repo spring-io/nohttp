@@ -29,15 +29,18 @@ import org.gradle.api.file.FileTree;
 import org.gradle.api.internal.ConventionMapping;
 import org.gradle.api.plugins.quality.Checkstyle;
 import org.gradle.api.plugins.quality.CheckstylePlugin;
+import org.gradle.api.provider.Provider;
 import org.gradle.api.reporting.ReportingExtension;
 import org.gradle.api.reporting.SingleFileReport;
 import org.gradle.api.resources.TextResource;
 import org.gradle.language.base.plugins.LifecycleBasePlugin;
+import org.gradle.util.GradleVersion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -211,16 +214,27 @@ public class NoHttpCheckstylePlugin implements Plugin<Project> {
 
 	private boolean configureConfigDirectory(Checkstyle checkstyleTask) {
 		File configDirectory = new File(this.project.relativePath(getConfigLocation()));
-		try {
-			DirectoryProperty property = (DirectoryProperty) checkstyleTask.getClass().getMethod("getConfigDirectory").invoke(checkstyleTask);
-			property.set(configDirectory);
-			return false;
+		if (!configDirectory.exists() && isAtLeastGradle7()) {
+			return true;
 		}
-		catch (Exception ex) {
+		try {
+			checkstyleTask.getConfigDirectory().set(configDirectory);
+			return false;
+		} catch (NoSuchMethodError ex) {
 			// Fall back to configDir
 		}
-		checkstyleTask.setConfigDir(project.provider(() -> configDirectory));
-		return true;
+		try {
+			Method configDir = checkstyleTask.getClass().getMethod("setConfigDir", Provider.class);
+			configDir.invoke(checkstyleTask, project.provider(() -> configDirectory));
+			return false;
+		} catch (ReflectiveOperationException ex) {
+			// Fall back to config_loc
+			return true;
+		}
+	}
+
+	private boolean isAtLeastGradle7() {
+		return GradleVersion.current().getBaseVersion().compareTo(GradleVersion.version("7.0")) >= 0;
 	}
 
 	private File getConfigLocation() {
