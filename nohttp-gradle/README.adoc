@@ -5,7 +5,7 @@ Applies <<NoHttpCheckstylePlugin>> and <<NoHttpCliPlugin>>
 
 == Sample
 
-You can find a working sample at https://github.com/spring-io/nohttp/tree/master/samples/nohttp-gradle-sample[nohttp-gradle-sample].
+You can find a working sample at https://github.com/spring-io/nohttp/tree/main/samples/nohttp-gradle-sample[nohttp-gradle-sample].
 
 == Usage
 
@@ -41,7 +41,7 @@ nohttp {
 
 == NoHttpCheckstylePlugin
 
-Configures Gradle's https://docs.gradle.org/current/dsl/org.gradle.api.plugins.quality.Checkstyle.html[Checkstyle] task to integrate with https://github.com/spring-io/nohttp/tree/master/nohttp-checkstyle[nohttp-checkstyle] to verify there are no restricted usages of `http://`.
+Configures Gradle's https://docs.gradle.org/current/dsl/org.gradle.api.plugins.quality.Checkstyle.html[Checkstyle] task to integrate with https://github.com/spring-io/nohttp/tree/main/nohttp-checkstyle[nohttp-checkstyle] to verify there are no restricted usages of `http://`.
 
 The plugin only needs to be added to the root project as all subdirectories are checked.
 
@@ -75,9 +75,9 @@ By default, the `NoHttpCheckstylePlugin` expects configuration files to be place
         └── allowlist.lines    // <4>
 ----
 <1> Nohttp configuration files go here
-<2> A custom checkstyle.xml file to use for `checkstyleNohttp`. The default can be found in the https://github.com/spring-io/nohttp/blob/master/nohttp-checkstyle/README.adoc#configuration[nohttp-checkstyle documentation]
+<2> A custom checkstyle.xml file to use for `checkstyleNohttp`. The default can be found in the https://github.com/spring-io/nohttp/blob/main/nohttp-checkstyle/README.adoc#configuration[nohttp-checkstyle documentation]
 <3> A suppressions file to use for `checkstyleNohttp`. The default is no suppressions
-<4> https://github.com/spring-io/nohttp/tree/master/nohttp-checkstyle#custom-allowlist[Custom allowlist] to use
+<4> https://github.com/spring-io/nohttp/tree/main/nohttp-checkstyle#custom-allowlist[Custom allowlist] to use
 
 === Dependency management
 
@@ -96,7 +96,7 @@ The nohttp plugin adds the following dependency configurations:
 
 === Configuration
 
-The https://github.com/spring-io/nohttp/blob/master/nohttp-gradle/src/main/java/io/spring/nohttp/gradle/NoHttpExtension.java[NohttpExtension] is used to customize the configuration. An example configuration is:
+The https://github.com/spring-io/nohttp/blob/main/nohttp-gradle/src/main/java/io/spring/nohttp/gradle/NoHttpExtension.java[NohttpExtension] is used to customize the configuration. An example configuration is:
 
 [source,groovy]
 ----
@@ -107,7 +107,7 @@ nohttp {
 }
 ----
 
-<1> `allowlistFile` (https://docs.oracle.com/javase/8/docs/api/java/io/File.html[File]) - instructs nohttp to use `src/nohttp/allowlist.lines` to provide https://github.com/spring-io/nohttp/tree/master/nohttp#regexpredicatecreateallowlistinputstream[Custom Rules] for allowing HTTP URLs. Modifying the `allowlistFile` also modifies the default <<project-layout>> to look for the other configuration in the parent directory of `allowlistFile` (i.e. `src/nohttp`) as apposed to `config/nohttp`. This means if you have a file named `checkstyle.xml` in the same folder as `allowlistFile` you either need to include https://github.com/spring-io/nohttp/tree/master/nohttp-checkstyle#nohttpcheck[NoHttpCheck] in the file or you need to explicitly <<Configuring nohttpCheckstyle,configure nohttpCheckstyle task>> with a https://github.com/spring-io/nohttp/tree/master/nohttp-checkstyle#configuration[different checkstyle file].
+<1> `allowlistFile` (https://docs.oracle.com/javase/8/docs/api/java/io/File.html[File]) - instructs nohttp to use `src/nohttp/allowlist.lines` to provide https://github.com/spring-io/nohttp/tree/main/nohttp#regexpredicatecreateallowlistinputstream[Custom Rules] for allowing HTTP URLs. Modifying the `allowlistFile` also modifies the default <<project-layout>> to look for the other configuration in the parent directory of `allowlistFile` (i.e. `src/nohttp`) as apposed to `config/nohttp`. This means if you have a file named `checkstyle.xml` in the same folder as `allowlistFile` you either need to include https://github.com/spring-io/nohttp/tree/master/nohttp-checkstyle#nohttpcheck[NoHttpCheck] in the file or you need to explicitly <<Configuring nohttpCheckstyle,configure nohttpCheckstyle task>> with a https://github.com/spring-io/nohttp/tree/master/nohttp-checkstyle#configuration[different checkstyle file].
 <2> `source` (https://docs.gradle.org/current/userguide/working_with_files.html#sec:file_trees[FileTree]) - instructs nohttp what files to include / exclude. In this example, we exclude anything in the folder `test-output`.
 <3> `toolVersion` - Updates the version of nohttp to use. The default is the same version as the nohttp Gradle Plugin version being used.
 
@@ -124,7 +124,7 @@ The `NoHttpCheckstylePlugin` defines:
 
 == NoHttpCliPlugin
 
-Adds a https://docs.gradle.org/current/javadoc/org/gradle/api/tasks/JavaExec.html[JavaExec] task that allows running https://github.com/spring-io/nohttp/tree/master/nohttp-cli[nohttp-cli].
+Adds a https://docs.gradle.org/current/javadoc/org/gradle/api/tasks/JavaExec.html[JavaExec] task that allows running https://github.com/spring-io/nohttp/tree/main/nohttp-cli[nohttp-cli].
 
 === Tasks
 
@@ -132,7 +132,7 @@ The Application plugin adds the following tasks to the project.
 
 `nohttp` — https://docs.gradle.org/current/javadoc/org/gradle/api/tasks/JavaExec.html[JavaExec]::
 +
-Runs https://github.com/spring-io/nohttp/tree/master/nohttp-cli[nohttp-cli] against the project.
+Runs https://github.com/spring-io/nohttp/tree/main/nohttp-cli[nohttp-cli] against the project.
 
 === nohttp samples
 
@@ -156,4 +156,4 @@ Advanced sample
 
 - Exclude the folders 'build', `.git'
 - Exclude the files 'spring.schemas`
-- Use additional `allowlistFile` to provide https://github.com/spring-io/nohttp/tree/master/nohttp#regexpredicatecreateallowlistinputstream[Custom Rules] of `config/nohttp/allowlist.lines`
+- Use additional `allowlistFile` to provide https://github.com/spring-io/nohttp/tree/main/nohttp#regexpredicatecreateallowlistinputstream[Custom Rules] of `config/nohttp/allowlist.lines`

@@ -12,22 +12,22 @@ NOTE: You can read more about the background of this project in the https://spri
 
 The project is split up into the following modules:
 
-* https://github.com/spring-io/nohttp/tree/master/nohttp[nohttp] - the core project that allows finding and replacing `http://` URLs
-* https://github.com/spring-io/nohttp/tree/master/nohttp-cli[nohttp-cli] - a thin wrapper around `nohttp` that allows running it from the command line
-* https://github.com/spring-io/nohttp/tree/master/nohttp-checkstyle[nohttp-checkstyle] - provides https://checkstyle.org/[checkstyle] integration with nohttp
-* https://github.com/spring-io/nohttp/tree/master/nohttp-gradle[nohttp-gradle] - provides https://gradle.org[Gradle] integration with nohttp
-* https://github.com/spring-io/nohttp/tree/master/samples[samples] - provides samples of using nohttp
+* https://github.com/spring-io/nohttp/tree/main/nohttp[nohttp] - the core project that allows finding and replacing `http://` URLs
+* https://github.com/spring-io/nohttp/tree/main/nohttp-cli[nohttp-cli] - a thin wrapper around `nohttp` that allows running it from the command line
+* https://github.com/spring-io/nohttp/tree/main/nohttp-checkstyle[nohttp-checkstyle] - provides https://checkstyle.org/[checkstyle] integration with nohttp
+* https://github.com/spring-io/nohttp/tree/main/nohttp-gradle[nohttp-gradle] - provides https://gradle.org[Gradle] integration with nohttp
+* https://github.com/spring-io/nohttp/tree/main/samples[samples] - provides samples of using nohttp
 
 == FAQ
 
 *How can I automate fixing my existing code?* 
 
-Automation is beyond the scope of this project. However, you can easily automate fixing your existing code by scripting along with https://github.com/spring-io/nohttp/tree/master/nohttp-cli[nohttp-cli]. If you use GitHub, you can leverage https://developer.github.com/v3/[GitHub APIs] to automatically clone repositories within a set of organizations. You can use https://github.com/github/hub[hub] to automate sending Pull Requests.
+Automation is beyond the scope of this project. However, you can easily automate fixing your existing code by scripting along with https://github.com/spring-io/nohttp/tree/main/nohttp-cli[nohttp-cli]. If you use GitHub, you can leverage https://developer.github.com/v3/[GitHub APIs] to automatically clone repositories within a set of organizations. You can use https://github.com/github/hub[hub] to automate sending Pull Requests.
 
 *What URLs need to be https?*
 
-See https://github.com/spring-io/nohttp/tree/master/nohttp#thought-process[Thought Process]
+See https://github.com/spring-io/nohttp/tree/main/nohttp#thought-process[Thought Process]
 
 *Are Allow Lists Supported*
 
-See https://github.com/spring-io/nohttp/tree/master/nohttp#allow-http-urls[Allow HTTP URLs]
+See https://github.com/spring-io/nohttp/tree/main/nohttp#allow-http-urls[Allow HTTP URLs]

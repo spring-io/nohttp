@@ -1,4 +1,4 @@
-This project integrates https://github.com/spring-io/nohttp/tree/master/nohttp[nohttp] with https://checkstyle.org[checkstyle] to reject URLs with the `http://` scheme while ignoring URLs that cannot be `https://`.
+This project integrates https://github.com/spring-io/nohttp/tree/main/nohttp[nohttp] with https://checkstyle.org[checkstyle] to reject URLs with the `http://` scheme while ignoring URLs that cannot be `https://`.
 
 = NoHttpCheck
 
@@ -6,7 +6,7 @@ This verifies that your build has no `http://` URLs but ignores URLs that cannot
 
 [NOTE]
 ====
-If you are using https://gradle.org/[Gradle], see https://github.com/spring-io/nohttp/tree/master/nohttp-gradle[nohttp-gradle] project.
+If you are using https://gradle.org/[Gradle], see https://github.com/spring-io/nohttp/tree/main/nohttp-gradle[nohttp-gradle] project.
 ====
 
 While many checkstyle configurations only impact your source and resources, it is important that no http checks are performed on all the files within your repository.
@@ -14,8 +14,8 @@ For example, you will want to ensure that you validate your build files like `po
 
 == Samples
 
-* https://github.com/spring-io/nohttp/tree/master/samples/nohttp-gradle-sample[nohttp-gradle-sample] - Demonstrates using nohttp with Gradle
-* https://github.com/spring-io/nohttp/tree/master/samples/nohttp-maven-sample[nohttp-maven-sample] - Demonstrates using nohttp with Maven
+* https://github.com/spring-io/nohttp/tree/main/samples/nohttp-gradle-sample[nohttp-gradle-sample] - Demonstrates using nohttp with Gradle
+* https://github.com/spring-io/nohttp/tree/main/samples/nohttp-maven-sample[nohttp-maven-sample] - Demonstrates using nohttp with Maven
 
 == Configuration
 
@@ -53,13 +53,13 @@ NOTE: `SuppressWithPlainTextCommentFilter` was added in Checkstyle 8.6, so for t
 
 === Custom Allowlist
 
-The nohttp project provides a https://github.com/spring-io/nohttp/tree/master/nohttp#allow-http-urls[default allowlist].
-If you find the need to exclude additional URL patterns, you can do so with the above configuration by including a https://checkstyle.org/config.html#Properties[checkstyle property] named `nohttp.checkstyle.allowlistFileName` pointing to an allowlist file that is in the format of https://github.com/spring-io/nohttp/tree/master/nohttp#allow-http-urls[RegexPredicate.createAllowlist(InputStream)].
+The nohttp project provides a https://github.com/spring-io/nohttp/tree/main/nohttp#allow-http-urls[default allowlist].
+If you find the need to exclude additional URL patterns, you can do so with the above configuration by including a https://checkstyle.org/config.html#Properties[checkstyle property] named `nohttp.checkstyle.allowlistFileName` pointing to an allowlist file that is in the format of https://github.com/spring-io/nohttp/tree/main/nohttp#allow-http-urls[RegexPredicate.createAllowlist(InputStream)].
 
 === Embedding an Allowlist
 
 If you prefer, you can embed an allowlist rather than externalizing it into a separate file by using the `allowlist` property.
-The value of `allowlist` should be in the format of https://github.com/spring-io/nohttp/tree/master/nohttp#allow-http-urls[RegexPredicate.createAllowlist(InputStream)].
+The value of `allowlist` should be in the format of https://github.com/spring-io/nohttp/tree/main/nohttp#allow-http-urls[RegexPredicate.createAllowlist(InputStream)].
 For example, the following will allowlist `http://example.com` and `http://example.org`:
 
 [source,xml]

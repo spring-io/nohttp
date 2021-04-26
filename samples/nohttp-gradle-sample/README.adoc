@@ -1,4 +1,4 @@
-Demo of using nohttp checkstyle with Gradle using https://github.com/spring-io/nohttp/tree/master/nohttp-gradle[nohttp-gradle]. Run the following
+Demo of using nohttp checkstyle with Gradle using https://github.com/spring-io/nohttp/tree/main/nohttp-gradle[nohttp-gradle]. Run the following
 
 [source,bash]
 ----
