@@ -221,7 +221,8 @@ public class NoHttpCheckstylePlugin implements Plugin<Project> {
 	private boolean configureConfigDirectory(Checkstyle checkstyleTask) {
 		File configDirectory = this.project.file(getConfigLocation());
 		if (!configDirectory.exists() && isAtLeastGradle7()) {
-			return true;
+			File defaultConfigDir = checkstyleTask.getConfigDirectory().getAsFile().forUseAtConfigurationTime().getOrNull();
+			return defaultConfigDir == null || !defaultConfigDir.exists();
 		}
 		try {
 			checkstyleTask.getConfigDirectory().set(configDirectory);

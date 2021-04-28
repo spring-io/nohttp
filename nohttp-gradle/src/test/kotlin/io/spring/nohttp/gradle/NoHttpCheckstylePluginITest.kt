@@ -137,6 +137,26 @@ class NoHttpCheckstylePluginITest {
                 .contains("configDirectory = ${configDirectory.canonicalPath}")
     }
 
+    @Test
+    fun worksIfCheckstyleConfigIsPresentInDefaultLocation() {
+        val configDirectory = tempBuild.newFolder("config", "checkstyle")
+        File(configDirectory, "checkstyle.xml").writeText("""
+            <?xml version="1.0"?>
+            <!DOCTYPE module PUBLIC
+                    "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN"
+                    "https://checkstyle.org/dtds/configuration_1_3.dtd">
+            <module name="Checker">
+                <module name="NewlineAtEndOfFile">
+                    <property name="lineSeparator" value="lf"/>
+                </module>
+            </module>
+        """.trimIndent())
+        buildFile()
+
+        val result = runner().build()
+        assertThat(checkstyleNohttpTaskOutcome(result)).isEqualTo(TaskOutcome.SUCCESS)
+    }
+
     fun checkstyleNohttpTaskOutcome(build: BuildResult): TaskOutcome? {
         return build.task(":" + NoHttpCheckstylePlugin.CHECKSTYLE_NOHTTP_TASK_NAME)?.outcome
     }
