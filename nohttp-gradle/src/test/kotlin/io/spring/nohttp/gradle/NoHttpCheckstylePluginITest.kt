@@ -50,7 +50,7 @@ class NoHttpCheckstylePluginITest {
     companion object {
         @Parameters(name = "{0}")
         @JvmStatic
-        fun gradleVersions() = listOf("6.0.1", "6.8.3", "7.0-rc-2").map(GradleVersion::version)
+        fun gradleVersions() = listOf("6.0.1", "6.8.3", "7.0").map(GradleVersion::version)
     }
 
     @Parameter
@@ -117,6 +117,26 @@ class NoHttpCheckstylePluginITest {
         assertThat(checkstyleNohttpTaskOutcome(fromCacheResult)).isEqualTo(TaskOutcome.FROM_CACHE)
     }
 
+    @Test
+    fun usesDefaultConfigDirectory() {
+        val configDirectory = tempBuild.newFolder("config", "nohttp")
+        tempBuild.newFile("test.txt")
+        buildFile("""
+            checkstyleNohttp {
+                doFirst {
+                    println "config_loc = " + configProperties['config_loc']
+                    println "configDirectory = " + configDirectory.asFile.getOrElse(null)?.canonicalPath
+                }
+            }
+        """.trimIndent())
+
+        val result = runner().build()
+        assertThat(checkstyleNohttpTaskOutcome(result)).isEqualTo(TaskOutcome.SUCCESS)
+        assertThat(result.output.lines())
+                .contains("config_loc = null")
+                .contains("configDirectory = ${configDirectory.canonicalPath}")
+    }
+
     fun checkstyleNohttpTaskOutcome(build: BuildResult): TaskOutcome? {
         return build.task(":" + NoHttpCheckstylePlugin.CHECKSTYLE_NOHTTP_TASK_NAME)?.outcome
     }
@@ -125,6 +145,7 @@ class NoHttpCheckstylePluginITest {
         var gradleRunner = GradleRunner.create()
                 .withProjectDir(projectDir)
                 .withPluginClasspath()
+                .forwardOutput()
                 .withGradleVersion(gradleVersion.version)
         val args = mutableListOf(NoHttpCheckstylePlugin.CHECKSTYLE_NOHTTP_TASK_NAME, "--stacktrace")
         if (testKitDir != null) {
