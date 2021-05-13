@@ -220,7 +220,7 @@ public class NoHttpCheckstylePlugin implements Plugin<Project> {
 
 	private boolean configureConfigDirectory(Checkstyle checkstyleTask) {
 		File configDirectory = this.project.file(getConfigLocation());
-		if (!configDirectory.exists() && isAtLeastGradle7()) {
+		if (!configDirectory.exists() && isGradle7_0()) {
 			File defaultConfigDir = checkstyleTask.getConfigDirectory().getAsFile().forUseAtConfigurationTime().getOrNull();
 			return defaultConfigDir == null || !defaultConfigDir.exists();
 		}
@@ -240,8 +240,8 @@ public class NoHttpCheckstylePlugin implements Plugin<Project> {
 		}
 	}
 
-	private boolean isAtLeastGradle7() {
-		return GradleVersion.current().getBaseVersion().compareTo(GradleVersion.version("7.0")) >= 0;
+	private boolean isGradle7_0() {
+		return GradleVersion.current().getBaseVersion().equals(GradleVersion.version("7.0"));
 	}
 
 	private File getConfigLocation() {
