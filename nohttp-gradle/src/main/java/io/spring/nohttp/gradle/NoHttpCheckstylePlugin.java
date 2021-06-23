@@ -163,7 +163,9 @@ public class NoHttpCheckstylePlugin implements Plugin<Project> {
 		checkstyleTask.getReports().all(new Action<SingleFileReport>() {
 			@Override
 			public void execute(final SingleFileReport report) {
-				String reportFileName = report.getDestination().getName();
+				String reportFileName = isAtLeastGradle7() ?
+					report.getOutputLocation().get().getAsFile().getName() :
+					report.getDestination().getName();
 				report.setDestination(project.getExtensions().getByType(ReportingExtension.class)
 						.getBaseDirectory()
 						.dir(checkstyleTask.getName())
@@ -238,6 +240,10 @@ public class NoHttpCheckstylePlugin implements Plugin<Project> {
 			// Fall back to config_loc
 			return true;
 		}
+	}
+
+	public static boolean isAtLeastGradle7() {
+		return GradleVersion.current().getBaseVersion().compareTo(GradleVersion.version("7.0")) >= 0;
 	}
 
 	private boolean isGradle7_0() {

@@ -50,7 +50,7 @@ class NoHttpCheckstylePluginITest {
     companion object {
         @Parameters(name = "{0}")
         @JvmStatic
-        fun gradleVersions() = listOf("6.0.1", "6.8.3", "7.0", "7.0.1").map(GradleVersion::version)
+        fun gradleVersions() = listOf("6.0.1", "6.8.3", "7.0", "7.0.1", "7.1").map(GradleVersion::version)
     }
 
     @Parameter

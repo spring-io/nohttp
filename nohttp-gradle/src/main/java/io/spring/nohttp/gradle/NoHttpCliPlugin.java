@@ -8,11 +8,14 @@ import org.gradle.api.artifacts.DependencySet;
 import org.gradle.api.tasks.JavaExec;
 
 import static io.spring.nohttp.gradle.NoHttpCheckstylePlugin.NOHTTP_EXTENSION_NAME;
+import static io.spring.nohttp.gradle.NoHttpCheckstylePlugin.isAtLeastGradle7;
 
 /**
  * @author Rob Winch
  */
 public class NoHttpCliPlugin implements Plugin<Project> {
+	private static final String MAIN_CLASS = "io.spring.nohttp.cli.NoHttpCliMain";
+
 	private Project project;
 
 	private NoHttpExtension extension;
@@ -28,7 +31,11 @@ public class NoHttpCliPlugin implements Plugin<Project> {
 		JavaExec nohttp = project.getTasks().create("nohttp", JavaExec.class);
 		nohttp.setDescription("Runs nohttp");
 
-		nohttp.setMain("io.spring.nohttp.cli.NoHttpCliMain");
+		if (isAtLeastGradle7()) {
+			nohttp.getMainClass().set(MAIN_CLASS);
+		} else {
+			nohttp.setMain(MAIN_CLASS);
+		}
 		nohttp.setClasspath(nohttpCli);
 	}
 
