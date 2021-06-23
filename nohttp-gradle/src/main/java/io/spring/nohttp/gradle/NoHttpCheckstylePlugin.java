@@ -163,7 +163,7 @@ public class NoHttpCheckstylePlugin implements Plugin<Project> {
 		checkstyleTask.getReports().all(new Action<SingleFileReport>() {
 			@Override
 			public void execute(final SingleFileReport report) {
-				String reportFileName = report.getDestination().getName();
+				String reportFileName = report.getOutputLocation().get().getAsFile().getName();
 				report.setDestination(project.getExtensions().getByType(ReportingExtension.class)
 						.getBaseDirectory()
 						.dir(checkstyleTask.getName())
