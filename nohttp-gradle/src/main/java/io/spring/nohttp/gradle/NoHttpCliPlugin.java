@@ -28,7 +28,7 @@ public class NoHttpCliPlugin implements Plugin<Project> {
 		JavaExec nohttp = project.getTasks().create("nohttp", JavaExec.class);
 		nohttp.setDescription("Runs nohttp");
 
-		nohttp.setMain("io.spring.nohttp.cli.NoHttpCliMain");
+		nohttp.getMainClass().set("io.spring.nohttp.cli.NoHttpCliMain");
 		nohttp.setClasspath(nohttpCli);
 	}
 
