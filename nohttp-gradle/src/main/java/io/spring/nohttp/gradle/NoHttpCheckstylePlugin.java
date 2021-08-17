@@ -208,12 +208,14 @@ public class NoHttpCheckstylePlugin implements Plugin<Project> {
 				File defaultCheckstyleFile = new File(configLoc, "checkstyle.xml");
 				if (defaultCheckstyleFile.exists()) {
 					logger.debug("Found default checkstyle configuration, so configuring checkstyleTask to use it");
-					return project.getResources().getText().fromFile(defaultCheckstyleFile);
+					String checkstyleXmlAsString = project.getResources().getText().fromFile(defaultCheckstyleFile).asString();
+					return project.getResources().getText().fromString(checkstyleXmlAsString);
 				}
 				logger.debug("No checkstyle configuration provided, so using the default.");
 				URL resource = getClass().getResource(
 						"/io/spring/nohttp/checkstyle/default-nohttp-checkstyle.xml");
-				return project.getResources().getText().fromUri(resource);
+				String checkstyleXmlAsString = project.getResources().getText().fromUri(resource).asString();
+				return project.getResources().getText().fromString(checkstyleXmlAsString);
 			}
 		});
 	}
