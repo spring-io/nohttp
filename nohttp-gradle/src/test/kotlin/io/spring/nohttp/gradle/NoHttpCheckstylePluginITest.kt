@@ -47,6 +47,14 @@ class NoHttpCheckstylePluginITest {
     @JvmField
     val sharedTestKitDir = TemporaryFolder()
 
+    @Rule
+    @JvmField
+    val sharedTestKitDir2 = TemporaryFolder()
+
+    @Rule
+    @JvmField
+    val sharedBuildCacheDir = TemporaryFolder()
+
     companion object {
         @Parameters(name = "{0}")
         @JvmStatic
@@ -114,6 +122,26 @@ class NoHttpCheckstylePluginITest {
         runner(testKitDir = sharedTestKitDir.root).build()
         
         val fromCacheResult = runner(projectDir = tempBuild2.root, testKitDir = sharedTestKitDir.root).build()
+        assertThat(checkstyleNohttpTaskOutcome(fromCacheResult)).isEqualTo(TaskOutcome.FROM_CACHE)
+    }
+
+    @Test
+    fun fromCacheWhenSwitchDirectoriesAndSwitchGradleHome() {
+        buildFile()
+
+        tempBuild.newFile("has-https.txt")
+            .writeText("""https://example.com""")
+        File(tempBuild.root, "settings.gradle").writeText("""
+              buildCache {
+                  local {
+                      directory = "${sharedBuildCacheDir.root.absolutePath.replace(File.separatorChar, '/')}"
+                  }
+              }
+        """.trimIndent())
+        tempBuild.root.copyRecursively(tempBuild2.root)
+        runner(testKitDir = sharedTestKitDir.root).build()
+
+        val fromCacheResult = runner(projectDir = tempBuild2.root, testKitDir = sharedTestKitDir2.root).build()
         assertThat(checkstyleNohttpTaskOutcome(fromCacheResult)).isEqualTo(TaskOutcome.FROM_CACHE)
     }
 
