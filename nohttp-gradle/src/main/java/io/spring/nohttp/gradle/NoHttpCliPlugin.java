@@ -28,15 +28,16 @@ public class NoHttpCliPlugin implements Plugin<Project> {
 		Configuration nohttpCli = this.project.getConfigurations().create("nohttp-cli");
 		configureDefaultDependenciesForProject(nohttpCli);
 
-		JavaExec nohttp = project.getTasks().create("nohttp", JavaExec.class);
-		nohttp.setDescription("Runs nohttp");
+		project.getTasks().register("nohttp", JavaExec.class).configure((nohttp) -> {
+			nohttp.setDescription("Runs nohttp");
 
-		if (isAtLeastGradle7()) {
-			nohttp.getMainClass().set(MAIN_CLASS);
-		} else {
-			nohttp.setMain(MAIN_CLASS);
-		}
-		nohttp.setClasspath(nohttpCli);
+			if (isAtLeastGradle7()) {
+				nohttp.getMainClass().set(MAIN_CLASS);
+			} else {
+				nohttp.setMain(MAIN_CLASS);
+			}
+			nohttp.setClasspath(nohttpCli);
+		});
 	}
 
 
