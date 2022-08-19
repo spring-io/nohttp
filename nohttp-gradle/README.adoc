@@ -103,7 +103,7 @@ The https://github.com/spring-io/nohttp/blob/main/nohttp-gradle/src/main/java/io
 nohttp {
     allowlistFile = project.file('src/nohttp/allowlist.lines') <1>
     source.exclude "**/test-output/**"                         <2>
-    toolVersion = '0.0.1.BUILD-SNAPSHOT'                       <3>
+    toolVersion = '0.0.10'                                     <3>
 }
 ----
 
