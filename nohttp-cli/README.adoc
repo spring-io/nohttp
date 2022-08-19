@@ -16,7 +16,7 @@ For example:
 
 [source,bash]
 ----
-export NOHTTP='~/Downloads/nohttp-cli-0.0.1.BUILD-SNAPSHOT.jar'
+export NOHTTP='~/Downloads/nohttp-cli-0.0.10.jar'
 ----
 
 == Compiling
@@ -28,17 +28,17 @@ To use this app first create the jar
 ./gradlew :nohttp-cli:assemble
 ----
 
-The jar will now available at `nohttp-cli/build/libs/nohttp-cli-0.0.1.BUILD-SNAPSHOT.jar`.
+The jar will now available at `nohttp-cli/build/libs/nohttp-cli-0.0.11-SNAPSHOT`.
 
 You can then export the full path to a variable.
 
 [source,bash]
 ----
-export NOHTTP=$(pwd)/nohttp-cli/build/libs/nohttp-cli-0.0.1.BUILD-SNAPSHOT.jar
+export NOHTTP=$(pwd)/nohttp-cli/build/libs/nohttp-cli-0.0.11-SNAPSHOT.jar
 ----
 
 The guide assumes that the jar is now available in the variable `$NOHTTP`.
-If that is not true, you can substitute `$NOHTTP` for the absolute path of `nohttp-cli-0.0.1.BUILD-SNAPSHOT.jar`.
+If that is not true, you can substitute `$NOHTTP` for the absolute path of `nohttp-cli-0.0.11-SNAPSHOT.jar`.
 
 == Running
 
