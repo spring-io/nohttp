@@ -23,6 +23,7 @@ import org.gradle.api.Task;
 import org.gradle.api.artifacts.Configuration;
 import org.gradle.api.artifacts.DependencySet;
 import org.gradle.api.file.ConfigurableFileTree;
+import org.gradle.api.file.Directory;
 import org.gradle.api.file.FileCollection;
 import org.gradle.api.file.FileTree;
 import org.gradle.api.internal.ConventionMapping;
@@ -163,14 +164,16 @@ public class NoHttpCheckstylePlugin implements Plugin<Project> {
 		checkstyleTask.getReports().all(new Action<SingleFileReport>() {
 			@Override
 			public void execute(final SingleFileReport report) {
-				String reportFileName = isAtLeastGradle7() ?
-					report.getOutputLocation().get().getAsFile().getName() :
-					report.getDestination().getName();
-				report.setDestination(project.getExtensions().getByType(ReportingExtension.class)
+				Provider<Directory> reportDir = project.getExtensions().getByType(ReportingExtension.class)
 						.getBaseDirectory()
-						.dir(checkstyleTask.getName())
-						.map(reportDir -> reportDir.file(reportFileName).getAsFile())
-				);
+						.dir(checkstyleTask.getName());
+				if (isAtLeastGradle7()) {
+					String reportFileName = report.getOutputLocation().get().getAsFile().getName();
+					report.getOutputLocation().value(reportDir.map(it -> it.file(reportFileName)));
+				} else {
+					String reportFileName = report.getDestination().getName();
+					report.setDestination(reportDir.map(it -> it.file(reportFileName).getAsFile()));
+				}
 			}
 		});
 		ConventionMapping taskMapping = checkstyleTask.getConventionMapping();
