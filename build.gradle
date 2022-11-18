@@ -16,7 +16,9 @@
 
 buildscript {
 	dependencies {
-		classpath 'io.spring.gradle:spring-build-conventions:0.0.37'
+		classpath('io.spring.gradle:spring-build-conventions:0.0.38') {
+			exclude module: 'docbook-reference-plugin'
+		}
 		classpath 'io.spring.nohttp:nohttp-gradle:0.0.5.RELEASE'
 	}
 	repositories {
