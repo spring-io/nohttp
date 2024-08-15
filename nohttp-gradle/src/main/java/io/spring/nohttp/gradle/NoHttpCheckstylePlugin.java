@@ -161,12 +161,12 @@ public class NoHttpCheckstylePlugin implements Plugin<Project> {
 		Logger logger = this.logger;
 		NoHttpExtension extension = this.extension;
 		checkstyleTask.setDescription("Checks for illegal uses of http://");
+		Provider<Directory> reportDir = project.getExtensions().getByType(ReportingExtension.class)
+				.getBaseDirectory()
+				.dir(checkstyleTask.getName());
 		checkstyleTask.getReports().all(new Action<SingleFileReport>() {
 			@Override
 			public void execute(final SingleFileReport report) {
-				Provider<Directory> reportDir = project.getExtensions().getByType(ReportingExtension.class)
-						.getBaseDirectory()
-						.dir(checkstyleTask.getName());
 				if (isAtLeastGradle7()) {
 					String reportFileName = report.getOutputLocation().get().getAsFile().getName();
 					report.getOutputLocation().value(reportDir.map(it -> it.file(reportFileName)));
